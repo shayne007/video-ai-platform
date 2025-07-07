@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.task.mapper.TaskCleanInterimMapper">
+
+    <update id="resetRunningStatus" parameterType="java.lang.Integer">
+        UPDATE task_clean_interim
+        SET `status` = #{newStatus,jdbcType=INTEGER},
+          retry_count = retry_count + 1,
+          update_time = now()
+        WHERE
+          `status` = #{oldStatus,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE
+          task_clean_interim
+        SET
+          `status` = #{state,jdbcType=INTEGER},
+          update_time = now()
+        WHERE
+          serialnumber = #{serialnumber,jdbcType=INTEGER}
+        <if test="ymd != null  and ymd != ''">
+          and ymd = #{ymd,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateStatusFailed">
+        UPDATE
+        task_clean_interim
+        SET
+        `status` = #{state,jdbcType=INTEGER},
+        retry_count = retry_count + 1,
+        update_time = now()
+        WHERE
+        serialnumber = #{serialnumber,jdbcType=INTEGER}
+        <if test="ymd != null  and ymd != ''">
+            and ymd = #{ymd,jdbcType=VARCHAR}
+        </if>
+    </update>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.task.mapper.CameraAnalysisTrackMapper">
+
+    <insert id="insertAnalysisTrackHisFromTrack" >
+        insert into camera_analysis_track_his
+          select * from camera_analysis_track where 1=1
+        <if test="cameraId != null  and cameraId != ''">
+            and camera_id = #{cameraId}
+        </if>
+        <if test="ymd != null  and ymd != ''">
+            and track_day = #{ymd}
+        </if>
+    </insert>
+
+    <delete id="deleteAnalysisTrack">
+        delete from camera_analysis_track where 1=1
+        <if test="cameraId != null  and cameraId != ''">
+            and camera_id = #{cameraId}
+        </if>
+        <if test="ymd != null  and ymd != ''">
+            and track_day = #{ymd}
+        </if>
+    </delete>
+</mapper>

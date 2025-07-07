@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.task.mapper.TbAnalysisDetailMapper">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO tb_analysis_detail (
+            id,
+            task_id,
+            progress,
+            entry_time,
+            analysis_url,
+            analysis_id,
+            analysis_status,
+            analysis_progress,
+            download_url,
+            download_status,
+            download_progress,
+            download_retry,
+            create_time,
+            remark
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+              #{item.id,jdbcType=VARCHAR},
+              #{item.taskId,jdbcType=VARCHAR},
+              #{item.progress,jdbcType=INTEGER},
+              #{item.entryTime,jdbcType=VARCHAR},
+              #{item.analysisUrl,jdbcType=VARCHAR},
+              #{item.analysisId,jdbcType=VARCHAR},
+              #{item.analysisStatus,jdbcType=INTEGER},
+              #{item.analysisProgress,jdbcType=INTEGER},
+              #{item.downloadUrl,jdbcType=VARCHAR},
+              #{item.downloadStatus,jdbcType=INTEGER},
+              #{item.downloadProgress,jdbcType=INTEGER},
+              #{item.downloadRetry,jdbcType=INTEGER},
+              #{item.createTime,jdbcType=TIMESTAMP},
+              #{item.remark,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    
+    <select id="getReuseList" parameterType="java.lang.String" resultType="com.keensense.task.entity.TbAnalysisDetail">
+        SELECT
+            *
+        FROM
+            tb_analysis_detail d
+        JOIN tb_analysis_task t ON d.task_id = t.id
+        WHERE
+            t.`status` != 2
+        AND progress >= 0
+        AND download_url IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="detail" separator=";">
+            update tb_analysis_detail
+            set
+                progress = #{detail.progress,jdbcType=SMALLINT},
+                analysis_url = #{detail.analysisUrl,jdbcType=VARCHAR},
+                analysis_status = #{detail.analysisStatus,jdbcType=SMALLINT},
+                analysis_progress = #{detail.analysisProgress,jdbcType=SMALLINT},
+                finish_time = #{detail.finishTime,jdbcType=TIMESTAMP},
+                lastupdate_time = #{detail.lastupdateTime,jdbcType=TIMESTAMP},
+                remark = #{detail.remark,jdbcType=VARCHAR}
+            where id = #{detail.id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <select id="getDetailByTaskId" parameterType="java.lang.String" resultType="com.keensense.task.entity.TbAnalysisDetail">
+        SELECT
+          d.*
+        FROM
+          tb_analysis_detail d
+        WHERE
+          d.task_id = #{taskId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="countByRetryId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+          COUNT(d.id)
+        FROM
+          tb_analysis_detail d
+        JOIN tb_analysis_task t ON d.task_id = t.id
+        WHERE
+        t.`status` != 2
+        AND d.analysis_id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateFailed" parameterType="com.keensense.task.entity.TbAnalysisDetail">
+        update tb_analysis_detail
+        set
+        progress = #{progress,jdbcType=SMALLINT},
+        analysis_status = #{analysisStatus,jdbcType=SMALLINT},
+        analysis_progress = #{analysisProgress,jdbcType=SMALLINT},
+        download_status = #{downloadStatus,jdbcType=SMALLINT},
+        download_progress = #{downloadProgress,jdbcType=SMALLINT},
+        download_retry = #{downloadRetry,jdbcType=SMALLINT},
+        transcode_status = #{transcodeStatus,jdbcType=SMALLINT},
+        transcode_progress = #{transcodeProgress,jdbcType=SMALLINT},
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+        lastupdate_time = #{lastupdateTime,jdbcType=TIMESTAMP},
+        remark = #{remark,jdbcType=VARCHAR}
+        where analysis_id = #{analysisId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateResetStatus">
+        update tb_analysis_detail
+        set
+            progress = 0,
+            analysis_status = 2,
+            analysis_progress = 0,
+            finish_time = NULL ,
+            lastupdate_time = now(),
+            remark = NULL
+        where
+            task_id = #{serialnumber,jdbcType=VARCHAR}
+        AND progress = -1
+    </update>
+</mapper>

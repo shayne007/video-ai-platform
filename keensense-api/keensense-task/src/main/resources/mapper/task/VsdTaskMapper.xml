@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.task.mapper.VsdTaskMapper">
+
+    <!--  根据detail中正在运行的任务查找vsd_task表记录，用以更新缓存  -->
+	<select id="selectByRunningDetail" resultType="com.keensense.task.entity.VsdTask">
+		SELECT
+            v.*
+        FROM
+            vsd_task v
+        JOIN tb_analysis_detail d ON v.serialnumber = d.analysis_id
+        WHERE
+            d.analysis_status IN (1, 2)
+	</select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+      insert into vsd_task (serialnumber, type,
+          progress, isvalid, status,
+          reserve, retrycount, slaveip,
+          endtime, createtime, userserialnumber,
+          entrytime, framerate, errcode,
+          errmsg, param,task_type)
+      values
+        <foreach collection="list" item="item" separator=",">
+          (#{item.serialnumber,jdbcType=VARCHAR}, #{item.type,jdbcType=VARCHAR},
+              #{item.progress,jdbcType=SMALLINT}, #{item.isValid,jdbcType=SMALLINT}, #{item.status,jdbcType=SMALLINT},
+              #{item.reserve,jdbcType=VARCHAR}, #{item.retryCount,jdbcType=SMALLINT}, #{item.slaveip,jdbcType=VARCHAR},
+              #{item.endtime,jdbcType=TIMESTAMP}, #{item.createtime,jdbcType=TIMESTAMP}, #{item.userserialnumber,jdbcType=VARCHAR},
+              #{item.entrytime,jdbcType=TIMESTAMP}, #{item.framerate,jdbcType=INTEGER}, #{item.errcode,jdbcType=INTEGER},
+              #{item.errmsg,jdbcType=VARCHAR}, #{item.param,jdbcType=LONGVARCHAR}, #{item.taskType,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <update id="updateTask" parameterType="java.lang.String">
+        UPDATE vsd_task v
+        SET v.param = #{param,jdbcType=VARCHAR}
+        WHERE
+        v.userserialnumber = #{userSerialnumber,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateProgress">
+        UPDATE vsd_task v
+        SET v.progress = #{progress,jdbcType=INTEGER}
+        WHERE
+        v.serialnumber = #{serialnumber,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateStatusByIds">
+        UPDATE vsd_task v
+        SET v.status = #{status,jdbcType=INTEGER}
+        WHERE
+        v.id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <update id="updateStatusBySerialnumber">
+        UPDATE vsd_task v
+        SET
+          v.status = #{status,jdbcType=INTEGER}
+        WHERE
+          v.serialnumber = #{serialnumber,jdbcType=VARCHAR}
+    </update>
+
+
+    <update id="updateStatusById">
+        UPDATE vsd_task v
+        SET v.status = #{status,jdbcType=INTEGER}
+        WHERE
+        v.id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateStatusProgressBySer">
+        UPDATE vsd_task v
+        SET
+        v.param = #{param,jdbcType=VARCHAR},
+         v.progress = #{progress,jdbcType=INTEGER},
+         v.errcode = #{errcode,jdbcType=INTEGER},
+         v.errmsg = #{errmsg,jdbcType=VARCHAR}
+        WHERE
+        v.serialnumber = #{serialnumber,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateDeadTaskByVersion">
+        UPDATE vsd_task v
+        SET
+         v.status = #{status,jdbcType=INTEGER}
+        WHERE
+         v.id = #{id,jdbcType=BIGINT}  and
+        v.version = #{version,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateResetStatus">
+        UPDATE vsd_task v
+        SET
+            v.retrycount = 0,
+            v.progress = 0,
+            v.status = 0
+        WHERE
+            v.userserialnumber = #{serialnumber,jdbcType=VARCHAR}  and
+            v.status = 3
+    </update>
+
+    <update id="updateTimeOutTask">
+        update vsd_slavestatus s,vsd_task t set t.`status` = 0,t.slaveip = '',t.progress = 0
+        where t.slaveip = s.slave_ip and t.`status` = 1 and s.valid = 0;
+    </update>
+
+    <update id="updateResetList" parameterType="list">
+        UPDATE vsd_task v
+        SET
+            v.progress = 0,
+            v.status = 0
+        WHERE
+            v.id IN 
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="getSerialnumberByTaskIds" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        serialnumber
+        FROM
+        vsd_task
+        WHERE
+        id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <update id="deleteVsdTask" parameterType="java.lang.String">
+        UPDATE vsd_task
+        SET
+        isvalid = 0,
+        endtime = now(),
+        lastupdate_time = now(),
+        status = 1
+        WHERE
+        userserialnumber = #{userserialnumber,jdbcType=VARCHAR}
+    </update>
+</mapper>

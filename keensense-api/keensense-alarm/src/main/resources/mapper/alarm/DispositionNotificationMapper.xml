@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.alarm.mapper.DispositionNotificationMapper">
+    <select id="selectDispositionNotiBySql" resultType="com.keensense.alarm.entity.DispositionNotificationEntity">
+        SELECT * FROM alarm_disposition_notification WHERE ${sql}
+    </select>
+
+    <select id="selectNotisCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM alarm_disposition_notification
+        <if test="(ew.customSqlSegment.contains('trigger_time &gt;=') or ew.customSqlSegment.contains('trigger_time &lt;=')) and ew.customSqlSegment.contains('disposition_category') and !ew.customSqlSegment.contains('disposition_id')">
+            force index (trigger_time_index)
+        </if>
+
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

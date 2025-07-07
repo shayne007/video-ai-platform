@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.extension.mapper.CameraRelationInfoMapper">
+
+    <resultMap id="cameraRelationInfo" type="com.keensense.extension.entity.CameraRelationInfo">
+        <id column="id" property="id" />
+        <id column="device_id" property="deviceId" />
+        <id column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="conditionFilter">
+        <if test="ids!=null and ids.size()>0">
+            AND id IN
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="deviceIds!=null and deviceIds.size()>0">
+            AND device_id IN
+            <foreach collection="deviceIds" item="deviceId" separator="," open="(" close=")">
+                #{deviceId}
+            </foreach>
+        </if>
+        <if test="updateTimes!=null and updateTimes.size()==1">
+            AND update_time IN
+            <foreach collection="updateTimes" item="updateTime" separator="," open="(" close=")">
+                #{updateTime}
+            </foreach>
+        </if>
+        <if test="updateTimes!=null and updateTimes.size()==2">
+            AND update_time BETWEEN
+            <foreach collection="updateTimes" item="updateTime" index="index">
+                <if test="index == 0">
+                    #{updateTime} AND
+                </if>
+                <if test="index == 1">
+                    #{updateTime}
+                </if>
+            </foreach>
+        </if>
+    </sql>
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+        Insert into camera_relation (id,device_id,update_time) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.deviceId},#{item.updateTime})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByCondition">
+        Delete from camera_relation WHERE 1=1
+        <include refid="com.keensense.extension.mapper.CameraRelationInfoMapper.conditionFilter"></include>
+    </delete>
+
+    <select id="queryByCondition" resultMap="cameraRelationInfo">
+        SELECT * from camera_relation where 1=1
+        <include refid="com.keensense.extension.mapper.CameraRelationInfoMapper.conditionFilter"></include>
+    </select>
+
+</mapper>

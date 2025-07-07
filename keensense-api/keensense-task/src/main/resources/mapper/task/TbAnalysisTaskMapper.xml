@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.task.mapper.TbAnalysisTaskMapper">
+
+	<select id="selectListByParam" resultType="com.keensense.task.entity.TaskVO" parameterType="java.util.Map">
+        SELECT
+            t.id serialnumber,
+            t.`name`,
+            IFNULL(v.progress, 0) progress,
+            IFNULL(v.`status`, 0) status,
+            v.type,
+            t.create_time createTime,
+            t.camera_id cameraId,
+            t.create_userid createUserId,
+            t.device_id deviceId,
+            IFNULL(v.isvalid, 1) isvalid,
+            v.slaveip,
+            v.endtime
+        FROM
+            tb_analysis_task t
+            LEFT JOIN vsd_task v ON t.id = v.userserialnumber
+        WHERE
+            t.`status` != 2
+        <if test="param.serialnumber != null and param.serialnumber != '' ">
+            AND t.id = #{param.serialnumber,jdbcType=VARCHAR}
+        </if>
+        <if test="param.taskType != null and param.taskType != '' ">
+            AND t.task_type = #{param.taskType,jdbcType=INTEGER}
+        </if>
+        <if test="param.type != null and param.type != '' ">
+            AND t.analy_type = #{param.type,jdbcType=VARCHAR}
+        </if>
+        <if test="param.cameraIdArr != null ">
+            AND t.camera_id in
+            <foreach collection="param.cameraIdArr" separator="," open="(" close=")" item="cameraId">
+                #{cameraId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="param.startTime != null ">
+            AND t.create_time >= #{param.startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param.endTime != null ">
+            AND  #{param.endTime,jdbcType=TIMESTAMP} >= t.create_time
+        </if>
+        <if test="param.name != null and param.name != '' ">
+            AND t.name like CONCAT("%",#{param.name,jdbcType=VARCHAR},"%")
+        </if>
+        <if test="param.deviceIdArr != null">
+            AND t.device_id in
+            <foreach collection="param.deviceIdArr" separator="," open="(" close=")" item="deviceId">
+              #{deviceId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="param.statusSql != null and param.statusSql != '' ">
+            ${param.statusSql}
+        </if>
+        ORDER BY t.create_time DESC
+	</select>
+
+    <update id="stopTask" parameterType="java.lang.String">
+        UPDATE vsd_task v
+        SET
+            v.endtime = now(),
+            v.isvalid = 0,
+            v.status = 1
+        WHERE
+          v.userserialnumber = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="stopPictureTask" parameterType="java.lang.String">
+        UPDATE vsd_task v
+        SET
+        v.endtime = now(),
+        v.isvalid = 0,
+        v.`status` = 2
+        WHERE
+        v.userserialnumber = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="continuePictureTask" parameterType="java.lang.String">
+        UPDATE vsd_task v
+        LEFT JOIN tb_analysis_task t ON t.id = v.userserialnumber
+        SET
+            t.`status` = 0,
+            v.endtime = NULL,
+            v.isvalid = 1,
+            v.`status` = 1
+        WHERE
+            t.id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="continueTask" parameterType="java.lang.String">
+        UPDATE vsd_task v
+        LEFT JOIN tb_analysis_task t ON t.id = v.userserialnumber
+        SET
+        t.`status` = 0,
+        v.endtime = NULL,
+        v.retrycount = 0,
+        v.isvalid = 1,
+        v.`status` = 0
+        WHERE
+        t.id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deleteTask" parameterType="java.lang.String">
+        UPDATE tb_analysis_task t
+        LEFT JOIN tb_analysis_detail d ON t.id = d.task_id
+        LEFT JOIN vsd_task v ON d.analysis_id = v.serialnumber
+                <!-- 此处关联查询仅为了排除分片复用的问题，会影响查询效率，没用可删除 -->
+                  AND v.serialnumber NOT IN (
+                    SELECT tmp.analysis_id FROM
+                      (select * from tb_analysis_detail) tmp
+                        GROUP BY tmp.analysis_id HAVING COUNT(1) > 1)
+                <!-- 删除结束节点 -->
+        SET t.lastupdate_time = now(),
+            t.`status` = 2,
+            v.isvalid = 0,
+            v.endtime = now()
+        WHERE
+            t.id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deletePictureTask" parameterType="java.lang.String">
+        UPDATE tb_analysis_task t
+            LEFT JOIN tb_analysis_detail d ON t.id = d.task_id
+            LEFT JOIN vsd_task v ON d.analysis_id = v.serialnumber
+        SET
+            t.lastupdate_time = now(),
+            t.`status` = 2,
+            v.isvalid = 0,
+            v.endtime = now(),
+            v.`status` = 2
+        WHERE
+        t.id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="stopBatchTask">
+        UPDATE vsd_task v
+        SET
+            v.endtime = NULL,
+            v.isvalid = 0
+        WHERE
+        v.userserialnumber in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+          #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <update id="deleteBatchTask">
+        UPDATE tb_analysis_task t
+        LEFT JOIN vsd_task v ON t.id = v.userserialnumber
+        SET t.lastupdate_time = now(),
+        t.`status` = 2,
+        v.isvalid = 0,
+        v.endtime = now()
+        WHERE
+        t.id in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <select id="getTaskForSearch" resultType="com.keensense.task.entity.SearchTaskEntity" parameterType="java.util.Map">
+        SELECT
+            t.id,
+            t.task_type taskType,
+            d.analysis_id serialnumber,
+            d.progress,
+            d.remark,
+            d.entry_time entryTime
+        FROM
+            tb_analysis_task t
+        LEFT JOIN tb_analysis_detail d ON d.task_id = t.id
+        WHERE
+          t.`status` != 2 AND d.progress != -1
+        <if test="cameraIds != null and cameraIds != '' ">
+            AND t.camera_id in
+            <foreach collection="cameraIds" close=")" open="(" separator="," item="cameraId">
+                #{cameraId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="serialnumbers != null and serialnumbers != '' ">
+            AND t.id in
+            <foreach collection="serialnumbers" close=")" open="(" separator="," item="serailnumber">
+                #{serailnumber,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <choose>
+            <when test="startTime != null and endTime != null">
+                AND (t.task_type = 1 OR (d.entry_time >= #{startTime,jdbcType=TIMESTAMP}
+                AND #{endTime,jdbcType=TIMESTAMP} >= d.entry_time))
+            </when>
+            <otherwise>
+                <if test="startTime != null">
+                    AND (t.task_type = 1 OR d.entry_time >= #{startTime,jdbcType=TIMESTAMP})
+                </if>
+                <if test="endTime != null ">
+                    AND (t.task_type = 1 OR #{endTime,jdbcType=TIMESTAMP} >= d.entry_time)
+                </if>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectOfficeForDelete" resultType="com.keensense.task.entity.TbAnalysisTask" parameterType="java.sql.Timestamp">
+        SELECT
+            t.*
+        FROM
+            tb_analysis_task t
+        WHERE
+          t.task_type != 1
+          AND #{endTime,jdbcType=TIMESTAMP} >= t.create_time
+          AND t.id not in (SELECT c.userserialnumber FROM task_clean_log c)
+    </select>
+
+    <select id="getVideoObjectTaskList" resultType="com.keensense.task.entity.VideoTaskMap">
+        SELECT
+            t.id,
+            t.`name`,
+            t.progress as mainProgress,
+            v.progress,
+            v.slaveip,
+            v.`status`,
+            t.analy_type analyType,
+            t.analy_param analyParam,
+            d.analysis_url analysisUrl,
+            t.task_type taskType,
+            t.create_time createTime,
+            d.id detailId,
+            d.lastupdate_time lastUpdateTime,
+            d.create_time detailCreateTime,
+            d.progress detailProgress,
+            d.download_url downloadUrl,
+            d.analysis_id analysisId,
+            v.progress vsdProgress,
+            d.remark,
+            v.userserialnumber,
+            v.errcode,
+            v.errmsg
+        FROM
+            tb_analysis_task t
+            LEFT JOIN tb_analysis_detail d ON t.id = d.task_id
+            LEFT JOIN vsd_task v ON d.analysis_id = v.serialnumber
+        WHERE
+            t.id IN
+            <foreach collection="array" separator="," open="(" close=")" item="id">
+                #{id,jdbcType=VARCHAR}
+            </foreach>
+    </select>
+
+    <select id="selectEarliestOfficeTask" resultType="com.keensense.task.entity.TbAnalysisTask">
+        SELECT
+        t.*
+        FROM
+        tb_analysis_task t
+        WHERE
+        t.task_type != 1   and id not in (select userserialnumber from task_clean_interim where status = 100)
+        ORDER BY t.create_time
+         LIMIT 1
+    </select>
+
+    <select id="getSerialnumberByCameras" resultType="com.keensense.task.entity.TbAnalysisTask">
+        SELECT
+        t.id,t.camera_id
+        FROM
+        tb_analysis_task t
+        WHERE task_type in (1,2,3) and t.camera_id in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+</mapper>

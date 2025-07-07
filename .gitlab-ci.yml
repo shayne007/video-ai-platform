@@ -1,0 +1,41 @@
+stages:
+  - build
+  #- package
+  #- deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  MODULE_TASK: "keensense-api/keensense-task"
+  MODULE_PICTURESTREAM: "keensense-api/keensense-picturestream"
+
+cache:
+  paths:
+    - .m2/repository
+    - $MODULE_TASK/target
+    - $MODULE_PICTURESTREAM/target
+
+.maven-build: &build_module
+  image: maven:3.3.9-jdk-8
+  stage: build
+  tags:
+    - platform
+
+module-task:
+  <<: *build_module
+  script:
+    - 'mvn $MAVEN_CLI_OPTS  package -pl $MODULE_TASK -am'
+  artifacts:
+    paths:
+      - $MODULE_TASK/target/*.jar
+    expire_in: 1 week
+
+module-picturestream:
+  <<: *build_module
+  script:
+    - 'mvn $MAVEN_CLI_OPTS clean package -pl $MODULE_PICTURESTREAM -am'
+  artifacts:
+    paths:
+      - $MODULE_PICTURESTREAM/target/*.jar
+    expire_in: 1 week
+

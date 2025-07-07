@@ -1,0 +1,78 @@
+server:
+  port: 9999
+logging:
+  level:
+    com:
+      alibaba:
+        nacos: warn
+#feign开启hystrix的fallback
+feign:
+  hystrix:
+    enabled: true
+gate:
+  ignore:
+    startWith: /auth/jwt
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      routes:
+        #sdk 模块
+        - id: keensense-search
+          uri: lb://keensense-search
+          predicates:
+            - Path=/VIID/System/**,/VIID/APEs/**,/VIID/MotorVehicles/**,/VIID/NonMotorVehicles/**,/VIID/Persons/**,/VIID/Faces/**,/VIID/Summary/**,/VIID/Result/**,/VIID/GroupByQuery/**,/VIID/convert/**,/VIID/Violation/**,/VIID/Vehicleflowrate/**,/VIID/Capacity/**,/VIID/CrowdDensity/**,/VIID/Event/**,/VIID/Feature/**
+          filters:
+            - PrefixPath=/VIID
+        - id: keensense-image
+          uri: lb://keensense-image
+          predicates:
+            - Path=/VIID/Images/**,/VIID/Image/**
+          filters:
+            - PrefixPath=/VIID
+        - id: keensense-video
+          uri: lb://keensense-video
+          predicates:
+            - Path=/VIID/File/**
+          filters:
+            - PrefixPath=/VIID
+        #扩展服务 模块 一人一档
+        - id: keensense-extension
+          uri: lb://keensense-extension
+          predicates:
+            - Path=/VIID/Archives/**,/VIID/Trail/**,/VIID/Feature/**,/VIID/Picture/Face/**,/VIID/StartBodyClust/**
+          filters:
+            - PrefixPath=/VIID
+        - id: keensense-commonlib
+          uri: lb://keensense-commonlib
+          predicates:
+            - Path=/VIID/CommonLib/**,/VIID/CommonLibFeature/**
+          filters:
+            - PrefixPath=/VIID
+        - id: keensense-alarm
+          uri: lb://keensense-alarm
+          predicates:
+            - Path=/VIID/Dispositions/**,/VIID/DispositionNotifications/**
+          filters:
+            - PrefixPath=/VIID
+        - id: keensense-task
+          uri: lb://keensense-task
+          predicates:
+            - Path=/rest/**
+          filters:
+            - PrefixPath=/rest
+        - id: keensense-picturestream
+          uri: lb://keensense-picturestream
+          predicates:
+            - Path=/picturestream/**
+          filters:
+            - PrefixPath=/picturestream
+        - id: keensense-archives
+          uri: lb://keensense-archives
+          predicates:
+            - Path=/VIID/Archive/**
+          filters:
+            - PrefixPath=/VIID

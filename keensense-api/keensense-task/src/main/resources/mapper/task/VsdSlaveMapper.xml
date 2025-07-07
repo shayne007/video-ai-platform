@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.task.mapper.VsdSlaveMapper">
+
+    <select id="getSlaveIdList" resultType="java.lang.String">
+        SELECT distinct  slave_id FROM vsd_slavestatus
+    </select>
+
+    <update id="updateSlaveId" parameterType="java.lang.String">
+        UPDATE vsd_slavestatus SET slave_id = #{slaveId} where slave_ip = #{slaveIp}
+    </update>
+
+    <update id="updateTimeOut">
+        update vsd_slavestatus s set s.valid = 0 where UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.lastupdate_time) > 60;
+    </update>
+</mapper>

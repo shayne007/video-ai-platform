@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: keensense-monitor
+  # 安全配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
+        enabled: true
+      config:
+        file-extension: yaml
+        server-addr: ${NACOS_HOST}
+        shared-dataids: service-monitor.yaml
+        refreshable-dataids: service-monitor.yaml
+logging:
+  config: /logs/config/logback-spring.xml

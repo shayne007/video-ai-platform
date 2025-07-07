@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: keensense-archives
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
+        enabled: true
+      config:
+        server-addr: ${NACOS_HOST}
+        file-extension: properties
+        shared-dataids: comConfig.properties,commonip.properties,keensense-archive.properties
+        refreshable-dataids: comConfig.properties,commonip.properties,keensense-archive.properties
+logging:
+  config: /logs/config/logback-spring.xml
+server:
+  port: 8888

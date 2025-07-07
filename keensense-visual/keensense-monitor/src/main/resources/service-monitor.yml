@@ -1,0 +1,54 @@
+spring:
+  redis:
+    port: 16379  # Redis服务器连接端口
+    password: 123456   # Redis服务器连接密码（默认为空）
+  datasource:
+    #    使用druid数据源
+    druid:
+      name: test
+#      url: jdbc:mysql://172.16.1.29:3306/u2s?characterEncoding=utf-8&allowMultiQueries=true
+      username: qst
+      password: Ast4HS#qianshitong
+      driverClass: com.mysql.jdbc.Driver
+      maxActive: 20
+      initialSize: 5
+      maxWait: 60000
+      minIdle: 5
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall
+      filter:
+        stat:
+          logSlowSql: true
+          #         慢查询的时间秒
+          slowSqlMillis: 10000
+          mergeSql: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+logging:
+  level:
+    com:
+      alibaba:
+        nacos: warn
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+ribbon:
+  ReadTimeout: 5000
+  ConnectTimeout: 5000
