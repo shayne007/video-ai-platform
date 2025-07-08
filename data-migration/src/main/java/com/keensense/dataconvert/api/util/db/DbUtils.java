@@ -161,7 +161,7 @@ public class DbUtils {
                 while (resultSet.next()){
                     Map<String,Object> rowData = new HashMap<>(2*columnCount);
                     for (int i = 1; i <= columnCount; i++) {
-                        rowData.put(md.getColumnName(i), resultSet.getObject(i));
+                        rowData.put(md.getname(i), resultSet.getObject(i));
                     }
                     resultList.add(rowData);
                 }

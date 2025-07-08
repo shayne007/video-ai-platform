@@ -1,6 +1,5 @@
 package com.keensense.search.repository.origin;
 
-import cn.jiuling.plugin.extend.featuresearch.JviaFeatureSearch;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
 import com.keensense.search.domain.Result;
@@ -14,6 +13,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+import com.keensense.search.service.impl.JviaFeatureSearch;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +50,7 @@ public class OriginFeatureRepository implements FeatureRepository {
      */
     @Override
     public synchronized boolean init() {
-        JviaFeatureSearch.initInstance(redisHost, redisPort, brokerList, EXPIRE_SECOND);
+        JviaFeatureSearch.initInstance(redisHost, redisPort, brokerList);
         return true;
     }
 

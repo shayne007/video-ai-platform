@@ -5,19 +5,12 @@ import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.constants.SdkExceptionConst;
 import com.keensense.sdk.util.ImageBaseUtil;
 import com.keensense.sdk.util.RandomUtils;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.datastruct.WeekArray;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
+
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
 import java.io.IOException;

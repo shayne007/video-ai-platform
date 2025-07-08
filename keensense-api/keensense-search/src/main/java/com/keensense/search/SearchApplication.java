@@ -1,6 +1,5 @@
 package com.keensense.search;
 
-import com.loocme.plugin.spring.Config;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -18,7 +17,7 @@ public class SearchApplication {
 
 
         ConfigurableApplicationContext applicationContext = SpringApplication.run(SearchApplication.class, args);
-        new Config(applicationContext).create();
+//        new Config(applicationContext).create();
 
         Environment env = applicationContext.getEnvironment();
         String port = env.getProperty("server.port");

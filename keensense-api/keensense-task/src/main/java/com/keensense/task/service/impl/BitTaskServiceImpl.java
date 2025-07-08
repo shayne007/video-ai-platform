@@ -3,6 +3,7 @@ package com.keensense.task.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.keensense.common.util.HttpClientUtil;
 import com.keensense.task.constants.BitCommonConst;
 import com.keensense.task.constants.TaskConstants;
 import com.keensense.task.entity.VsdTask;
@@ -35,58 +36,40 @@ public class BitTaskServiceImpl implements IBitTaskService {
         url = url + BitCommonConst.BIT_START_TASK;
         JSONObject paramJson = JSON.parseObject(vsdTask.getParam());
         setSerialnumber(paramJson, vsdTask.getSerialnumber());
-        try {
-            JSONObject resultJson = JSON.parseObject(postRequest(url, paramJson.toString()));
-            if (this.isSuccess(resultJson)) {
-                return BitCommonConst.SUCCESS;
-            } else {
-                return BitCommonConst.FAIL;
-            }
-        } catch (HttpConnectionException e) {
-            log.error("vsdTask serialNumber = " + vsdTask.getSerialnumber() + " start request url = " + url + " error!");
-            log.error("http connect start task failed", e);
-            return BitCommonConst.ERROR;
+        JSONObject resultJson = JSON.parseObject(postRequest(url, paramJson.toString()));
+        if (this.isSuccess(resultJson)) {
+            return BitCommonConst.SUCCESS;
+        } else {
+            return BitCommonConst.FAIL;
         }
     }
 
     @Override
     public int queryTask(String url, String serialnumber, boolean isStream) {
         url = url + BitCommonConst.BIT_QUERY_TASK;
-        try {
-            JSONObject paramJson = getParamJsonObject(serialnumber);
-            JSONObject resultJson = JSONObject.parseObject(postRequest(url, paramJson.toString()));
-            if (this.isSuccess(resultJson)) {
-                JSONArray taskList = Optional.ofNullable(getStatus(resultJson))
-                        .map(p -> p.getJSONArray("tasks")).orElse(null);
-                JSONObject task = getTaskBySerialnumber(taskList, serialnumber);
-                if (task != null) {
-                    if (isSuccess(task)) {
-                        return updateProgress(task, serialnumber, isStream);
-                    } else {
-                        return BitCommonConst.FAIL;
-                    }
+        JSONObject paramJson = getParamJsonObject(serialnumber);
+        JSONObject resultJson = JSONObject.parseObject(postRequest(url, paramJson.toString()));
+        if (this.isSuccess(resultJson)) {
+            JSONArray taskList = Optional.ofNullable(getStatus(resultJson))
+                    .map(p -> p.getJSONArray("tasks")).orElse(null);
+            JSONObject task = getTaskBySerialnumber(taskList, serialnumber);
+            if (task != null) {
+                if (isSuccess(task)) {
+                    return updateProgress(task, serialnumber, isStream);
+                } else {
+                    return BitCommonConst.FAIL;
                 }
             }
-            return BitCommonConst.NOT_FOUND;
-        } catch (HttpConnectionException e) {
-            log.error("serialnumber  = " + serialnumber + " status request url = " + url + " error");
-            log.error("http connect query task failed", e);
-            return BitCommonConst.ERROR;
         }
+        return BitCommonConst.NOT_FOUND;
     }
 
     @Override
     public int stopTask(String url, String serialnumber) {
         url = url + BitCommonConst.BIT_STOP_TASK;
         JSONObject paramJson = getParamJsonObject(serialnumber);
-        try {
-            //查询调通不报错即可，不然返回结果是什么都认为是成功
-            postRequest(url, paramJson.toString());
-        } catch (HttpConnectionException e) {
-            log.error("serialnumber = " + serialnumber + " stop request url = " + url + " error");
-            log.error("http connect stop task failed", e);
-            return BitCommonConst.ERROR;
-        }
+        //查询调通不报错即可，不然返回结果是什么都认为是成功
+        postRequest(url, paramJson.toString());
         return BitCommonConst.SUCCESS;
     }
 
@@ -101,29 +84,24 @@ public class BitTaskServiceImpl implements IBitTaskService {
         JSONObject result = new JSONObject();
         url = url + BitCommonConst.BIT_QUERY_TASK;
         String status = "status";
-        try {
-            JSONObject resultJson = JSON.parseObject(postRequest(url, "{}"));
-            if (this.isSuccess(resultJson)) {
-                JSONObject statusObj = getStatus(resultJson);
-                if (statusObj != null) {
-                    JSONArray taskList = statusObj.getJSONArray("tasks");
-                    List<String> serialNumberList = new ArrayList<>();
-                    int useRoute = 0;
-                    if (taskList != null && !taskList.isEmpty()) {
-                        useRoute = taskList.size();
-                        for (int i = 0; i < taskList.size(); i++) {
-                            serialNumberList.add(getSerialnumber(taskList.getJSONObject(i)));
-                        }
+        JSONObject resultJson = JSON.parseObject(postRequest(url, "{}"));
+        if (this.isSuccess(resultJson)) {
+            JSONObject statusObj = getStatus(resultJson);
+            if (statusObj != null) {
+                JSONArray taskList = statusObj.getJSONArray("tasks");
+                List<String> serialNumberList = new ArrayList<>();
+                int useRoute = 0;
+                if (taskList != null && !taskList.isEmpty()) {
+                    useRoute = taskList.size();
+                    for (int i = 0; i < taskList.size(); i++) {
+                        serialNumberList.add(getSerialnumber(taskList.getJSONObject(i)));
                     }
-                    result.put("useRoute", useRoute);
-                    result.put("allRoute", useRoute + statusObj.getInteger("free"));
-                    result.put("serialnumberList", serialNumberList);
-                    result.put(status, BitCommonConst.SUCCESS);
                 }
+                result.put("useRoute", useRoute);
+                result.put("allRoute", useRoute + statusObj.getInteger("free"));
+                result.put("serialnumberList", serialNumberList);
+                result.put(status, BitCommonConst.SUCCESS);
             }
-        } catch (HttpConnectionException e) {
-            log.error("http connect query machine failed", e);
-            result.put(status, BitCommonConst.ERROR);
         }
         return result;
     }
@@ -134,8 +112,8 @@ public class BitTaskServiceImpl implements IBitTaskService {
      * @param params body参数
      * @return: java.lang.String
      */
-    private static String postRequest(String url, String params) throws HttpConnectionException {
-        return PostUtil.requestContent(url, "application/json", params);
+    private static String postRequest(String url, String params) {
+        return HttpClientUtil.requestPost(url, "application/json", params);
     }
 
     /***

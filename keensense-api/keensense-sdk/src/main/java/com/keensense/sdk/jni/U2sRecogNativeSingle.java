@@ -1,9 +1,5 @@
 package com.keensense.sdk.jni;
 
-import com.keensense.sdk.sys.utils.DbPropUtil;
-import com.loocme.sys.datastruct.Var;
-
-
 public class U2sRecogNativeSingle
 {
     private static U2sRecogNative recog = null;

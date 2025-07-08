@@ -1,6 +1,5 @@
 package com.keensense.search.service.impl;
 
-import cn.jiuling.plugin.extend.featuresearch.JviaFeatureSearch;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -15,6 +14,7 @@ import com.keensense.search.repository.FeatureRepository;
 import com.keensense.search.repository.ImageRepository;
 import com.keensense.search.utils.DateUtil;
 import com.keensense.search.utils.ResponseUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -57,8 +58,8 @@ public class SummaryServiceImpl extends DataServiceImpl {
 //    private static ExecutorService service = Executors.newSingleThreadExecutor();
 
     private static ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 1,
-                                   0L,TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<Runnable>());
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
     /**
      * 批量写入浓缩数据
@@ -70,7 +71,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
     public JSONObject batchInsert(JSONObject jsonObject) {
         //log.debug("begin to batch insert face");
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
-            .getRequestAttributes();
+                .getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
         String url = request.getRequestURL().toString();
         JSONArray summaryListObject = getSummaryObejectList(jsonObject);
@@ -90,8 +91,8 @@ public class SummaryServiceImpl extends DataServiceImpl {
             } catch (Exception e) {
                 log.error("handler request failed,the request is {}", summaryObject, e);
                 responseStatusArray.add(ResponseUtil
-                    .createFailedResponse(id, url, ResponseUtil.STATUS_CODE_FAILED,
-                        e.getMessage()));
+                        .createFailedResponse(id, url, ResponseUtil.STATUS_CODE_FAILED,
+                                e.getMessage()));
             }
         }
         responseObject.put("ResponseStatusObject", responseStatusArray);
@@ -112,7 +113,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
         //log.debug("begin to query person");
         JSONObject jsonObject = new JSONObject();
         List<SummaryResult> list = structuringDataRepository
-            .query("id", id, SummaryResult.class);
+                .query("id", id, SummaryResult.class);
         if (null != list && !list.isEmpty()) {
             jsonObject.put(SUMMARY_OBJECT, list.get(0));
             //log.debug("end to query summary, the response is {}", jsonObject);
@@ -131,13 +132,13 @@ public class SummaryServiceImpl extends DataServiceImpl {
     public String batchQuery(Map<String, String[]> parameterMap) {
         //log.debug("begin to batch query person");
         Map<String, String> map = jsonConvertUtil
-            .covertInputParameterToResultParameter(parameterMap);
+                .covertInputParameterToResultParameter(parameterMap);
 
         JSONObject responseObject = new JSONObject();
         JSONObject summaryObject = new JSONObject();
         try {
             Map<Integer, List<SummaryResult>> resultMap = structuringDataRepository
-                .batchQuery(map, SummaryResult.class);
+                    .batchQuery(map, SummaryResult.class);
             Entry<Integer, List<SummaryResult>> entry = resultMap.entrySet().iterator().next();
             int count = entry.getKey();
             List<SummaryResult> summaryResults = entry.getValue();
@@ -146,7 +147,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
             summaryObject.put("Count", count);
         } catch (Exception e) {
             log.error(
-                "query failed.", e);
+                    "query failed.", e);
             responseObject.put("Count", 0);
             summaryObject.put(SUMMARY_OBJECT, new JSONArray());
         }
@@ -187,7 +188,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
         }
 
         Map<Integer, List<SummaryResult>> resultMap = structuringDataRepository
-            .batchQuery(paraMap, SummaryResult.class);
+                .batchQuery(paraMap, SummaryResult.class);
         Entry<Integer, List<SummaryResult>> entry = resultMap.entrySet().iterator().next();
         int count = entry.getKey();
         List<SummaryResult> summaryResults = entry.getValue();
@@ -210,7 +211,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
 
         String key = summaryResult.getSerialnumber() + "_" + summaryResult.getId();
         String resultString = generatorQueryResponse(summaryResult)
-            .toJSONString();
+                .toJSONString();
         alarmRepository.insert(key, resultString);
         structuringDataRepository.save(summaryResult);
         //log.debug("end to covert person json, the result is {}", summaryResult);
@@ -220,7 +221,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
     public String singleDelete(Map<String, String[]> parameterMap) {
         featureRepository.init();
         Map<String, String> map = jsonConvertUtil
-            .covertInputParameterToResultParameter(parameterMap);
+                .covertInputParameterToResultParameter(parameterMap);
         String id = map.get("Id");
         try {
             Result deleteResult = getImageSearchIp(id, Result.class);
@@ -232,9 +233,9 @@ public class SummaryServiceImpl extends DataServiceImpl {
             if (!StringUtils.isEmpty(deleteResult.getAnalysisId())) {
                 serialnumber = deleteResult.getAnalysisId();
             }
-            if (!JviaFeatureSearch
-                .deleteFeature(deleteResult.getIp(), serialnumber,
-                    deleteResult.getObjType(), deleteResult.getId(), startTime, endTime, 20)) {
+            boolean deleted = !JviaFeatureSearch.deleteFeature(deleteResult.getIp(), serialnumber,
+                    deleteResult.getObjType(), deleteResult.getId(), startTime, endTime, 20);
+            if (deleted) {
                 throw new VideoException("batchDeleteData feature failed");
             }
             if (-1 == structuringDataRepository.delete("id", id, tclass)) {
@@ -255,7 +256,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
                 throw new VideoException("the parameter is empty");
             }
             //入库时，特征数据是否入搜图模块，默认true，发送搜图模块；如果没有存特征，则也不删除特征
-            if(Boolean.valueOf(featureSave)){
+            if (Boolean.valueOf(featureSave)) {
                 String featureTime = formatTimeToFeaturePattern(time);
                 if (!batchDeleteFeature(serialnumber,
                         featureTime)) {
@@ -267,7 +268,9 @@ public class SummaryServiceImpl extends DataServiceImpl {
             map.put("analysisId", serialnumber);
             Date start = DateUtil.generatorDate(time, "start");
             Date end = DateUtil.generatorDate(time, "end");
-            Date initDt = new SimpleDateFormat("yyyyMMddHHmmss").parse("19700101080001");;;//临界时间
+            Date initDt = new SimpleDateFormat("yyyyMMddHHmmss").parse("19700101080001");
+            ;
+            ;//临界时间
             //为了防止时间越界导致es无法正常处理，对越界时间进行处理
             if (initDt.after(start)) {//越界了
                 start = initDt;
@@ -276,9 +279,9 @@ public class SummaryServiceImpl extends DataServiceImpl {
                 end = initDt;
             }
             long esNum = structuringDataRepository
-                .batchDelete(map, "markTime",
-                        start,
-                        end, Result.class);
+                    .batchDelete(map, "markTime",
+                            start,
+                            end, Result.class);
             if (esNum == -1) {
                 log.info("batchDeleteData es data failed, retry it, serialnumer is {}, time is {}", serialnumber, time);
                 esNum = structuringDataRepository
@@ -286,7 +289,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
                                 start,
                                 end, Result.class);
                 if (esNum == -1) {
-                    throw new VideoException("Please try again, batchDeleteData es data failed, serialnumer is "+serialnumber+", time is " + time);
+                    throw new VideoException("Please try again, batchDeleteData es data failed, serialnumer is " + serialnumber + ", time is " + time);
                 }
             }
         } catch (Exception e) {
@@ -346,7 +349,7 @@ public class SummaryServiceImpl extends DataServiceImpl {
 
     public String unitBatchQuery(Map<String, String[]> parameterMap) {
         return batchQuery(parameterMap, "UnitListObject", "UnitObject",
-            Result.class);
+                Result.class);
     }
 
     private Class tranferTypeToClass(Integer type) {
@@ -395,7 +398,6 @@ public class SummaryServiceImpl extends DataServiceImpl {
 
         return year + "-" + month + "-" + day;
     }
-
 
 
 }

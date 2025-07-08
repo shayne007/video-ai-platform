@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.DateUtil;
 import com.keensense.search.domain.EventResult;
 import com.keensense.search.domain.FdfsCapacityResult;
 import com.keensense.search.domain.VehicleflowrateResult;
@@ -16,14 +17,6 @@ import com.keensense.search.utils.ClassUtil;
 import com.keensense.search.utils.HttpClientUtil;
 import com.keensense.search.utils.JsonConvertUtil;
 import com.keensense.search.utils.ResponseUtil;
-import com.loocme.plugin.spring.comp.Delete;
-import com.loocme.plugin.spring.comp.Insert;
-import com.loocme.plugin.spring.comp.Page;
-import com.loocme.plugin.spring.comp.Select;
-import com.loocme.plugin.spring.comp.SqlExecutor;
-import com.loocme.plugin.spring.comp.Update;
-import com.loocme.plugin.spring.enums.SqlCompare;
-import com.loocme.sys.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -145,29 +138,29 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
         return dataSource;
     }
 
-    public <T> Select<T> getSelect(Class<T> clazz) {
-        return Select.from(clazz, getSecondDataSource());
-    }
+//    public <T> Select<T> getSelect(Class<T> clazz) {
+//        return Select.from(clazz, getSecondDataSource());
+//    }
 
-    public boolean insert(Object object) {
-        return Insert.values(getSecondDataSource(), object);
-    }
+//    public boolean insert(Object object) {
+//        return Insert.values(getSecondDataSource(), object);
+//    }
 
-    public <T> Delete<T> getDelete(Class<T> clazz) {
-        return Delete.from(clazz, getSecondDataSource());
-    }
+//    public <T> Delete<T> getDelete(Class<T> clazz) {
+//        return Delete.from(clazz, getSecondDataSource());
+//    }
 
-    public <T> Update<T> getUpdate(Class<T> clazz) {
-        return Update.from(clazz, getSecondDataSource());
-    }
+//    public <T> Update<T> getUpdate(Class<T> clazz) {
+//        return Update.from(clazz, getSecondDataSource());
+//    }
 
-    public int updateById(Object object) {
-        return Update.byId(getSecondDataSource(), object);
-    }
+//    public int updateById(Object object) {
+//        return Update.byId(getSecondDataSource(), object);
+//    }
 
-    public SqlExecutor getSqlExecutor() {
-        return SqlExecutor.getInstance(getSecondDataSource());
-    }
+//    public SqlExecutor getSqlExecutor() {
+//        return SqlExecutor.getInstance(getSecondDataSource());
+//    }
 
     @Override
     public void save(Object result) {
@@ -261,19 +254,19 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
      * @param dataList
      */
     private void batchSaveEs(List<Object> dataList) {
-        SqlExecutor executor = getSqlExecutor();
-        for (Object result : dataList) {
-            executor.insert(result);
-        }
-        int r = executor.commit();
-        if (r < 0) {// 存储es失败，进行失败处理
-            log.info("batch insert to es err {} .", r);
-            esFaildPool.execute(() -> faildSaveEsOpt(dataList));
-        } else {
-            if ("true".equals(sendKafka)) {// 存储成功后发送kafka（交通）
-                kafkaServicePool.execute(() -> sendKafka(dataList));
-            }
-        }
+//        SqlExecutor executor = getSqlExecutor();
+//        for (Object result : dataList) {
+//            executor.insert(result);
+//        }
+//        int r = executor.commit();
+//        if (r < 0) {// 存储es失败，进行失败处理
+//            log.info("batch insert to es err {} .", r);
+//            esFaildPool.execute(() -> faildSaveEsOpt(dataList));
+//        } else {
+//            if ("true".equals(sendKafka)) {// 存储成功后发送kafka（交通）
+//                kafkaServicePool.execute(() -> sendKafka(dataList));
+//            }
+//        }
     }
 
     /**
@@ -289,22 +282,22 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
                 writeFailDataToFile(dataList);
             }
         } else {// 如果插入失败，重试一次，防止因为网络波动等情况导致连接问题
-            log.info("batch insert to es err , retry it.");
-            SqlExecutor executor = getSqlExecutor();
-            for (Object result : dataList) {
-                executor.insert(result);
-            }
-            int r = executor.commit();
-            if (r < 0) {// 存储es失败，进行失败处理
-                log.error("Retry batch insert to es err {} .", r);
-                if ("true".equals(compensation)) {// 如果开启了补偿机制,则将失败的数据写入文件来记录
-                    writeFailDataToFile(dataList);
-                }
-            } else {
-                if ("true".equals(sendKafka)) {// 存储成功后发送kafka（交通）
-                    kafkaServicePool.execute(() -> sendKafka(dataList));
-                }
-            }
+//            log.info("batch insert to es err , retry it.");
+//            SqlExecutor executor = getSqlExecutor();
+//            for (Object result : dataList) {
+//                executor.insert(result);
+//            }
+//            int r = executor.commit();
+//            if (r < 0) {// 存储es失败，进行失败处理
+//                log.error("Retry batch insert to es err {} .", r);
+//                if ("true".equals(compensation)) {// 如果开启了补偿机制,则将失败的数据写入文件来记录
+//                    writeFailDataToFile(dataList);
+//                }
+//            } else {
+//                if ("true".equals(sendKafka)) {// 存储成功后发送kafka（交通）
+//                    kafkaServicePool.execute(() -> sendKafka(dataList));
+//                }
+//            }
         }
     }
 
@@ -463,8 +456,9 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
 
     @Override
     public <T> List<T> query(String idKey, String idValue, Class<T> tClass) {
-        Select select = getSelect(tClass);
-        return select.addWhereCause(idKey, SqlCompare.EQ, idValue).list();
+//        Select select = getSelect(tClass);
+//        return select.addWhereCause(idKey, SqlCompare.EQ, idValue).list();
+        return null;
     }
 
     @Override
@@ -475,94 +469,96 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
         int pageRecordNumber = DEFAULT_PAGE_RECORD;
         int pageStartNumber = DEFAULT_PAGE_START_NUMBER;
         // log.debug("#######################start inner batch query");
-        Select<T> select = Select.from(tClass, getSecondDataSource());
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String[] parametorKeyArray = covertKeyToDomainMember(entry.getKey(), tClass);
-            String key = parametorKeyArray[0];
-            String operation = parametorKeyArray[1];
-            String value = entry.getValue();
-            if ("PageRecordNum".equalsIgnoreCase(key)) {
-                pageRecordNumber = getPageNum(value);
-            } else if ("RecordStartNo".equalsIgnoreCase(key)) {
-                pageStartNumber = Integer.valueOf(value);
-            } else if (operation == null) {
-                addEaualSelect(select, key, value);
-            } else if ("Like".equals(operation)) {
-                if (("PLATENO".equals(key.toUpperCase())) || "PLATELICENCE".equals(key.toUpperCase())) {
-                    if (value.length() == 1) {
-                        select.addWhereCause(key, SqlCompare.REGEXP, ".*" + value + ".*");
-                    } else {
-                        select.addWhereCause(key, SqlCompare.LIKE, value);
-                    }
-                } else {
-                    select.addWhereCause(key, SqlCompare.REGEXP, ".*" + value + ".*");
-                }
-            } else if ("Gte".equals(operation)) {
-                Object objectValue = getValueType(key, tClass, value);
-                select.addWhereCause(key, SqlCompare.MORE_EQ, objectValue);
-            } else if ("Gt".equals(operation)) {
-                Object objectValue = getValueType(key, tClass, value);
-                select.addWhereCause(key, SqlCompare.MORE, objectValue);
-            } else if ("Lte".equals(operation)) {
-                Object objectValue = getValueType(key, tClass, value);
-                select.addWhereCause(key, SqlCompare.LESS_EQ, objectValue);
-            } else if ("Lt".equals(operation)) {
-                Object objectValue = getValueType(key, tClass, value);
-                select.addWhereCause(key, SqlCompare.LESS, objectValue);
-            } else if ("Order".equals(operation)) {
-                select.addOrderCause(key, value);
-            } else if ("In".equals(operation)) {
-                Object[] valueArray = getInOpeartionVlaueArray(value);
-                select.addWhereCause(key, SqlCompare.IN, valueArray);
-            } else {
-                throw new VideoException(operation + " is not support");
-            }
-        }
-        Page page = new Page(pageRecordNumber, pageStartNumber);
-        // log.debug("#######################start query ES");
-        select.page(page);
-        // log.debug("#######################end query ES");
-        List<T> list = (List<T>) page.getRecords();
-        Map<Integer, List<T>> resultMap = new HashedMap();
-        resultMap.put(page.getRecordCount(), list);
+//        Select<T> select = Select.from(tClass, getSecondDataSource());
+//        for (Map.Entry<String, String> entry : map.entrySet()) {
+//            String[] parametorKeyArray = covertKeyToDomainMember(entry.getKey(), tClass);
+//            String key = parametorKeyArray[0];
+//            String operation = parametorKeyArray[1];
+//            String value = entry.getValue();
+//            if ("PageRecordNum".equalsIgnoreCase(key)) {
+//                pageRecordNumber = getPageNum(value);
+//            } else if ("RecordStartNo".equalsIgnoreCase(key)) {
+//                pageStartNumber = Integer.valueOf(value);
+//            } else if (operation == null) {
+//                addEaualSelect(select, key, value);
+//            } else if ("Like".equals(operation)) {
+//                if (("PLATENO".equals(key.toUpperCase())) || "PLATELICENCE".equals(key.toUpperCase())) {
+//                    if (value.length() == 1) {
+//                        select.addWhereCause(key, SqlCompare.REGEXP, ".*" + value + ".*");
+//                    } else {
+//                        select.addWhereCause(key, SqlCompare.LIKE, value);
+//                    }
+//                } else {
+//                    select.addWhereCause(key, SqlCompare.REGEXP, ".*" + value + ".*");
+//                }
+//            } else if ("Gte".equals(operation)) {
+//                Object objectValue = getValueType(key, tClass, value);
+//                select.addWhereCause(key, SqlCompare.MORE_EQ, objectValue);
+//            } else if ("Gt".equals(operation)) {
+//                Object objectValue = getValueType(key, tClass, value);
+//                select.addWhereCause(key, SqlCompare.MORE, objectValue);
+//            } else if ("Lte".equals(operation)) {
+//                Object objectValue = getValueType(key, tClass, value);
+//                select.addWhereCause(key, SqlCompare.LESS_EQ, objectValue);
+//            } else if ("Lt".equals(operation)) {
+//                Object objectValue = getValueType(key, tClass, value);
+//                select.addWhereCause(key, SqlCompare.LESS, objectValue);
+//            } else if ("Order".equals(operation)) {
+//                select.addOrderCause(key, value);
+//            } else if ("In".equals(operation)) {
+//                Object[] valueArray = getInOpeartionVlaueArray(value);
+//                select.addWhereCause(key, SqlCompare.IN, valueArray);
+//            } else {
+//                throw new VideoException(operation + " is not support");
+//            }
+//        }
+//        Page page = new Page(pageRecordNumber, pageStartNumber);
+//        // log.debug("#######################start query ES");
+//        select.page(page);
+//        // log.debug("#######################end query ES");
+//        List<T> list = (List<T>) page.getRecords();
+//        Map<Integer, List<T>> resultMap = new HashedMap();
+//        resultMap.put(page.getRecordCount(), list);
         // log.debug("#######################end inner batch query");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @Override
     public <T> long batchDelete(Map<String, String> map, String timeName, Date startTime, Date endTime,
                                 Class<T> tClass) {
-        Delete<T> delete = getDelete(tClass);
-        for (Entry<String, String> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (!StringUtils.isEmpty(value)) {
-                delete.addWhereCause(key, SqlCompare.EQ, value);
-            }
-        }
-        if (null != startTime && null != endTime) {
-            delete.addWhereCause(timeName, SqlCompare.LESS, endTime);
-            delete.addWhereCause(timeName, SqlCompare.MORE_EQ, startTime);
-        }
-        return delete.commit();
+//        Delete<T> delete = getDelete(tClass);
+//        for (Entry<String, String> entry : map.entrySet()) {
+//            String key = entry.getKey();
+//            String value = entry.getValue();
+//            if (!StringUtils.isEmpty(value)) {
+//                delete.addWhereCause(key, SqlCompare.EQ, value);
+//            }
+//        }
+//        if (null != startTime && null != endTime) {
+//            delete.addWhereCause(timeName, SqlCompare.LESS, endTime);
+//            delete.addWhereCause(timeName, SqlCompare.MORE_EQ, startTime);
+//        }
+//        return delete.commit();
+        return 0;
     }
 
     @Override
     public <T> long delete(String key, String value, Class<T> tClass) {
-        Delete<T> delete = getDelete(tClass);
-        delete.addWhereCause(key, SqlCompare.EQ, value);
-        return delete.commit();
+//        Delete<T> delete = getDelete(tClass);
+//        delete.addWhereCause(key, SqlCompare.EQ, value);
+//        return delete.commit();
+        return 0;
     }
 
-    private <T> void addEaualSelect(Select<T> select, String key, String value) {
-        if ("Null".equals(value)) {
-            select.addWhereCause(key, SqlCompare.ISNULL);
-        } else if ("NotNull".equals(value)) {
-            select.addWhereCause(key, SqlCompare.ISNOTNULL);
-        } else {
-            select.addWhereCause(key, SqlCompare.EQ, value);
-        }
-    }
+//    private <T> void addEaualSelect(Select<T> select, String key, String value) {
+////        if ("Null".equals(value)) {
+////            select.addWhereCause(key, SqlCompare.ISNULL);
+////        } else if ("NotNull".equals(value)) {
+////            select.addWhereCause(key, SqlCompare.ISNOTNULL);
+////        } else {
+////            select.addWhereCause(key, SqlCompare.EQ, value);
+//        }
+//    }
 
     private static String[] removePrefix(String key) {
         String[] keyArray = key.split("\\.");
@@ -604,7 +600,7 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
                 Class<?> superClazz = tClass.getSuperclass();
                 field = superClazz.getDeclaredField(key);
             } catch (NoSuchFieldException e) {
-                throw new VideoException(e);
+                throw new VideoException(e.getMessage());
             }
         }
 
@@ -613,7 +609,7 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
 
         Object result;
         if ("java.util.Date".equals(typeName)) {
-            result = DateUtil.getDate(value);
+            result = DateUtil.parseDate(value);
         } else if ("java.lang.Long".equals(typeName)) {
             result = new Long(value);
         } else if ("java.lang.Integer".equals(typeName)) {

@@ -1,26 +1,25 @@
 package com.keensense.search.service.search.impl;
 
-import cn.jiuling.plugin.extend.featuresearch.JviaFeatureSearch;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.DateUtil;
 import com.keensense.search.feign.FeignToArchive;
 import com.keensense.search.feign.FeignToTask;
 import com.keensense.search.schedule.ImageServiceClusterIpScheduled;
+import com.keensense.search.service.impl.JviaFeatureSearch;
 import com.keensense.search.service.search.ImageSearchService;
 import com.keensense.search.utils.HttpClientUtil;
 import com.keensense.search.utils.ParametercheckUtil;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -179,9 +178,9 @@ public class ImageSearchServiceImpl implements ImageSearchService {
      * @param timeName    时间放到请求json中的键值
      */
     private void getSearchTime(JSONObject searchParam, String time, String timeName) {
-        if (StringUtil.isNotNull(time)) {
-            Date searchStartTime = DateUtil.getDate(time, DATE_FORMAT);
-            searchParam.put(timeName, DateUtil.getFormat(searchStartTime, DATE_FORMAT));
+        if (StringUtils.isNotEmpty(time)) {
+            Date searchStartTime = DateUtil.parseDate(time, DATE_FORMAT);
+            searchParam.put(timeName, searchStartTime);
         }
     }
 
@@ -216,19 +215,19 @@ public class ImageSearchServiceImpl implements ImageSearchService {
         int limitNum = getIntegerFromJson(jsonObject, LIMIT_NUM, 3000);
         searchParam.put("max_result", limitNum);
 
-        if (StringUtil.isNotNull(startTime) && !ParametercheckUtil.isTimeLegal(startTime)) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(startTime) && !ParametercheckUtil.isTimeLegal(startTime)) {
             throw new VideoException("开始时间格式不正确,格式为[yyyy-MM-dd HH:mm:ss]");
         }
 
-        if (StringUtil.isNotNull(endTime) && !ParametercheckUtil.isTimeLegal(endTime)) {
+        if (StringUtils.isNotEmpty(endTime) && !ParametercheckUtil.isTimeLegal(endTime)) {
             throw new VideoException("结束时间格式不正确,格式为[yyyy-MM-dd HH:mm:ss]");
         }
         getSearchTime(searchParam, startTime, "from");
         getSearchTime(searchParam, endTime, "to");
 
-        if (StringUtil.isNotNull(startTime) && StringUtil.isNotNull(endTime)) {
-            Date startDt = DateUtil.getDateByObject(startTime);
-            Date endDt = DateUtil.getDateByObject(endTime);
+        if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
+            Date startDt = DateUtil.parse(startTime);
+            Date endDt = DateUtil.parse(endTime);
             long startMs = startDt.getTime();
             long endMs = endDt.getTime();
             if (endMs < startMs) {
@@ -268,14 +267,14 @@ public class ImageSearchServiceImpl implements ImageSearchService {
         float threshold =
                 searchParam.containsKey(THRESHOLD_DOWN_CASE) ? searchParam.getFloat(THRESHOLD_DOWN_CASE)
                         : 0;
-        Var var = JviaFeatureSearch.searchFeature(searchParam.toJSONString(), threshold, 20);
-        if (!"0".equals(var.getString("code"))) {
+        Map<String, Object> var = JviaFeatureSearch.searchFeature(searchParam.toJSONString(), threshold, 20);
+        if (!"0".equals(var.get("code"))) {
             JSONObject response = createResponse("-1", "Fail");
-            response.put("message", var.getString("code") + ":" + var.getString("desc"));
+            response.put("message", var.get("code") + ":" + var.get("desc"));
             return response.toJSONString();
         } else {
             JSONArray resultArray = transferAnalysisIdToSerialnumber(
-                    JSONObject.parseArray(var.getString(RESULTS)), analysisIdToSerialnumberMap);
+                    JSONObject.parseArray((String) var.get(RESULTS)), analysisIdToSerialnumberMap);
             return generatorResponse(searchParam, resultArray);
         }
     }

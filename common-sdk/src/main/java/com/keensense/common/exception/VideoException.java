@@ -41,6 +41,10 @@ public class VideoException extends RuntimeException {
         this.message = message;
     }
 
+    public VideoException() {
+
+    }
+
     public int getStatus() {
         return status;
     }

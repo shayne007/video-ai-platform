@@ -3,6 +3,7 @@ package com.keensense.search.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.DateUtil;
 import com.keensense.search.config.ArchiveRedisConfig;
 import com.keensense.search.domain.FaceResult;
 import com.keensense.search.domain.NonMotorVehiclesResult;
@@ -23,8 +24,8 @@ import com.keensense.search.utils.KafkaUtil;
 import com.keensense.search.utils.ParametercheckUtil;
 import com.keensense.search.utils.ResponseUtil;
 import com.keensense.search.utils.Utils;
-import com.loocme.sys.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -751,7 +752,7 @@ public abstract class DataServiceImpl implements DataService {
                 "faceappeartime".equalsIgnoreCase(key) || "facedisappeartime".equalsIgnoreCase(key) ||
                 "personappeartime".equalsIgnoreCase(key) || "persondiskappeartime".equalsIgnoreCase(key) ||
                 "passtime".equalsIgnoreCase(key)) {
-            transferValue = DateUtil.getDate(value.toString()).getTime();
+            transferValue = DateUtil.parse(value.toString()).getTime();
         }
 
         return transferValue;

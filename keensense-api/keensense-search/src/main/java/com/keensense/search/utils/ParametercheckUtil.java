@@ -2,15 +2,11 @@ package com.keensense.search.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.util.StringUtil;
-import com.keensense.search.exception.ValidException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.springframework.util.StringUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by zhanx xiaohui on 2019-02-23.

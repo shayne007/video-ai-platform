@@ -12,8 +12,10 @@ import com.keensense.sdk.constants.CommonConst;
 import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.jni.U2sRecogHttp;
 import com.keensense.sdk.util.SDKUtils;
-import com.loocme.sys.datastruct.Var;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 初始化加载类
@@ -47,29 +49,29 @@ public class AlgoStartup {
             BodyConstant.setBodySdkInvoke(bodyClasspath);
             IBodySdkInvoke bodySdkInvoke = BodyConstant.getBodySdkInvoke();
             if(bodySdkInvoke != null){
-                Var body =  Var.newObject();
-                body.set("bodyServiceUrl","http://" + featureExtractUrl.split(":")[0] + ":39082/");
+                Map<String,Object> body =  new HashMap<>();
+                body.put("bodyServiceUrl","http://" + featureExtractUrl.split(":")[0] + ":39082/");
                 bodySdkInvoke.initParams(body);
             }
             //人脸
             FaceConstant.setFaceSdkInvoke(faceClasspath);
             IFaceSdkInvoke sdkInvoke = FaceConstant.getFaceSdkInvoke();
             //加载featureVersion
-            Var face = Var.newObject();
-            face.set("faceServiceUrl",faceServiceUrl);
+            Map<String,Object> face = new HashMap<>();
+            face.put("faceServiceUrl",faceServiceUrl);
             if (sdkInvoke instanceof KsFaceSdkInvokeImpl) {
                 FaceConstant.reloadFeatureVersion(faceServiceUrl + FaceConstant.KSAPP_VERSION );
             }
             if (sdkInvoke instanceof GlstFaceSdkInvokeImpl){
-                face.set("faceGlstTempPath",jsonObject.getString("faceGlstTempPath"));
+                face.put("faceGlstTempPath",jsonObject.getString("faceGlstTempPath"));
             }
             if (sdkInvoke instanceof StFaceSdkInvokeImpl) {
-                face.set("stFastSearch", jsonObject.getString("stFastSearch"));
+                face.put("stFastSearch", jsonObject.getString("stFastSearch"));
             }
             if (sdkInvoke instanceof GLQstFaceSdkInvokeImpl){
-                face.set("glStructPort",jsonObject.getString("glStructPort"));
-                face.set("glComparePort",jsonObject.getString("glComparePort"));
-                face.set("glStructDetectMode",jsonObject.getString("glStructDetectMode"));
+                face.put("glStructPort",jsonObject.getString("glStructPort"));
+                face.put("glComparePort",jsonObject.getString("glComparePort"));
+                face.put("glStructDetectMode",jsonObject.getString("glStructDetectMode"));
             }
             sdkInvoke.initParams(face);
         }

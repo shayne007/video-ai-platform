@@ -3,10 +3,10 @@ package com.keensense.sdk.constants;
 import com.keensense.common.config.SpringContext;
 import com.keensense.sdk.algorithm.IBodySdkInvoke;
 import com.keensense.sdk.algorithm.impl.QstBodySdkInvokeImpl;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.ReflectUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.reflect.misc.ReflectUtil;
+
 /**
  * @description:
  * @author jingege
@@ -22,7 +22,14 @@ public class BodyConstant
 
     public static boolean setBodySdkInvoke(String classpath)
     {
-        Object tHandler = ReflectUtil.newInstance(classpath);
+        Object tHandler = null;
+        try {
+            tHandler = ReflectUtil.newInstance(classpath.getClass());
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
         if (tHandler instanceof IBodySdkInvoke)
         {
             iBodySdkInvoke = (IBodySdkInvoke) tHandler;
@@ -35,9 +42,9 @@ public class BodyConstant
     {
         if (null == iBodySdkInvoke){
             iBodySdkInvoke = SpringContext.getBean(QstBodySdkInvokeImpl.class);
-            Var var = Var.newObject();
-            var.set("bodyServiceUrl", SERVICE_URL);
-            iBodySdkInvoke.initParams(var);
+//            Var var = Var.newObject();
+//            var.set("bodyServiceUrl", SERVICE_URL);
+//            iBodySdkInvoke.initParams(var);
         }
         return iBodySdkInvoke;
     }

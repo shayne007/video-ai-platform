@@ -1,34 +1,36 @@
 package com.keensense.search.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Id;
-import com.loocme.sys.annotation.database.Table;
+
 import lombok.Data;
 import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by zhanx xiaohui on 2019-08-30.
  */
 @Data
-@Table(TableName = "fdfscapacity_result")
+@Table(name = "fdfscapacity_result")
 @ToString(callSuper=true, includeFieldNames=true)
 public class FdfsCapacityResult {
     @Id
     @JSONField(name= "group")
-    @Column(ColumnName = "group")
+    @Column(name = "group")
     protected String group;
 
     @JSONField(name= "usage")
-    @Column(ColumnName = "usage")
+    @Column(name = "usage")
     protected Long usage;
 
     @JSONField(name= "total")
-    @Column(ColumnName = "total")
+    @Column(name = "total")
     protected Long total;
 
     @JSONField(name= "date")
-    @Column(ColumnName = "date")
+    @Column(name = "date")
     protected String date;
 }
 

@@ -1,27 +1,23 @@
 package com.keensense.sdk.algorithm.impl;
 
 
-import cn.jiuling.plugin.extend.FaceConstant;
-import cn.jiuling.plugin.extend.picrecog.FaceAppMain;
 import com.keensense.common.exception.VideoException;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.CommonConst;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class QstFaceSdkInvokeImpl implements IFaceSdkInvoke {
 
-	private FaceAppMain faceApp;
+//	private FaceAppMain faceApp;
 
 	@Override
-	public void initParams(Var param) {
+	public void initParams(Map<String,Object> param) {
 //		sdkInvoke.initParams(param);
-		this.faceApp = FaceAppMain.getInstance(FaceConstant.TYPE_COMPANY_QST, Var.newObject());
+//		this.faceApp = FaceAppMain.getInstance(FaceConstant.TYPE_COMPANY_QST, Var.newObject());
 	}
 
 	@Override
@@ -40,12 +36,12 @@ public class QstFaceSdkInvokeImpl implements IFaceSdkInvoke {
 	}
 
 	@Override
-	public Var getPicAnalyze(String picture) throws VideoException{
+	public Map<String,Object> getPicAnalyze(String picture) throws VideoException{
 		return  BodyConstant.getBodySdkInvoke().getPicAnalyze(CommonConst.OBJ_TYPE_FACE, picture);
 	}
 
 	@Override
-	public Var getPicAnalyzeOne(String picture) throws VideoException{
+	public Map<String,Object> getPicAnalyzeOne(String picture) throws VideoException{
 		return  BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(CommonConst.OBJ_TYPE_FACE, picture);
 	}
 

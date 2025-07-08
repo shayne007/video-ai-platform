@@ -2,7 +2,6 @@ package com.keensense.sdk.constants;
 
 import com.keensense.sdk.algorithm.impl.GlFullFaceSdkInvokeImpl;
 import com.keensense.sdk.algorithm.impl.StFaceSdkInvokeImpl;
-import com.loocme.sys.util.PropUtil;
 
 public class CommonConst {
 

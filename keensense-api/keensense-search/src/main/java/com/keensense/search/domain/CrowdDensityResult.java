@@ -3,54 +3,56 @@ package com.keensense.search.domain;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.keensense.search.tool_interface.ParameterCheck;
 import com.keensense.search.utils.ParametercheckUtil;
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Id;
-import com.loocme.sys.annotation.database.Table;
+
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by zhanx xiaohui on 2019-09-10.
  */
 @Data
-@Table(TableName = "crowddensity_result")
+@Table(name = "crowddensity_result")
 @ToString(callSuper=true, includeFieldNames=true)
 public class CrowdDensityResult implements ParameterCheck {
     //主键
     @Id
     @JSONField(name = "Id")
-    @Column(ColumnName = "id")
+    @Column(name = "id")
     private String id;
 
     //任务编号
     @JSONField(name = "Serialnumber")
-    @Column(ColumnName = "serialnumber")
+    @Column(name = "serialnumber")
     private String serialnumber;
 
     //总人数
     @JSONField(name = "Count")
-    @Column(ColumnName = "count")
+    @Column(name = "count")
     private Integer count;
 
     //抓拍场景图片访问地址
     @JSONField(name = "PicUrl")
-    @Column(ColumnName = "picurl")
+    @Column(name = "picurl")
     private String picUrl;
 
     //创建时间
     @JSONField(name = "CreateTime" ,format = "yyyyMMddHHmmss")
-    @Column(ColumnName = "createtime")
+    @Column(name = "createtime")
     private Date createTime;
 
     //该字段用于存储每个ROI的人群密度信息
     @JSONField(name = "DensityInfo")
-    @Column(ColumnName = "densityinfo")
+    @Column(name = "densityinfo")
     private String densityInfo;
 
     //人头位置信息
     @JSONField(name = "HeadPosition")
-    @Column(ColumnName = "headposition")
+    @Column(name = "headposition")
     private String headPosition;
 
     @Override

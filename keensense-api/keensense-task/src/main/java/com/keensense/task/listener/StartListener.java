@@ -57,7 +57,11 @@ public class StartListener implements ApplicationListener<ContextRefreshedEvent>
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.info("====================项目启动，开始加载=========================");
-        loadHostId();
+        try {
+            loadHostId();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         MasterSchedule.reloadLocalIp();
         loadNacosIp();
         log.info("====================获取本机IP配置："+MasterSchedule.getMasterIp()+"=========================");

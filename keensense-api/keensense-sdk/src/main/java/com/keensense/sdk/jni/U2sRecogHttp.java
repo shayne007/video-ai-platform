@@ -8,14 +8,7 @@ import com.keensense.sdk.constants.CommonConst;
 import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.sys.utils.DbPropUtil;
 import com.keensense.sdk.util.PritureTypeUtil;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.datastruct.WeekArray;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.HttpUtil;
 
-import com.loocme.sys.util.StringUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,32 +1,28 @@
 package com.keensense.sdk.algorithm.impl;
 
-import cn.jiuling.jni.QstCompareFeatureExec;
+import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.HttpClientUtil;
 import com.keensense.sdk.algorithm.IBodySdkInvoke;
 import com.keensense.sdk.constants.CommonConst;
 import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.constants.SdkExceptionConst;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 import com.keensense.sdk.util.ImageBaseUtil;
 import com.keensense.sdk.util.SDKUtils;
 import com.keensense.sdk.util.ValidUtil;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
-
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.PatternMatchUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author jingege
@@ -44,8 +40,8 @@ public class QstBodySdkInvokeImpl implements IBodySdkInvoke {
     private String applicationJsonString = "application/json";
 
     @Override
-    public void initParams(Var param) {
-        this.baseUrl = param.getString("bodyServiceUrl");
+    public void initParams(Map<String,Object> param) {
+        this.baseUrl = (String) param.get("bodyServiceUrl");
     }
 
     @Override
@@ -61,16 +57,11 @@ public class QstBodySdkInvokeImpl implements IBodySdkInvoke {
     @Override
     public String deleteRegistLib(String repoId) throws VideoException {
         String resp = "";
-        try {
-            resp = PostUtil.requestContent(this.baseUrl + "delete/" + repoId,
-                    applicationJsonString, "");
-        } catch (HttpConnectionException e) {
-            log.error("deleteRegistLib error", e);
-            throw new VideoException(SdkExceptionConst.FAIL_CODE, "deleteRegistLib error" + e.getMessage());
-        }
-        Var respVar = Var.fromJson(resp);
+        resp = HttpClientUtil.requestPost(this.baseUrl + "delete/" + repoId,
+                applicationJsonString, "");
+        JSONObject respVar = (JSONObject) JSONObject.parse(resp);
         String msg = respVar.getString(errorMsgString);
-        if (StringUtil.isNull(msg)) {
+        if (StringUtils.isEmpty(msg)) {
             log.error("删除特征库失败:响应为空");
         }
         if ("OK".equals(msg)) {
@@ -85,12 +76,12 @@ public class QstBodySdkInvokeImpl implements IBodySdkInvoke {
 
     @Override
     public Var getPicAnalyze(int objType, String picture) throws VideoException {
-        if (StringUtil.isNull(picture)) {
+        if (StringUtils.isEmpty(picture)) {
             throw new VideoException(SdkExceptionConst.FAIL_CODE, "input picture is null");
         }
 
         byte[] picBy;
-        if (PatternUtil.isMatch(picture, "^(http|ftp).*$", Pattern.CASE_INSENSITIVE)) {
+        if (PatternMatchUtils.simpleMatch(picture, "^(http|ftp).*$")) {
 
             picBy = ImageBaseUtil.getPictureBytes(picture);
             if (null == picBy) {
@@ -100,7 +91,7 @@ public class QstBodySdkInvokeImpl implements IBodySdkInvoke {
                         "[getBodyPicAnalyze] 获取base64失败 param-[%s]", picture));
             }
         } else {
-            picBy = Base64.decode(picture.getBytes());
+            picBy = Base64.decode(Arrays.toString(picture.getBytes()));
         }
 
         try {

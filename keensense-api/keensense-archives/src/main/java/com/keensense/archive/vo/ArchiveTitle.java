@@ -11,7 +11,7 @@ import lombok.Data;
  * Created by memory_fu on 2019/12/26.
  */
 @Data
-@Table(TableName = "archive_title")
+@Table(name = "archive_title")
 public class ArchiveTitle {
     
     public ArchiveTitle(List<String> combineCluster) {
@@ -27,19 +27,19 @@ public class ArchiveTitle {
         this.combineCluster = combineCluster;
     }
     
-    @Column(ColumnName = "clusterIndex")
+    @Column(name = "clusterIndex")
     @JSONField(name= "clusterIndex")
     private String clusterIndex;
     
-    @Column(ColumnName = "url")
+    @Column(name = "url")
     @JSONField(name= "url")
     private String url;
     
-    @Column(ColumnName = "createTime")
+    @Column(name = "createTime")
     @JSONField(name= "createTime")
     private long createTime;
     
-    @Column(ColumnName = "clusterFlag")
+    @Column(name = "clusterFlag")
     @JSONField(name= "clusterFlag")
     private String clusterFlag;
     

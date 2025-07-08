@@ -5,14 +5,13 @@ import com.keensense.sdk.algorithm.IBodySdkInvoke;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.algorithm.impl.KsFaceSdkInvokeImpl;
 import com.keensense.sdk.algorithm.impl.QstBodySdkInvokeImpl;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.HttpGetUtil;
-import com.loocme.sys.util.ReflectUtil;
-import com.loocme.sys.util.StringUtil;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /***
  * @description:
  * @author jingege
@@ -84,10 +83,11 @@ public class FaceConstant
         {
             reloadFeatureVersion(SERVICE_URL);
             iFaceSdkInvoke = SpringContext.getBean(KsFaceSdkInvokeImpl.class);
-            Var var = Var.newObject();
-            var.set("faceServiceUrl", SERVICE_URL);
-            var.set("staticFeatureVersion", FEATURE_VERSION_SEARCH);
-            var.set("monitorFeatureVersion", FEATURE_VERSION);
+            Map<String,Object> var = new HashMap<>();
+            var.put("faceServiceUrl", SERVICE_URL);
+            var.put("staticFeatureVersion", FEATURE_VERSION_SEARCH);
+            var.put("monitorFeatureVersion", FEATURE_VERSION);
+            var.put("monitorFeatureVersion", FEATURE_VERSION);
             iFaceSdkInvoke.initParams(var);
             
         }

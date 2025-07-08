@@ -5,11 +5,9 @@ import com.keensense.sdk.algorithm.IBodySdkInvoke;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.CommonConst;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * @author ycl
@@ -22,7 +20,7 @@ public class StQstFaceSdkInvokeImpl implements IFaceSdkInvoke {
     private IFaceSdkInvoke stSdkInvoke = new StFaceSdkInvokeImpl();
 
     @Override
-    public void initParams(Var param) {
+    public void initParams(Map<String,Object> param) {
         this.stSdkInvoke.initParams(param);
     }
 
@@ -42,17 +40,17 @@ public class StQstFaceSdkInvokeImpl implements IFaceSdkInvoke {
     }
 
     @Override
-    public Var getPicAnalyze(String picture) throws VideoException {
+    public Map<String,Object> getPicAnalyze(String picture) throws VideoException {
         return stSdkInvoke.getPicAnalyze(picture);
     }
 
     @Override
-    public Var getPicAnalyzeOne(String picture) throws VideoException {
-        Var faces = this.getPicAnalyze(picture);
+    public Map<String,Object> getPicAnalyzeOne(String picture) throws VideoException {
+        Map<String,Object> faces = this.getPicAnalyze(picture);
         if (null == faces) {
             return null;
         }
-        return faces.get("[0]");
+        return (Map<String, Object>) faces.get("[0]");
     }
 
     @Override

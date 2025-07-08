@@ -8,7 +8,6 @@ import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.constants.SdkExceptionConst;
 import com.keensense.sdk.util.ImageBaseUtil;
-import com.loocme.sys.datastruct.IVarForeachHandler;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,14 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.constance.DateFormatConst;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.HttpGetUtil;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
 import org.springframework.stereotype.Service;

@@ -79,56 +79,56 @@ public class PlatformDownloadThread implements Runnable {
             this.detail.setLastupdateTime(com.keensense.task.util.DateUtil.now());
             tbAnalysisDetailMapper.updateById(this.detail);
         } else if (TaskConstants.OPERAT_TYPE_RUNNING == this.detail.getDownloadStatus()) {
-            downloadId = StringUtil.getInteger(this.detail.getDownloadId());
+//            downloadId = StringUtils.getInteger(this.detail.getDownloadId());
         }
 
-        int pos = getProgess(conn, downloadId);
-        if (pos >= TaskConstants.PROGRESS_MAX_VALUE) {
-            String fileUrl = conn.getDownloadRecFPath(downloadId);
-            downloadProgress(pos, fileUrl);
-            log.info(String.format("[%s] platform download file success. file is [%s]. ", this.detail.getId(), fileUrl));
-        } else {
-            log.error(String.format("[%s] platform download file error . pos=%d ", this.detail.getId(), pos));
-            String errMsg = StringUtils.isEmpty(nacosConfig.getAnalysisDownloadProcess()) ?
-                    "download file pos is " + pos : nacosConfig.getAnalysisDownloadProcess();
-            addRetryCount(errMsg);
-        }
+//        int pos = getProgess(conn, downloadId);
+//        if (pos >= TaskConstants.PROGRESS_MAX_VALUE) {
+//            String fileUrl = conn.getDownloadRecFPath(downloadId);
+//            downloadProgress(pos, fileUrl);
+//            log.info(String.format("[%s] platform download file success. file is [%s]. ", this.detail.getId(), fileUrl));
+//        } else {
+//            log.error(String.format("[%s] platform download file error . pos=%d ", this.detail.getId(), pos));
+//            String errMsg = StringUtils.isEmpty(nacosConfig.getAnalysisDownloadProcess()) ?
+//                    "download file pos is " + pos : nacosConfig.getAnalysisDownloadProcess();
+//            addRetryCount(errMsg);
+//        }
         this.finished();
     }
 
     /***
      * @description: 获取下载进度
-     * @param conn   scoket连接对象
-     * @param downloadId 下载ID
+//     * @param conn   scoket连接对象
+//     * @param downloadId 下载ID
      * @return: int
      */
-    private int getProgess(ClientSocket conn, int downloadId) {
-        // 根据下载id获取下载状态和进度
-        int pos = 0;
-        long startDownTime = System.currentTimeMillis();
-        while (pos >= 0 && pos < TaskConstants.PROGRESS_MAX_VALUE) {
-            int timeout = nacosConfig.getAnalysisTimeOut();
-            if (0 == pos && (System.currentTimeMillis() - startDownTime > timeout * 1000)) {
-                log.info(String.format("[%s] platform download file progress=0 and readtimeout for [%d] ", this.detail.getId(), timeout));
-                break;
-            }
-
-            try {
-                Thread.sleep(nacosConfig.getAnalysisRetrySleep() * 1000L);
-            } catch (InterruptedException e) {
-                log.error(e.getMessage());
-                Thread.currentThread().interrupt();
-            }
-            int nPos = conn.getDownloadRecProgress(downloadId);
-            if (-101 != nPos) {
-                pos = nPos;
-            }
-            log.info(String.format("[%s] platform download file progress=%d ", this.detail.getId(), nPos));
-
-            downloadProgress(pos, "");
-        }
-        return pos;
-    }
+//    private int getProgess(ClientSocket conn, int downloadId) {
+//        // 根据下载id获取下载状态和进度
+//        int pos = 0;
+//        long startDownTime = System.currentTimeMillis();
+//        while (pos >= 0 && pos < TaskConstants.PROGRESS_MAX_VALUE) {
+//            int timeout = nacosConfig.getAnalysisTimeOut();
+//            if (0 == pos && (System.currentTimeMillis() - startDownTime > timeout * 1000)) {
+//                log.info(String.format("[%s] platform download file progress=0 and readtimeout for [%d] ", this.detail.getId(), timeout));
+//                break;
+//            }
+//
+//            try {
+//                Thread.sleep(nacosConfig.getAnalysisRetrySleep() * 1000L);
+//            } catch (InterruptedException e) {
+//                log.error(e.getMessage());
+//                Thread.currentThread().interrupt();
+//            }
+////            int nPos = conn.getDownloadRecProgress(downloadId);
+////            if (-101 != nPos) {
+////                pos = nPos;
+////            }
+//            log.info(String.format("[%s] platform download file progress=%d ", this.detail.getId(), nPos));
+//
+//            downloadProgress(pos, "");
+//        }
+//        return pos;
+//    }
 
     private void addRetryCount(String msg) {
         int maxRetryCount = nacosConfig.getAnalysisRetryCount();
@@ -152,7 +152,8 @@ public class PlatformDownloadThread implements Runnable {
     private void downloadProgress(int progress, String fileUrl) {
         detail = TbAnalysisDetailUtil.updateProgress(this.detail, TbAnalysisDetailUtil.DOWNLOAD, progress, null);
         if (TaskConstants.PROGRESS_MAX_VALUE <= progress) {
-            String[] downloadFileInfos = PatternUtil.getMatch(fileUrl, "^.*(\\\\|/)([^/\\\\]+)#([0-9\\.]+)$");
+//            String[] downloadFileInfos = Pattern.getMatch(fileUrl, "^.*(\\\\|/)([^/\\\\]+)#([0-9\\.]+)$");
+            String[] downloadFileInfos = new String[4];
             if (null == downloadFileInfos) {
                 String errMsg = StringUtils.isEmpty(nacosConfig.getAnalysisDownloadPath()) ?
                         "下载路径名不合法-" + fileUrl : nacosConfig.getAnalysisDownloadPath();
@@ -181,7 +182,7 @@ public class PlatformDownloadThread implements Runnable {
     private void finished() {
         int currThread = PlatformTaskSchedule.finished(this.detail.getId());
         if (0 == currThread) {
-            ClientSocket.destroyInstance();
+//            ClientSocket.destroyInstance();
         }
     }
 }

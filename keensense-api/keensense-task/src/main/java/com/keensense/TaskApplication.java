@@ -31,17 +31,17 @@ public class TaskApplication {
         springApplication.run(args);
     }
 
-    @Bean
-    public ServletRegistrationBean<StatViewServlet> druidStatViewServlet() {
-        ServletRegistrationBean<StatViewServlet> registrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
-        // IP白名单 (没有配置或者为空，则允许所有访问)
-        registrationBean.addInitParameter("allow", "");
-        // IP黑名单 (存在共同时，deny优先于allow)
-        registrationBean.addInitParameter("deny", "");
-       
-        registrationBean.addInitParameter("loginUsername", "qst");
-        registrationBean.addInitParameter("loginPassword", "qst**0808");
-        registrationBean.addInitParameter("resetEnable", "false");
-        return registrationBean;
-    }
+//    @Bean
+//    public ServletRegistrationBean<StatViewServlet> druidStatViewServlet() {
+//        ServletRegistrationBean<StatViewServlet> registrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+//        // IP白名单 (没有配置或者为空，则允许所有访问)
+//        registrationBean.addInitParameter("allow", "");
+//        // IP黑名单 (存在共同时，deny优先于allow)
+//        registrationBean.addInitParameter("deny", "");
+//
+//        registrationBean.addInitParameter("loginUsername", "qst");
+//        registrationBean.addInitParameter("loginPassword", "qst**0808");
+//        registrationBean.addInitParameter("resetEnable", "false");
+//        return registrationBean;
+//    }
 }

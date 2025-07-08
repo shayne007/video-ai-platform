@@ -9,26 +9,26 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-@Table(TableName = "archives_info")
+@Table(name = "archives_info")
 public class ArchivesInfo {
     
-    @Column(ColumnName = "id")
+    @Column(name = "id")
     private String id;
-    @Column(ColumnName = "face_img_url")
+    @Column(name = "face_img_url")
     private String faceImgUrl;
-    @Column(ColumnName = "face_feature_id")
+    @Column(name = "face_feature_id")
     private String faceFeatureId;
     
     //需自填
-    @Column(ColumnName = "p_id")
+    @Column(name = "p_id")
     private String pId;
-    @Column(ColumnName = "create_time")
+    @Column(name = "create_time")
     private Date createTime;
-    @Column(ColumnName = "obj_type")
+    @Column(name = "obj_type")
     private Integer objType;
-    @Column(ColumnName = "relation_id")
+    @Column(name = "relation_id")
     private String relationId;
-    @Column(ColumnName = "angle")
+    @Column(name = "angle")
     private Integer angle;
     
     public ArchivesInfo() {

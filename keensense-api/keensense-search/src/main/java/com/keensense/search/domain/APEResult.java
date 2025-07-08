@@ -1,89 +1,91 @@
 package com.keensense.search.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Id;
-import com.loocme.sys.annotation.database.Table;
+
 import lombok.Data;
 import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by zhanx xiaohui on 2019-05-06.
  */
-@Table(TableName = "apes_result")
+@Table(name = "apes_result")
 @Data
 @ToString(callSuper = true, includeFieldNames = true)
 public class APEResult {
     @Id
     @JSONField(name = "ApeID")
-    @Column(ColumnName = "apeid")
+    @Column(name = "apeid")
     private String apeId;
 
     @JSONField(name = "Name")
-    @Column(ColumnName = "name")
+    @Column(name = "name")
     private String name;
 
     @JSONField(name = "Model")
-    @Column(ColumnName = "model")
+    @Column(name = "model")
     private String model;
 
     @JSONField(name = "IPAddr")
-    @Column(ColumnName = "ipaddr")
+    @Column(name = "ipaddr")
     private String ipAddr;
 
     @JSONField(name = "IPV6Addr")
-    @Column(ColumnName = "ipv6addr")
+    @Column(name = "ipv6addr")
     private String ipv6Addr;
 
     @JSONField(name = "Port")
-    @Column(ColumnName = "port")
+    @Column(name = "port")
     private Integer port;
 
     @JSONField(name = "Longitude")
-    @Column(ColumnName = "longitude")
+    @Column(name = "longitude")
     private Double longitude;
 
     @JSONField(name = "Latitude")
-    @Column(ColumnName = "latitude")
+    @Column(name = "latitude")
     private Double latitude;
 
     @JSONField(name = "PlaceCode")
-    @Column(ColumnName = "placecode")
+    @Column(name = "placecode")
     private String placeCode;
 
     @JSONField(name = "Place")
-    @Column(ColumnName = "place")
+    @Column(name = "place")
     private String place;
 
     @JSONField(name = "OrgCode")
-    @Column(ColumnName = "orgcode")
+    @Column(name = "orgcode")
     private String orgCode;
 
     @JSONField(name = "CapDirection")
-    @Column(ColumnName = "capdirection")
+    @Column(name = "capdirection")
     private Integer capDirection;
 
     @JSONField(name = "MonitorDirection")
-    @Column(ColumnName = "monitordirection")
+    @Column(name = "monitordirection")
     private String monitorDirection;
 
     @JSONField(name = "MonitorAreaDesc")
-    @Column(ColumnName = "monitorareadesc")
+    @Column(name = "monitorareadesc")
     private String monitorAreaDesc;
 
     @JSONField(name = "IsOnline")
-    @Column(ColumnName = "isonline")
+    @Column(name = "isonline")
     private String isOnline;
 
     @JSONField(name = "OwnerApsID")
-    @Column(ColumnName = "ownerapsid")
+    @Column(name = "ownerapsid")
     private String ownerApsID;
 
     @JSONField(name = "UserId")
-    @Column(ColumnName = "userid")
+    @Column(name = "userid")
     private String userId;
 
     @JSONField(name = "Password")
-    @Column(ColumnName = "password")
+    @Column(name = "password")
     private String password;
 }

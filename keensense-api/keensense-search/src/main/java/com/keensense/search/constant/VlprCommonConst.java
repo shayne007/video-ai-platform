@@ -1,7 +1,9 @@
 package com.keensense.search.constant;
 
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.util.ByteUtil;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import org.apache.kafka.common.utils.ByteUtils;
+
+import java.util.Arrays;
 
 public class VlprCommonConst {
     private VlprCommonConst(){}
@@ -19,10 +21,10 @@ public class VlprCommonConst {
     /**从GSTL获取特征添加固定头*/
     private static final byte[] GSTL = {'G','L','S','T'};
     private static final byte[] timestamp = {0,0,0,0,0,0,0,0};
-    private static final byte[] version =  ByteUtil.int2ByteLow(143,4);
+    private static final byte[] version =  new byte[4];
 
     public static String getGlstFeature(String feature){
-        byte[] featureByte = Base64.decode(feature.getBytes());
+        byte[] featureByte = Base64.decode(Arrays.toString(feature.getBytes()));
         byte[] result = new byte[featureByte.length+version.length+GSTL.length+timestamp.length];
         System.arraycopy(GSTL,0,result,0,GSTL.length);
         System.arraycopy(version,0,result,GSTL.length,version.length);

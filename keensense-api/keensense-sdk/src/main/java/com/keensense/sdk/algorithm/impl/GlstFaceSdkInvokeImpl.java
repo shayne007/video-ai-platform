@@ -17,18 +17,8 @@ import com.keensense.sdk.util.ImageBaseUtil;
 import com.keensense.sdk.util.OperateImage;
 import com.keensense.sdk.util.PritureTypeUtil;
 import com.keensense.sdk.util.RandomUtils;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.HttpGetUtil;
-import com.loocme.sys.util.HttpUtil;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import sun.misc.BASE64Encoder;
 
 @Slf4j

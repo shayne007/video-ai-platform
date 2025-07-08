@@ -120,15 +120,15 @@ public class VsdTaskUtil {
          */
         try {
             Map<String,String> serialNumberMap = redisService.hgetAll(RedisConstant.REDIS_SERIAL_NUMBER_MAP);
-            List<String> vlprTableNameList = appSysService.selectAllDataTables("vlpr_result");
-            List<String> objextTableNameList = appSysService.selectAllDataTables("objext_result");
+            List<String> vlprnameList = appSysService.selectAllDataTables("vlpr_result");
+            List<String> objextnameList = appSysService.selectAllDataTables("objext_result");
 
-            if (ListUtil.isNotNull(objextTableNameList) && MapUtil.isNotNull(serialNumberMap)){
+            if (ListUtil.isNotNull(objextnameList) && MapUtil.isNotNull(serialNumberMap)){
                 HashMap<Object, Object> params;
-                for (String objextTableStr : objextTableNameList) {
+                for (String objextTableStr : objextnameList) {
                     for (Map.Entry<String,String> entry : serialNumberMap.entrySet()) {
                         params = new HashMap<>();
-                        params.put("ymdTableName",objextTableStr);
+                        params.put("ymdname",objextTableStr);
                         params.put("serialKey",entry.getKey());
                         params.put("serialValue",entry.getValue());
                         logger.info("[Update objext_result data]:{} ",params);
@@ -137,12 +137,12 @@ public class VsdTaskUtil {
                 }
             }
 
-            if (ListUtil.isNotNull(vlprTableNameList) && MapUtil.isNotNull(serialNumberMap)){
+            if (ListUtil.isNotNull(vlprnameList) && MapUtil.isNotNull(serialNumberMap)){
                 HashMap<Object, Object> params;
-                for (String vlprTableStr : vlprTableNameList) {
+                for (String vlprTableStr : vlprnameList) {
                     for (Map.Entry<String,String> entry : serialNumberMap.entrySet()) {
                         params = new HashMap<>();
-                        params.put("ymdTableName",vlprTableStr);
+                        params.put("ymdname",vlprTableStr);
                         params.put("serialKey",entry.getKey());
                         params.put("serialValue",entry.getValue());
                         logger.info("[Update vlpr_result data]:{} ",params);

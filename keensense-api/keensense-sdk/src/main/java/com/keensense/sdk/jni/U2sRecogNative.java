@@ -9,8 +9,6 @@ import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
-import com.loocme.sys.util.SystemUtil;
-
 @Slf4j
 public class U2sRecogNative
 {

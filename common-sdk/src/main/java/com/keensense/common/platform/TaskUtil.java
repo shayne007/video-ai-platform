@@ -1,12 +1,12 @@
 package com.keensense.common.platform;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.platform.bo.video.CrowdDensityTaskBo;
 import com.keensense.common.platform.bo.video.ObjextTaskBo;
 import com.keensense.common.platform.constant.StandardUrlConstant;
 import com.keensense.common.platform.constant.WebserviceConstant;
 import com.keensense.common.util.HttpU2sGetUtil;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
 /**

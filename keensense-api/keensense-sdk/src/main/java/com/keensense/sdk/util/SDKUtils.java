@@ -7,8 +7,6 @@ import com.keensense.sdk.jni.U2sRecogHttp;
 import com.keensense.sdk.jni.U2sRecogNativeSingle;
 import lombok.extern.slf4j.Slf4j;
 
-import com.loocme.security.encrypt.Base64;
-
 @Slf4j
 public class SDKUtils {
     //调用类型

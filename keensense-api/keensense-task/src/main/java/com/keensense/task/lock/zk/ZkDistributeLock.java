@@ -104,7 +104,7 @@ public class ZkDistributeLock implements Lock, Watcher {
             }
         } catch (Exception e) {
             log.error(">>>>>>>>>Exception:{}", e.getMessage());
-            throw new VideoException(e);
+            throw new VideoException(e.getMessage());
         }
     }
 
@@ -214,7 +214,7 @@ public class ZkDistributeLock implements Lock, Watcher {
             }
         } catch (Exception e) {
             log.error(">>>>>> Exception:{}", e.getMessage());
-            throw new VideoException(e);
+            throw new VideoException(e.getMessage());
         }
         if (ret) {
             log.info("================>>> get {} lock....", lockName);

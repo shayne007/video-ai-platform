@@ -1,7 +1,8 @@
 package com.keensense.sdk.algorithm;
+
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.datastruct.Var;
-import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @description:
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 public interface IFaceSdkInvoke
 {
     
-    void initParams(Var param);
+    void initParams(Map<String,Object> param);
 
     String createRegistLib() throws VideoException;
 
@@ -19,9 +20,9 @@ public interface IFaceSdkInvoke
 
     String getRegistLib(String repoId) throws VideoException;
 
-    Var getPicAnalyze(String picture) throws VideoException;
-    
-    Var getPicAnalyzeOne(String picture) throws VideoException;
+    Map<String,Object> getPicAnalyze(String picture) throws VideoException;
+
+    Map<String,Object> getPicAnalyzeOne(String picture) throws VideoException;
 
     String addFaceToLib(String repoId, String feature, String url) throws VideoException;
     String addFaceToLib(String repoId, String feature, String url,String time) throws VideoException;
@@ -30,9 +31,9 @@ public interface IFaceSdkInvoke
 
     String getFaceFeature(String repoId, String featureId) throws VideoException;
 
-    Var getSimilars(String regIds, String feature, float threshold,
+    Map<String,Object> getSimilars(String regIds, String feature, float threshold,
         int maxResult) throws VideoException;
-    Var getSimilars(String regIds, String feature, float threshold,
+    Map<String,Object> getSimilars(String regIds, String feature, float threshold,
                     int maxResult,String startTime,String endTime) throws VideoException;
 
     float compareFeature(String feature1, String feature2) throws VideoException;

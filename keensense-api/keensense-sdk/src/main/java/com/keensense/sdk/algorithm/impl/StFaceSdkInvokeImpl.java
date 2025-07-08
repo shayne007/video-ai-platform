@@ -1,19 +1,11 @@
 package com.keensense.sdk.algorithm.impl;
 
 
-import cn.jiuling.plugin.config.DbPropUtil;
 import com.keensense.common.exception.VideoException;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.util.*;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.datastruct.WeekArray;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.HttpUtil;
-import com.loocme.sys.util.StringUtil;
+
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;

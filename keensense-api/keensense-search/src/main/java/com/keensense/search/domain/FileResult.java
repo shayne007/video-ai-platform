@@ -1,43 +1,38 @@
 package com.keensense.search.domain;
 
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Id;
-import com.loocme.sys.annotation.database.Table;
+
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Created by zhanx xiaohui on 2019-08-20.
  */
-@Table(TableName = "file_result")
+@Table(name = "file_result")
 @Data
 @ToString(callSuper=true, includeFieldNames=true)
 public class FileResult {
     @Id
-    @Column(ColumnName = "id")
+    @Column(name = "id")
     private String id;
 
     @Id
-    @Column(ColumnName = "type")
+    @Column(name = "type")
     private String type;
 
-    @Column(ColumnName = "analysisid")
+    @Column(name = "analysisid")
     private String analysisId;
 
-    @Column(ColumnName = "group")
+    @Column(name = "group")
     private String group;
 
-    @Column(ColumnName = "url")
+    @Column(name = "url")
     private String url;
 
-    @Column(ColumnName = "datetime")
+    @Column(name = "datetime")
     private Date datetime;
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-08-20 15:52
- **/
