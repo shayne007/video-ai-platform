@@ -1,0 +1,108 @@
+{
+  "analysisid": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "bigimgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "cameraid": {
+    "index": "true",
+    "type": "long"
+  },
+  "createtime": {
+    "type": "date"
+  },
+  "distance": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "endframeidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "endframepts": {
+    "index": "true",
+    "type": "long"
+  },
+  "faceImgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "frameidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "h": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "height": {
+    "index": "true",
+    "type": "long"
+  },
+  "id": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "imgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "inserttime": {
+    "type": "date"
+  },
+  "objid": {
+    "index": "true",
+    "type": "long"
+  },
+  "objtype": {
+    "index": "true",
+    "type": "long"
+  },
+  "serialnumber": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "slaveip": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "startframeidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "startframepts": {
+    "index": "true",
+    "type": "long"
+  },
+  "taskid": {
+    "index": "true",
+    "type": "long"
+  },
+  "tubeid": {
+    "index": "true",
+    "type": "long"
+  },
+  "w": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "width": {
+    "index": "true",
+    "type": "long"
+  },
+  "x": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "xywh": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "y": {
+    "index": "true",
+    "type": "keyword"
+  }
+}

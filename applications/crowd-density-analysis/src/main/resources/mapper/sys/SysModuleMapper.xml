@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.densecrowd.mapper.sys.SysModuleMapper">
+
+    <resultMap type="com.keensense.densecrowd.entity.sys.SysModule" id="sysModuleMap">
+        <result property="moduleId" column="module_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="moduleUrl" column="module_url"/>
+        <result property="state" column="state"/>
+        <result property="isVisible" column="is_visible"/>
+        <result property="actions" column="actions"/>
+        <result property="longNumber" column="long_number"/>
+        <result property="moduleLevel" column="module_level"/>
+        <result property="displayName" column="display_name"/>
+        <result property="leaf" column="leaf"/>
+        <result property="seq" column="seq"/>
+        <result property="moduleName" column="module_name"/>
+        <result property="moduleNumber" column="module_number"/>
+        <result property="moduleDescription" column="module_description"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="lastUpdateUserId" column="last_update_user_id"/>
+        <result property="lastUpdatedTime" column="last_updated_time"/>
+        <result property="ctrlUnitId" column="ctrl_unit_id"/>
+        <result property="moduleIcon" column="module_icon"/>
+        <result property="isDsiplay" column="is_dsiplay"/>
+        <result property="displayOrder" column="display_order"/>
+        <result property="info1" column="info1"/>
+        <result property="info2" column="info2"/>
+        <result property="info3" column="info3"/>
+    </resultMap>
+
+    <!-- 通过角色id 查询角色 拥有的菜单-->
+    <select id="selectMenuByRoleId" parameterType="java.lang.Long" resultMap="sysModuleMap">
+        SELECT
+        p.* FROM sys_module_dev p LEFT JOIN sys_role_permission_dev rp ON rp.permission_id = p.module_id
+        WHERE rp.role_id =
+        #{id,jdbcType=BIGINT} order by display_order,module_id asc
+    </select>
+
+    <select id="selectMenuByRoleIdAndPid" resultMap="sysModuleMap">
+        SELECT
+        p.* FROM sys_module_dev p LEFT JOIN sys_role_permission_dev rp ON rp.permission_id = p.module_id
+        WHERE rp.role_id = #{roleId,jdbcType=BIGINT} and p.parent_id = #{parentId} and p.is_dsiplay = 1 and p.type = "menu"
+        group by p.module_id order by display_order,module_id asc
+    </select>
+
+    <select id="selectMenuByRoleIdAndModuleId"  resultMap="sysModuleMap">
+        SELECT
+        p.* FROM sys_module_dev p LEFT JOIN sys_role_permission_dev rp ON rp.permission_id = p.module_id
+        WHERE rp.role_id = #{roleId,jdbcType=BIGINT} and p.parent_id = #{moduleId} and p.is_dsiplay = 1 and p.type = "menu"
+        group by p.module_id order by display_order,module_id asc
+    </select>
+
+    <select id="selectButtonByRoleId"  resultMap="sysModuleMap">
+        SELECT
+        p.* FROM sys_module_dev p LEFT JOIN sys_role_permission_dev rp ON rp.permission_id = p.module_id
+        WHERE rp.role_id = #{roleId,jdbcType=BIGINT}  and p.is_dsiplay = 1 and p.type = "button"
+        group by p.module_id order by display_order,module_id asc
+    </select>
+</mapper>

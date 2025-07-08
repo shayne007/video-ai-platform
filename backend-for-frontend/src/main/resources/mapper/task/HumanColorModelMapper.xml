@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.HumanColorModelMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.HumanColorModel" id="humanColorModelMap">
+        <result property="id" column="id"/>
+        <result property="colorId" column="color_id"/>
+        <result property="colorRgbTag" column="color_rgb_tag"/>
+        <result property="colorBgrTag" column="color_bgr_tag"/>
+        <result property="colorHexTag" column="color_hex_tag"/>
+        <result property="colorName" column="color_name"/>
+        <result property="fuzzyColor" column="fuzzy_color"/>
+        <result property="colorNumber" column="color_number"/>
+        <result property="info1" column="info1"/>
+        <result property="info2" column="info2"/>
+    </resultMap>
+
+</mapper>

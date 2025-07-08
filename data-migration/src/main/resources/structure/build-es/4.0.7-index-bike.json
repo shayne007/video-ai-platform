@@ -1,0 +1,316 @@
+{
+  "age": {
+    "index": "true",
+    "type": "long"
+  },
+  "analysisid": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "angle": {
+    "index": "true",
+    "type": "long"
+  },
+  "bag": {
+    "index": "true",
+    "type": "long"
+  },
+  "bigimgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "bikeColor": {
+    "index": "true",
+    "type": "long"
+  },
+  "bikeGenre": {
+    "index": "true",
+    "type": "long"
+  },
+  "bikeHasPlate": {
+    "index": "true",
+    "type": "long"
+  },
+  "bike_feature_json": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "cameraid": {
+    "index": "true",
+    "type": "long"
+  },
+  "cap": {
+    "index": "true",
+    "type": "long"
+  },
+  "coatStyle": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "coatTexture": {
+    "index": "true",
+    "type": "long"
+  },
+  "createtime": {
+    "type": "date"
+  },
+  "distance": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "endframeidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "endframepts": {
+    "index": "true",
+    "type": "long"
+  },
+  "faceImgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "featuredataurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "frameidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "glasses": {
+    "index": "true",
+    "type": "long"
+  },
+  "h": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "hairStyle": {
+    "index": "true",
+    "type": "long"
+  },
+  "handbag": {
+    "index": "true",
+    "type": "long"
+  },
+  "height": {
+    "index": "true",
+    "type": "long"
+  },
+  "helmet": {
+    "index": "true",
+    "type": "long"
+  },
+  "helmetColorTag1": {
+    "index": "true",
+    "type": "long"
+  },
+  "helmetColorTag2": {
+    "index": "true",
+    "type": "long"
+  },
+  "humanfeature": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "id": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "imgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "inserttime": {
+    "type": "date"
+  },
+  "lamShape": {
+    "index": "true",
+    "type": "long"
+  },
+  "lowcolorTag": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "lowcolorTag1": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "lowcolorTag2": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "lowcolorTag3": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "lowcolor_1": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "lowcolor_2": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "lowcolor_3": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "maincolorTag": {
+    "index": "true",
+    "type": "long"
+  },
+  "maincolorTag1": {
+    "index": "true",
+    "type": "long"
+  },
+  "maincolorTag2": {
+    "index": "true",
+    "type": "long"
+  },
+  "maincolorTag3": {
+    "index": "true",
+    "type": "long"
+  },
+  "maincolor_1": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "maincolor_2": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "maincolor_3": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "objid": {
+    "index": "true",
+    "type": "long"
+  },
+  "objtype": {
+    "index": "true",
+    "type": "long"
+  },
+  "peccancy": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "respirator": {
+    "index": "true",
+    "type": "long"
+  },
+  "seatingCount": {
+    "index": "true",
+    "type": "long"
+  },
+  "serialnumber": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "sex": {
+    "index": "true",
+    "type": "long"
+  },
+  "size": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "slaveip": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "startframeidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "startframepts": {
+    "index": "true",
+    "type": "long"
+  },
+  "sychronized": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "taskid": {
+    "index": "true",
+    "type": "long"
+  },
+  "trousersStyle": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "trousersTexture": {
+    "index": "true",
+    "type": "long"
+  },
+  "tubeid": {
+    "index": "true",
+    "type": "long"
+  },
+  "umbrella": {
+    "index": "true",
+    "type": "long"
+  },
+  "umbrella_color_tag": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "upcolorTag": {
+    "index": "true",
+    "type": "long"
+  },
+  "upcolorTag1": {
+    "index": "true",
+    "type": "long"
+  },
+  "upcolorTag2": {
+    "index": "true",
+    "type": "long"
+  },
+  "upcolorTag3": {
+    "index": "true",
+    "type": "long"
+  },
+  "upcolor_1": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "upcolor_2": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "upcolor_3": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vlpr_result_id": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "w": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "wheels": {
+    "index": "true",
+    "type": "long"
+  },
+  "width": {
+    "index": "true",
+    "type": "long"
+  },
+  "x": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "xywh": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "y": {
+    "index": "true",
+    "type": "keyword"
+  }
+}

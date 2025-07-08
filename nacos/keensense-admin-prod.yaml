@@ -1,0 +1,149 @@
+spring:
+  datasource:
+    #    使用druid数据源
+    druid:
+      name: test
+      url: jdbc:mysql://172.16.1.68:3306/keensense_u2s?characterEncoding=utf-8&allowMultiQueries=true
+      username: qst
+      password: Ast4HS#qianshitong
+      driverClass: com.mysql.jdbc.Driver
+      maxActive: 20
+      initialSize: 0
+      maxWait: 60000
+      minIdle: 5
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall
+      filter:
+        stat:
+          logSlowSql: true
+          #         慢查询的时间秒
+          slowSqlMillis: 2000
+          mergeSql: true
+  redis:
+    host: 127.0.0.1
+    port: 16379
+    password:
+    timeout: 60000
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    database:
+      base: 1
+      count: 2
+  kafka:
+    bootstrap-servers: 127.0.0.1:39092
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: u2s-mqtt
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      auto-commit-interval: 1000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      max-poll-records: 100
+      # 单位只支持配M和G
+      max-partition-fetch-bytes: 1G
+      # 单位只支持配M和G
+      fetch-max-bytes: 1G
+      # 单位只支持配M和G
+      fetch-min-bytes: 1G
+      # 单位 毫秒
+      fetch-max-wait-ms: 20000
+      #有值就不监听,停止消费
+      stop-listener: 1
+    listener:
+      concurrency: 2
+      poll-timeout: 3000
+
+mqtt:
+  host: tcp://127.0.0.1:1883
+  username: donganuser
+  password: da2018529
+  topic: eastcoast/identification
+  clientid: server13
+   #有值就走GB1400转换
+  gbStandard:
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*/*Mapper.xml
+
+feign:
+  hystrix:
+    enabled: true
+
+druid:
+  loginUsername: qst
+  loginPassword: qst**0808
+  wall:
+    multiStatementAllow: true
+    noneBaseStatementAllow: true
+
+swagger:
+  title: 快检接口管理API
+  description: 快检接口管理API
+  version: 1.0.0
+  license: Powered By keensense
+  licenseUrl: null
+  terms-of-service-url: null
+  contact:
+    name: null
+    email: null
+    url: null
+
+imagesearch:
+  resultLimit: 3000
+  enable: false
+  threshold: 0.5
+  #过滤项，vehiclecolor：车身颜色，wheels：非机动车车轮数，coatcolor1：非机动车上身颜色，bikegenre：非机动车车型
+  optimizeItems: vehiclecolor,wheels,coatcolor1,bikegenre,cartype
+  #保留相似度top目标数
+  top: 3
+
+  #色系配置
+  colorGroups:
+  #黑（深灰）:1,0,5263440,37887
+  #白:2,16777215
+  #灰:3,11842740,11711154    棕:8,8761028,343174,2111058
+  #红:4,9983,16743167   紫:10,9576596    粉红:12
+  #蓝:5,8327170,16724484,12423793,15311656
+  #黄:6,65535    橙:7,37887
+  #绿:9,16776448,5287936
+    - 1,0,5263440,37887
+    - 2,16777215
+    - 3,11842740,11711154,8,8761028,343174,2111058
+    - 4,9983,16743167,10,9576596,12
+    - 5,8327170,16724484,12423793,15311656
+    - 6,65535,7,37887
+    - 9,16776448,5287936
+
+
+  #车辆类型分组配置:
+  #轿车K33、面包车K39、越野车K32、商务车K34、皮卡H38、轻客K31、中型客车K21、重型客车K11、小型货车H31、中型货车H21、大型货车H11
+  carTypeGroups:
+    - K33,H38
+    - K32,K34
+    - K39
+    - K31,K21,K11
+    - H31,H21,H11
+  #二次排序控制
+  secondSort: false
+#人脸特征提取对应 0.千视通 1.格林
+comConfig:
+  face:
+    feature: 0
+#置顶功能开关
+topgetMem: true

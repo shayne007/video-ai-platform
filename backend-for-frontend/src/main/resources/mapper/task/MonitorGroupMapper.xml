@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.admin.mapper.task.MonitorGroupMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.MonitorGroup" id="monitorGroupMap">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+        <result column="create_user_id" property="createUserId" jdbcType="BIGINT" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="start_num" property="startNum" jdbcType="SMALLINT" />
+        <result column="total_num" property="totalNum" jdbcType="SMALLINT" />
+    </resultMap>
+
+    <!--使用vsd_task_relation 查询任务启动状态-->
+    <select id="selectMonitorGroupByPage" parameterType="java.util.Map" resultMap="monitorGroupMap">
+        SELECT
+        id,
+        group_name,
+        create_time,
+        create_user_id,
+        start_num,
+        total_num
+        FROM
+        (
+        SELECT
+        tb_mg.id,
+        tb_mg.group_name,
+        tb_mg.create_time,
+        tb_mg.create_user_id,
+        IFNULL(start_num, 0) AS start_num,
+        IFNULL(COUNT(tmgd.monitor_group_id),0) AS total_num
+        FROM
+        tb_monitor_group tb_mg
+        LEFT JOIN (
+        SELECT
+        tb_mgd.id,
+        tb_mgd.monitor_group_id,
+        SUM(
+        CASE vtr.isvalid
+        WHEN '1' THEN
+        1
+        ELSE
+        0
+        END
+        ) AS start_num
+        FROM
+        tb_monitor_group_detail tb_mgd
+        LEFT JOIN vsd_task_relation vtr ON vtr.camera_file_id = tb_mgd.camera_id
+        WHERE
+        vtr.from_type in (1,4,6)
+        GROUP BY
+        tb_mgd.monitor_group_id
+        ) AS tll ON tb_mg.id = monitor_group_id
+        LEFT JOIN tb_monitor_group_detail tmgd ON tb_mg.id = tmgd.monitor_group_id
+        GROUP BY
+        tb_mg.id
+        ) AS tmg
+        <where>
+            <if test="params.groupName != null and ''!=params.groupName">
+                and group_name like #{params.groupName,jdbcType=VARCHAR}
+            </if>
+            <if test='params.status=="1"'>
+                and (total_num != 0 and (total_num-start_num = 0))
+            </if>
+            <if test='params.status=="0"'>
+                and (total_num = 0 or (total_num-start_num >= 1))
+            </if>
+        </where>
+        ORDER BY
+        create_time DESC,
+        id DESC
+
+    </select>
+
+    <select id="queryMonitorGroupIdByName" resultMap="monitorGroupMap" parameterType="java.lang.String">
+        select * from tb_monitor_group where group_name = #{groupName}
+    </select>
+</mapper>

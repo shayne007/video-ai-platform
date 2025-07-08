@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.adminmapper.task.CtrlUnitMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.CtrlUnit" id="ctrlUnitMap">
+        <result property="id" column="id"/>
+        <result property="unitState" column="unit_state"/>
+        <result property="unitIdentity" column="unit_identity"/>
+        <result property="orgType" column="org_type"/>
+        <result property="shareUnitId" column="share_unit_id"/>
+        <result property="longNumber" column="long_number"/>
+        <result property="unitLevel" column="unit_level"/>
+        <result property="displayName" column="display_name"/>
+        <result property="isLeaf" column="is_leaf"/>
+        <result property="seqNum" column="seq_num"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="unitNumber" column="unit_number"/>
+        <result property="unitDescription" column="unit_description"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="lastUpdateUserId" column="last_update_user_id"/>
+        <result property="lastUpdatedTime" column="last_updated_time"/>
+        <result property="ctrlUnitId" column="ctrl_unit_id"/>
+        <result property="unitParentId" column="unit_parent_id"/>
+    </resultMap>
+
+</mapper>

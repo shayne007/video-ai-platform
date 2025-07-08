@@ -1,0 +1,81 @@
+{
+  "age": {
+    "index": "true",
+    "type": "long"
+  },
+  "analysisid": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "cameraid": {
+    "index": "true",
+    "type": "long"
+  },
+  "createtime": {
+    "type": "date"
+  },
+  "featuredataurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "frameidx": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "glass": {
+    "index": "true",
+    "type": "long"
+  },
+  "h": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "horizontalangle": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "id": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "imgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "nation": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "qualityscore": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "rotatingangle": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "serialnumber": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "sex": {
+    "index": "true",
+    "type": "long"
+  },
+  "verticalangle": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "w": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "x": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "y": {
+    "index": "true",
+    "type": "keyword"
+  }
+}

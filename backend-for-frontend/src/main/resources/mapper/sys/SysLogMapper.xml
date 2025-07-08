@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.sys.SysLogMapper">
+
+    <resultMap type="com.keensense.admin.entity.sys.SysLog" id="sysLogMap">
+        <result property="id" column="id"/>
+        <result property="moduleName" column="module_name"/>
+        <result property="moduleUrl" column="module_url"/>
+        <result property="actionType" column="action_type"/>
+        <result property="userName" column="user_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="ipaddr" column="ipaddr"/>
+        <result property="createTime" column="create_time"/>
+        <result property="c1" column="c1"/>
+        <result property="c2" column="c2"/>
+        <result property="c3" column="c3"/>
+        <result property="c4" column="c4"/>
+    </resultMap>
+
+    <select id="selectPageByParams"  resultType="com.keensense.admin.entity.sys.SysLog"  parameterType="java.util.Map">
+        SELECT
+        s.id as id,
+        date_format(s.create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+        s.module_name as moduleName,
+        s.real_name as realName,
+        s.action_type as actionType
+        FROM sys_log s
+        where 1=1
+        <if test="params.moduleName != null">
+            and	s.module_name like #{params.moduleName}
+        </if>
+        <if test="params.startTime != null">
+		    	 and s.create_time &gt; #{params.startTime}
+        </if>
+        <if test="params.endTime != null">
+		    	 and s.create_time &lt; #{params.endTime}
+        </if>
+        <if test="params.userName != null">
+            and	(s.user_name  like #{params.userName} or s.real_name like #{params.userName})
+        </if>
+        <if test="params.actionType != null">
+            and s.action_type in
+            <foreach item="item" index="index" collection="params.actionType"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by s.create_time desc
+    </select>
+
+    <select id="queryUserPageByParams"  resultType="com.keensense.admin.vo.SysOperateLogVo"  parameterType="java.util.Map">
+        SELECT
+        su.user_id AS userId,
+        su.real_name AS userName,
+        IFNULL(sd.dept_name,"无") AS deptName,
+        IFNULL(totalNum, 0) AS visitNum,
+        IFNULL(date_format(updateTime,'%Y-%m-%d %H:%i:%s'),"无") as latestTime
+        FROM
+        sys_user su
+        LEFT JOIN (
+        SELECT
+        sl.user_id AS userId,
+        SUM(sl.visit_num) AS totalNum,
+        SUBSTRING_INDEX(
+        group_concat(
+        sl.update_time
+        ORDER BY
+        sl.update_time DESC
+        ),
+        ',',
+        1
+        ) AS updateTime
+        FROM
+        sys_operate_log sl
+        <where>
+            <if test="params.startTime != null">
+                <![CDATA[
+           sl.create_time>= str_to_date(#{params.startTime},'%Y-%m-%d %H:%i:%s')
+          ]]>
+            </if>
+            <if test="params.endTime != null">
+                <![CDATA[
+          and	sl.create_time<=str_to_date(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+          ]]>
+            </if>
+        </where>
+        GROUP BY
+        sl.user_id
+        ) AS operate_log ON userId = su.user_id
+        LEFT JOIN sys_dept sd ON sd.dept_number = su.dept_id
+        <where>
+            <if test="params.userName">
+                and su.real_name like #{params.userName}
+            </if>
+        </where>
+        ORDER BY
+        totalNum DESC,deptName DESC,userId DESC
+    </select>
+
+    <select id="queryDeptPageByParams"  resultType="com.keensense.admin.vo.SysOperateLogVo"  parameterType="java.util.Map">
+        SELECT
+        sd.dept_number AS deptId,
+        sd.dept_name as deptName,
+        IFNULL(totalNum, 0) AS visitNum
+        FROM
+        sys_dept sd
+        LEFT JOIN (
+        SELECT
+        sl.dept_id AS deptId,
+        SUM(sl.visit_num) AS totalNum
+        FROM
+        sys_operate_log sl
+        <where>
+            <if test="params.startTime != null">
+                <![CDATA[
+             AND sl.create_time>= str_to_date(#{params.startTime},'%Y-%m-%d %H:%i:%s')
+            ]]>
+            </if>
+            <if test="params.endTime != null">
+                <![CDATA[
+            AND	sl.create_time<=str_to_date(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+            ]]>
+            </if>
+        </where>
+        GROUP BY
+        sl.dept_id
+        ) AS operate_log ON deptId = sd.dept_number
+        <where>
+            <if test="params.deptName">
+                AND sd.dept_name LIKE #{params.deptName}
+            </if>
+        </where>
+        ORDER BY
+        totalNum DESC
+    </select>
+
+
+</mapper>

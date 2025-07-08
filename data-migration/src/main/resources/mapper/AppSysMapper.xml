@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.dataconvert.biz.dao.AppSysMapper">
+
+    <!-- 查询数据库需要处理的 vlpr表 和 objext 表-->
+    <select id="selectAllDataTables" resultType="java.lang.String">
+       SELECT
+            TABLE_NAME
+        FROM
+            information_schema.TABLES
+        WHERE
+            TABLE_SCHEMA = (SELECT DATABASE())
+        AND TABLE_NAME LIKE '${tablePrefix}2%'
+    </select>
+
+</mapper>

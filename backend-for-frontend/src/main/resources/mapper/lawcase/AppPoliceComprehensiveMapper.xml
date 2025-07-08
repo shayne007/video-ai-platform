@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.lawcase.AppPoliceComprehensiveMapper">
+
+    <resultMap type="com.keensense.admin.entity.lawcase.AppPoliceComprehensive" id="appPoliceComprehensiveMap">
+        <result property="lawcaseId" column="LAWCASE_ID"/>
+        <result property="caseName" column="CASE_NAME"/>
+        <result property="caseCode" column="CASE_CODE"/>
+        <result property="categoryValue" column="CATEGORY_VALUE"/>
+        <result property="propertyValue" column="property_value"/>
+        <result property="caseState" column="CASE_STATE"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="recieveTime" column="RECIEVE_TIME"/>
+        <result property="resolveTime" column="RESOLVE_TIME"/>
+        <result property="engageOrg" column="ENGAGE_ORG"/>
+        <result property="reporterName" column="reporter_name"/>
+        <result property="reporterPhone" column="reporter_phone"/>
+        <result property="locationId" column="LOCATION_ID"/>
+        <result property="policeStation" column="POLICE_STATION"/>
+        <result property="caseCommunity" column="CASE_COMMUNITY"/>
+        <result property="locationType" column="LOCATION_TYPE"/>
+        <result property="locationName" column="LOCATION_NAME"/>
+        <result property="locationDetail" column="LOCATION_DETAIL"/>
+        <result property="lontitude" column="LONTITUDE"/>
+        <result property="latitude" column="LATITUDE"/>
+        <result property="caseArea" column="CASE_AREA"/>
+        <result property="casePlaces" column="CASE_PLACES"/>
+        <result property="placesType" column="PLACES_TYPE"/>
+        <result property="caseDesc" column="CASE_DESC"/>
+        <result property="caseMoney" column="CASE_MONEY"/>
+        <result property="moneyLose" column="MONEY_LOSE"/>
+        <result property="choosePlace" column="CHOOSE_PLACE"/>
+        <result property="choosePerson" column="CHOOSE_PERSON"/>
+        <result property="chooseItem" column="CHOOSE_ITEM"/>
+        <result property="chooseDate" column="CHOOSE_DATE"/>
+        <result property="chooseTime" column="CHOOSE_TIME"/>
+        <result property="chooseChance" column="CHOOSE_CHANCE"/>
+        <result property="chooseWeather" column="CHOOSE_WEATHER"/>
+        <result property="caseMethodFeaturesValue" column="CASE_METHOD_FEATURES_VALUE"/>
+        <result property="stealMethod" column="STEAL_METHOD"/>
+        <result property="disguiseMethod" column="DISGUISE_METHOD"/>
+        <result property="prepareMethod" column="PREPARE_METHOD"/>
+        <result property="orgWay" column="ORG_WAY"/>
+        <result property="colludeWay" column="COLLUDE_WAY"/>
+        <result property="caseWay" column="CASE_WAY"/>
+        <result property="exploreWay" column="EXPLORE_WAY"/>
+        <result property="actionWay" column="ACTION_WAY"/>
+        <result property="isCross" column="IS_CROSS"/>
+        <result property="busWay" column="BUS_WAY"/>
+        <result property="upStation" column="UP_STATION"/>
+        <result property="downStation" column="DOWN_STATION"/>
+        <result property="caseTool" column="CASE_TOOL"/>
+        <result property="oprateResult" column="OPRATE_RESULT"/>
+        <result property="keyWords" column="KEY_WORDS"/>
+        <result property="remarkAdvice" column="REMARK_ADVICE"/>
+        <result property="hasSupect" column="HAS_SUPECT"/>
+        <result property="hasSurvey" column="HAS_SURVEY"/>
+        <result property="isOldData" column="IS_OLD_DATA"/>
+        <result property="electronicFileId" column="ELECTRONIC_FILE_ID"/>
+        <result property="caseClass" column="CASE_CLASS"/>
+        <result property="caseThumbnail" column="CASE_THUMBNAIL"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateUserId" column="UPDATE_USER_ID"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="isDeleted" column="IS_DELETED"/>
+        <result property="deleteTime" column="DELETE_TIME"/>
+        <result property="deleteReason" column="DELETE_REASON"/>
+        <result property="archiveInfo" column="ARCHIVE_INFO"/>
+        <result property="archiveReport" column="ARCHIVE_REPORT"/>
+        <result property="principal" column="PRINCIPAL"/>
+        <result property="isClassicCase" column="IS_CLASSIC_CASE"/>
+        <result property="happenPlaceLevel" column="HAPPEN_PLACE_LEVEL"/>
+        <result property="reportPerson" column="REPORT_PERSON"/>
+        <result property="idCard" column="ID_CARD"/>
+        <result property="contactPhone" column="CONTACT_PHONE"/>
+        <result property="isqualified" column="ISQUALIFIED"/>
+        <result property="sourceid" column="SOURCEID"/>
+        <result property="isacrossborder" column="ISACROSSBORDER"/>
+        <result property="verifyingStatus" column="VERIFYING_STATUS"/>
+        <result property="withwaitverifyres" column="WITHWAITVERIFYRES"/>
+        <result property="orginSystem" column="ORGIN_SYSTEM"/>
+        <result property="orginCode" column="ORGIN_CODE"/>
+        <result property="recieveCode" column="RECIEVE_CODE"/>
+        <result property="transport" column="TRANSPORT"/>
+        <result property="syncStatus" column="SYNC_STATUS"/>
+        <result property="trackImageUrl" column="TRACK_IMAGE_URL"/>
+    </resultMap>
+
+
+    <select id="selectCaseByPage" parameterType="java.util.Map" resultType="com.keensense.admin.vo.PoliceComprehensiveVo">
+        SELECT
+        p.CASE_NAME AS caseName,
+        p.CASE_STATE AS caseState,
+        date_format(p.CREATE_TIME,'%Y-%m-%d %H:%i:%s') AS createTimeStr,
+        u.real_name as userName,
+        p.LAWCASE_ID as lawcaseId
+        FROM
+        app_police_comprehensive p
+        LEFT JOIN sys_user u ON p.CREATOR_ID = u.user_id
+        where 1=1
+        <if test="params.caseState != null and ''!= params.caseState" >
+            and    p.CASE_STATE = #{params.caseState,jdbcType=VARCHAR}
+        </if>
+        <if test="params.caseName != null and ''!=params.caseName" >
+            and    p.CASE_NAME like #{params.caseName,jdbcType=VARCHAR}
+        </if>
+        order by p.CREATE_TIME desc , p.LAWCASE_ID desc
+    </select>
+</mapper>

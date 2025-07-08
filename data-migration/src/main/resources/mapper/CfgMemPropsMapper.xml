@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.dataconvert.biz.dao.CfgMemPropsMapper">
+    <!-- BaseResultMap -->
+    <resultMap id="BaseResultMap" type="com.keensense.dataconvert.biz.entity.CfgMemProps">
+        <id column="module_name" jdbcType="VARCHAR" property="moduleName" />
+        <id column="prop_key" jdbcType="VARCHAR" property="propKey" />
+        <result column="prop_name" jdbcType="VARCHAR" property="propName" />
+        <result column="prop_value" jdbcType="VARCHAR" property="propValue" />
+        <result column="prop_desc" jdbcType="VARCHAR" property="propDesc" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <!-- Base_Column_List -->
+    <sql id="Base_Column_List">
+    module_name, prop_key, prop_name, prop_value, prop_desc, update_time
+    </sql>
+
+    <!-- selectByPrimaryKey -->
+    <select id="selectByPrimaryKey" parameterType="com.keensense.dataconvert.biz.entity.CfgMemPropsKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cfg_mem_props
+    where module_name = #{moduleName,jdbcType=VARCHAR}
+      and prop_key = #{propKey,jdbcType=VARCHAR}
+    </select>
+
+    <!-- deleteByPrimaryKey  -->
+    <delete id="deleteByPrimaryKey" parameterType="com.keensense.dataconvert.biz.entity.CfgMemPropsKey">
+    delete from cfg_mem_props
+    where module_name = #{moduleName,jdbcType=VARCHAR}
+      and prop_key = #{propKey,jdbcType=VARCHAR}
+    </delete>
+
+    <!-- insert-->
+    <insert id="insert" parameterType="com.keensense.dataconvert.biz.entity.CfgMemProps">
+    insert into cfg_mem_props (module_name, prop_key, prop_name,
+      prop_value, prop_desc, update_time
+      )
+    values (#{moduleName,jdbcType=VARCHAR}, #{propKey,jdbcType=VARCHAR}, #{propName,jdbcType=VARCHAR},
+      #{propValue,jdbcType=VARCHAR}, #{propDesc,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+    </insert>
+
+    <!-- insertSelective  -->
+    <insert id="insertSelective" parameterType="com.keensense.dataconvert.biz.entity.CfgMemProps">
+    insert into cfg_mem_props
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="moduleName != null">
+        module_name,
+      </if>
+      <if test="propKey != null">
+        prop_key,
+      </if>
+      <if test="propName != null">
+        prop_name,
+      </if>
+      <if test="propValue != null">
+        prop_value,
+      </if>
+      <if test="propDesc != null">
+        prop_desc,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="moduleName != null">
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="propKey != null">
+        #{propKey,jdbcType=VARCHAR},
+      </if>
+      <if test="propName != null">
+        #{propName,jdbcType=VARCHAR},
+      </if>
+      <if test="propValue != null">
+        #{propValue,jdbcType=VARCHAR},
+      </if>
+      <if test="propDesc != null">
+        #{propDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    </insert>
+
+    <!-- updateByPrimaryKeySelective -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.keensense.dataconvert.biz.entity.CfgMemProps">
+    update cfg_mem_props
+    <set>
+      <if test="propName != null">
+        prop_name = #{propName,jdbcType=VARCHAR},
+      </if>
+      <if test="propValue != null">
+        prop_value = #{propValue,jdbcType=VARCHAR},
+      </if>
+      <if test="propDesc != null">
+        prop_desc = #{propDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where module_name = #{moduleName,jdbcType=VARCHAR}
+      and prop_key = #{propKey,jdbcType=VARCHAR}
+    </update>
+
+    <!-- updateByPrimaryKey -->
+    <update id="updateByPrimaryKey" parameterType="com.keensense.dataconvert.biz.entity.CfgMemProps">
+    update cfg_mem_props
+    set prop_name = #{propName,jdbcType=VARCHAR},
+      prop_value = #{propValue,jdbcType=VARCHAR},
+      prop_desc = #{propDesc,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where module_name = #{moduleName,jdbcType=VARCHAR}
+      and prop_key = #{propKey,jdbcType=VARCHAR}
+    </update>
+</mapper>

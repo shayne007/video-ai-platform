@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.job.mapper.CtrlUnitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keensense.job.entity.CtrlUnit">
+        <id column="id" property="id" />
+        <result column="unit_state" property="unitState" />
+        <result column="unit_identity" property="unitIdentity" />
+        <result column="org_type" property="orgType" />
+        <result column="share_unit_id" property="shareUnitId" />
+        <result column="long_number" property="longNumber" />
+        <result column="unit_level" property="unitLevel" />
+        <result column="display_name" property="displayName" />
+        <result column="is_leaf" property="isLeaf" />
+        <result column="seq_num" property="seqNum" />
+        <result column="unit_name" property="unitName" />
+        <result column="unit_number" property="unitNumber" />
+        <result column="unit_description" property="unitDescription" />
+        <result column="creator_id" property="creatorId" />
+        <result column="create_time" property="createTime" />
+        <result column="last_update_user_id" property="lastUpdateUserId" />
+        <result column="last_updated_time" property="lastUpdatedTime" />
+        <result column="ctrl_unit_id" property="ctrlUnitId" />
+        <result column="unit_parent_id" property="unitParentId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, unit_state AS unitState, unit_identity AS unitIdentity, org_type AS orgType, share_unit_id AS shareUnitId, long_number AS longNumber, unit_level AS unitLevel, display_name AS displayName, is_leaf AS isLeaf, seq_num AS seqNum, unit_name AS unitName, unit_number AS unitNumber, unit_description AS unitDescription, creator_id AS creatorId, create_time AS createTime, last_update_user_id AS lastUpdateUserId, last_updated_time AS lastUpdatedTime, ctrl_unit_id AS ctrlUnitId, unit_parent_id AS unitParentId
+    </sql>
+
+    <select id="selectAllCtrlUnits" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from camera
+    </select>
+
+</mapper>

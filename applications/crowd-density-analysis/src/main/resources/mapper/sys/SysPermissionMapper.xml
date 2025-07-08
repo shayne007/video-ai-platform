@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.densecrowd.mapper.sys.SysPermissionMapper">
+
+    <resultMap type="com.keensense.densecrowd.entity.sys.SysPermission" id="sysPermissionMap">
+        <result property="permissionId" column="permission_id"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="resourceName" column="resource_name"/>
+        <result property="resourceType" column="resource_type"/>
+        <result property="actionId" column="action_id"/>
+        <result property="actionName" column="action_name"/>
+        <result property="functionCode" column="function_code"/>
+        <result property="permissionName" column="permission_name"/>
+        <result property="permissionSign" column="permission_sign"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+</mapper>

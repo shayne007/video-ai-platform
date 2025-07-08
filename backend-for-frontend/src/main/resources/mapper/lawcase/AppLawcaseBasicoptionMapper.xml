@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.lawcase.AppLawcaseBasicoptionMapper">
+
+    <resultMap type="com.keensense.admin.entity.lawcase.AppLawcaseBasicoption" id="appLawcaseBasicoptionMap">
+        <result property="id" column="ID"/>
+        <result property="basicId" column="BASIC_ID"/>
+        <result property="colName" column="COL_NAME"/>
+        <result property="tableName" column="TABLE_NAME"/>
+        <result property="optionsName" column="OPTIONS_NAME"/>
+        <result property="optionsValue" column="OPTIONS_VALUE"/>
+        <result property="createUserid" column="CREATE_USERID"/>
+        <result property="createUsername" column="CREATE_USERNAME"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="orderbyCode" column="ORDERBY_CODE"/>
+        <result property="isValid" column="IS_VALID"/>
+        <result property="busiCode" column="BUSI_CODE"/>
+    </resultMap>
+
+    <select id="queryAppLawcaseList" parameterType="java.lang.String" resultMap="appLawcaseBasicoptionMap">
+        select ID, BASIC_ID, COL_NAME, TABLE_NAME, OPTIONS_NAME, OPTIONS_VALUE, CREATE_USERID, CREATE_USERNAME,
+        CREATE_TIME, ORDERBY_CODE, IS_VALID, BUSI_CODE
+        from app_lawcase_basicoption
+        where OPTIONS_VALUE like #{typeCode} and COL_NAME = "CATEGORY_VALUE"
+    </select>
+
+</mapper>

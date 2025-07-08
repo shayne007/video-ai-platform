@@ -1,0 +1,20 @@
+server:
+  port: 9801
+  servlet:
+      context-path: /densecrowd
+  max-http-header-size: 10000000
+  connection-timeout : 120000
+spring:
+  application:
+    name: keensense-densecrowd
+  profiles:
+    #dev|prod
+    active: dev
+  servlet:
+      multipart:
+        enabled: true
+        max-file-size: 3000MB
+        max-request-size: 3000MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

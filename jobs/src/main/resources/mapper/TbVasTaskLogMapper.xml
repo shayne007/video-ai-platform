@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.job.mapper.TbVasTaskLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keensense.job.entity.TbVasTaskLog">
+        <id column="id" property="id" />
+        <result column="status" property="status" />
+        <result column="msg" property="msg" />
+        <result column="vas_cnt" property="vasCnt" />
+        <result column="vas_insert_cnt" property="vasInsertCnt" />
+        <result column="vas_update_cnt" property="vasUpdateCnt" />
+        <result column="vas_delete_cnt" property="vasDeleteCnt" />
+        <result column="org_cnt" property="orgCnt" />
+        <result column="org_insert_cnt" property="orgInsertCnt" />
+        <result column="org_update_cnt" property="orgUpdateCnt" />
+        <result column="org_delete_cnt" property="orgDeleteCnt" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, status, msg, vas_cnt AS vasCnt, vas_insert_cnt AS vasInsertCnt, vas_update_cnt AS vasUpdateCnt, vas_delete_cnt AS vasDeleteCnt, org_cnt AS orgCnt, org_insert_cnt AS orgInsertCnt, org_update_cnt AS orgUpdateCnt, org_delete_cnt AS orgDeleteCnt, create_time AS createTime
+    </sql>
+
+</mapper>

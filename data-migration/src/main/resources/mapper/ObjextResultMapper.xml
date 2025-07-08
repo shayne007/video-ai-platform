@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.dataconvert.biz.dao.ObjextResultMapper">
+    <!-- BaseResultMap -->
+    <resultMap id="BaseResultMap" type="com.keensense.dataconvert.biz.entity.ObjextResult">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="serialnumber" jdbcType="VARCHAR" property="serialnumber" />
+        <result column="cameraid" jdbcType="BIGINT" property="cameraid" />
+        <result column="vlpr_result_id" jdbcType="BIGINT" property="vlprResultId" />
+        <result column="imgurl" jdbcType="VARCHAR" property="imgurl" />
+        <result column="bigimgurl" jdbcType="VARCHAR" property="bigimgurl" />
+        <result column="objtype" jdbcType="SMALLINT" property="objtype" />
+        <result column="maincolor_tag_1" jdbcType="INTEGER" property="maincolorTag1" />
+        <result column="maincolor_tag_2" jdbcType="INTEGER" property="maincolorTag2" />
+        <result column="maincolor_tag_3" jdbcType="INTEGER" property="maincolorTag3" />
+        <result column="upcolor_tag_1" jdbcType="INTEGER" property="upcolorTag1" />
+        <result column="upcolor_tag_2" jdbcType="INTEGER" property="upcolorTag2" />
+        <result column="upcolor_tag_3" jdbcType="INTEGER" property="upcolorTag3" />
+        <result column="lowcolor_tag_1" jdbcType="INTEGER" property="lowcolorTag1" />
+        <result column="lowcolor_tag_2" jdbcType="INTEGER" property="lowcolorTag2" />
+        <result column="lowcolor_tag_3" jdbcType="INTEGER" property="lowcolorTag3" />
+        <result column="sex" jdbcType="TINYINT" property="sex" />
+        <result column="age" jdbcType="TINYINT" property="age" />
+        <result column="wheels" jdbcType="TINYINT" property="wheels" />
+        <result column="size" jdbcType="TINYINT" property="size" />
+        <result column="bag" jdbcType="TINYINT" property="bag" />
+        <result column="handbag" jdbcType="TINYINT" property="handbag" />
+        <result column="glasses" jdbcType="TINYINT" property="glasses" />
+        <result column="umbrella" jdbcType="TINYINT" property="umbrella" />
+        <result column="umbrella_color_tag" jdbcType="INTEGER" property="umbrellaColorTag" />
+        <result column="angle" jdbcType="SMALLINT" property="angle" />
+        <result column="tubeid" jdbcType="INTEGER" property="tubeid" />
+        <result column="objid" jdbcType="INTEGER" property="objid" />
+        <result column="startframeidx" jdbcType="INTEGER" property="startframeidx" />
+        <result column="endframeidx" jdbcType="INTEGER" property="endframeidx" />
+        <result column="startframepts" jdbcType="INTEGER" property="startframepts" />
+        <result column="endframepts" jdbcType="INTEGER" property="endframepts" />
+        <result column="frameidx" jdbcType="INTEGER" property="frameidx" />
+        <result column="width" jdbcType="SMALLINT" property="width" />
+        <result column="height" jdbcType="SMALLINT" property="height" />
+        <result column="xywh" jdbcType="VARCHAR" property="xywh" />
+        <result column="distance" jdbcType="REAL" property="distance" />
+        <result column="face_imgurl" jdbcType="VARCHAR" property="faceImgurl" />
+        <result column="peccancy" jdbcType="SMALLINT" property="peccancy" />
+        <result column="bike_color" jdbcType="INTEGER" property="bikeColor" />
+        <result column="bike_genre" jdbcType="INTEGER" property="bikeGenre" />
+        <result column="seating_count" jdbcType="INTEGER" property="seatingCount" />
+        <result column="helmet" jdbcType="TINYINT" property="helmet" />
+        <result column="helmet_color_tag_1" jdbcType="INTEGER" property="helmetColorTag1" />
+        <result column="helmet_color_tag_2" jdbcType="INTEGER" property="helmetColorTag2" />
+        <result column="lam_shape" jdbcType="SMALLINT" property="lamShape" />
+        <result column="bike_has_plate" jdbcType="TINYINT" property="bikeHasPlate" />
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+        <result column="inserttime" jdbcType="TIMESTAMP" property="inserttime" />
+        <result column="recog_id" jdbcType="VARCHAR" property="recogId" />
+        <result column="slave_ip" jdbcType="VARCHAR" property="slaveIp" />
+        <result column="coat_style" jdbcType="VARCHAR" property="coatStyle" />
+        <result column="trousers_style" jdbcType="VARCHAR" property="trousersStyle" />
+        <result column="retrycount" jdbcType="INTEGER" property="retrycount" />
+        <result column="respirator" jdbcType="INTEGER" property="respirator" />
+        <result column="cap" jdbcType="INTEGER" property="cap" />
+        <result column="hair_style" jdbcType="INTEGER" property="hairStyle" />
+        <result column="coat_texture" jdbcType="INTEGER" property="coatTexture" />
+        <result column="trousers_texture" jdbcType="INTEGER" property="trousersTexture" />
+    </resultMap>
+
+    <!-- Base_Column_List  -->
+    <sql id="Base_Column_List">
+        id, serialnumber, cameraid, vlpr_result_id, imgurl, bigimgurl, objtype, maincolor_tag_1,
+        maincolor_tag_2, maincolor_tag_3, upcolor_tag_1, upcolor_tag_2, upcolor_tag_3, lowcolor_tag_1,
+        lowcolor_tag_2, lowcolor_tag_3, sex, age, wheels, `size`, bag, handbag, glasses, umbrella,
+        umbrella_color_tag, angle, tubeid, objid, startframeidx, endframeidx, startframepts,
+        endframepts, frameidx, width, height, xywh, distance, face_imgurl, peccancy, bike_color,
+        bike_genre, seating_count, helmet, helmet_color_tag_1, helmet_color_tag_2, lam_shape,
+        bike_has_plate, createtime, inserttime, recog_id, slave_ip, coat_style, trousers_style,
+        retrycount, respirator, cap, hair_style, coat_texture, trousers_texture
+    </sql>
+
+    <!-- selectByPrimaryKey  -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from objext_result
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!-- selectListByYmd -->
+    <select id="selectListByYmd" resultMap="BaseResultMap" parameterType="String">
+        select
+        <include refid="Base_Column_List" />
+        from objext_result${ymd}
+    </select>
+
+    <!-- deleteByPrimaryKey -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from objext_result
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!-- insert -->
+    <insert id="insert" parameterType="com.keensense.dataconvert.biz.entity.ObjextResult">
+    insert into objext_result (id, serialnumber, cameraid,
+      vlpr_result_id, imgurl, bigimgurl,
+      objtype, maincolor_tag_1, maincolor_tag_2,
+      maincolor_tag_3, upcolor_tag_1, upcolor_tag_2,
+      upcolor_tag_3, lowcolor_tag_1, lowcolor_tag_2,
+      lowcolor_tag_3, sex, age,
+      wheels, `size`, bag,
+      handbag, glasses, umbrella,
+      umbrella_color_tag, angle, tubeid,
+      objid, startframeidx, endframeidx,
+      startframepts, endframepts, frameidx,
+      width, height, xywh,
+      distance, face_imgurl, peccancy,
+      bike_color, bike_genre, seating_count,
+      helmet, helmet_color_tag_1, helmet_color_tag_2,
+      lam_shape, bike_has_plate, createtime,
+      inserttime, recog_id, slave_ip,
+      coat_style, trousers_style, retrycount,
+      respirator, cap, hair_style,
+      coat_texture, trousers_texture)
+    values (#{id,jdbcType=INTEGER}, #{serialnumber,jdbcType=VARCHAR}, #{cameraid,jdbcType=BIGINT},
+      #{vlprResultId,jdbcType=BIGINT}, #{imgurl,jdbcType=VARCHAR}, #{bigimgurl,jdbcType=VARCHAR},
+      #{objtype,jdbcType=SMALLINT}, #{maincolorTag1,jdbcType=INTEGER}, #{maincolorTag2,jdbcType=INTEGER},
+      #{maincolorTag3,jdbcType=INTEGER}, #{upcolorTag1,jdbcType=INTEGER}, #{upcolorTag2,jdbcType=INTEGER},
+      #{upcolorTag3,jdbcType=INTEGER}, #{lowcolorTag1,jdbcType=INTEGER}, #{lowcolorTag2,jdbcType=INTEGER},
+      #{lowcolorTag3,jdbcType=INTEGER}, #{sex,jdbcType=TINYINT}, #{age,jdbcType=TINYINT},
+      #{wheels,jdbcType=TINYINT}, #{size,jdbcType=TINYINT}, #{bag,jdbcType=TINYINT},
+      #{handbag,jdbcType=TINYINT}, #{glasses,jdbcType=TINYINT}, #{umbrella,jdbcType=TINYINT},
+      #{umbrellaColorTag,jdbcType=INTEGER}, #{angle,jdbcType=SMALLINT}, #{tubeid,jdbcType=INTEGER},
+      #{objid,jdbcType=INTEGER}, #{startframeidx,jdbcType=INTEGER}, #{endframeidx,jdbcType=INTEGER},
+      #{startframepts,jdbcType=INTEGER}, #{endframepts,jdbcType=INTEGER}, #{frameidx,jdbcType=INTEGER},
+      #{width,jdbcType=SMALLINT}, #{height,jdbcType=SMALLINT}, #{xywh,jdbcType=VARCHAR},
+      #{distance,jdbcType=REAL}, #{faceImgurl,jdbcType=VARCHAR}, #{peccancy,jdbcType=SMALLINT},
+      #{bikeColor,jdbcType=INTEGER}, #{bikeGenre,jdbcType=INTEGER}, #{seatingCount,jdbcType=INTEGER},
+      #{helmet,jdbcType=TINYINT}, #{helmetColorTag1,jdbcType=INTEGER}, #{helmetColorTag2,jdbcType=INTEGER},
+      #{lamShape,jdbcType=SMALLINT}, #{bikeHasPlate,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP},
+      #{inserttime,jdbcType=TIMESTAMP}, #{recogId,jdbcType=VARCHAR}, #{slaveIp,jdbcType=VARCHAR},
+      #{coatStyle,jdbcType=VARCHAR}, #{trousersStyle,jdbcType=VARCHAR}, #{retrycount,jdbcType=INTEGER},
+      #{respirator,jdbcType=INTEGER}, #{cap,jdbcType=INTEGER}, #{hairStyle,jdbcType=INTEGER},
+      #{coatTexture,jdbcType=INTEGER}, #{trousersTexture,jdbcType=INTEGER})
+    </insert>
+
+    <!-- insertSelective -->
+    <insert id="insertSelective" parameterType="com.keensense.dataconvert.biz.entity.ObjextResult">
+    insert into objext_result
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serialnumber != null">
+        serialnumber,
+      </if>
+      <if test="cameraid != null">
+        cameraid,
+      </if>
+      <if test="vlprResultId != null">
+        vlpr_result_id,
+      </if>
+      <if test="imgurl != null">
+        imgurl,
+      </if>
+      <if test="bigimgurl != null">
+        bigimgurl,
+      </if>
+      <if test="objtype != null">
+        objtype,
+      </if>
+      <if test="maincolorTag1 != null">
+        maincolor_tag_1,
+      </if>
+      <if test="maincolorTag2 != null">
+        maincolor_tag_2,
+      </if>
+      <if test="maincolorTag3 != null">
+        maincolor_tag_3,
+      </if>
+      <if test="upcolorTag1 != null">
+        upcolor_tag_1,
+      </if>
+      <if test="upcolorTag2 != null">
+        upcolor_tag_2,
+      </if>
+      <if test="upcolorTag3 != null">
+        upcolor_tag_3,
+      </if>
+      <if test="lowcolorTag1 != null">
+        lowcolor_tag_1,
+      </if>
+      <if test="lowcolorTag2 != null">
+        lowcolor_tag_2,
+      </if>
+      <if test="lowcolorTag3 != null">
+        lowcolor_tag_3,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="wheels != null">
+        wheels,
+      </if>
+      <if test="size != null">
+        `size`,
+      </if>
+      <if test="bag != null">
+        bag,
+      </if>
+      <if test="handbag != null">
+        handbag,
+      </if>
+      <if test="glasses != null">
+        glasses,
+      </if>
+      <if test="umbrella != null">
+        umbrella,
+      </if>
+      <if test="umbrellaColorTag != null">
+        umbrella_color_tag,
+      </if>
+      <if test="angle != null">
+        angle,
+      </if>
+      <if test="tubeid != null">
+        tubeid,
+      </if>
+      <if test="objid != null">
+        objid,
+      </if>
+      <if test="startframeidx != null">
+        startframeidx,
+      </if>
+      <if test="endframeidx != null">
+        endframeidx,
+      </if>
+      <if test="startframepts != null">
+        startframepts,
+      </if>
+      <if test="endframepts != null">
+        endframepts,
+      </if>
+      <if test="frameidx != null">
+        frameidx,
+      </if>
+      <if test="width != null">
+        width,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="xywh != null">
+        xywh,
+      </if>
+      <if test="distance != null">
+        distance,
+      </if>
+      <if test="faceImgurl != null">
+        face_imgurl,
+      </if>
+      <if test="peccancy != null">
+        peccancy,
+      </if>
+      <if test="bikeColor != null">
+        bike_color,
+      </if>
+      <if test="bikeGenre != null">
+        bike_genre,
+      </if>
+      <if test="seatingCount != null">
+        seating_count,
+      </if>
+      <if test="helmet != null">
+        helmet,
+      </if>
+      <if test="helmetColorTag1 != null">
+        helmet_color_tag_1,
+      </if>
+      <if test="helmetColorTag2 != null">
+        helmet_color_tag_2,
+      </if>
+      <if test="lamShape != null">
+        lam_shape,
+      </if>
+      <if test="bikeHasPlate != null">
+        bike_has_plate,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="inserttime != null">
+        inserttime,
+      </if>
+      <if test="recogId != null">
+        recog_id,
+      </if>
+      <if test="slaveIp != null">
+        slave_ip,
+      </if>
+      <if test="coatStyle != null">
+        coat_style,
+      </if>
+      <if test="trousersStyle != null">
+        trousers_style,
+      </if>
+      <if test="retrycount != null">
+        retrycount,
+      </if>
+      <if test="respirator != null">
+        respirator,
+      </if>
+      <if test="cap != null">
+        cap,
+      </if>
+      <if test="hairStyle != null">
+        hair_style,
+      </if>
+      <if test="coatTexture != null">
+        coat_texture,
+      </if>
+      <if test="trousersTexture != null">
+        trousers_texture,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serialnumber != null">
+        #{serialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cameraid != null">
+        #{cameraid,jdbcType=BIGINT},
+      </if>
+      <if test="vlprResultId != null">
+        #{vlprResultId,jdbcType=BIGINT},
+      </if>
+      <if test="imgurl != null">
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="bigimgurl != null">
+        #{bigimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="objtype != null">
+        #{objtype,jdbcType=SMALLINT},
+      </if>
+      <if test="maincolorTag1 != null">
+        #{maincolorTag1,jdbcType=INTEGER},
+      </if>
+      <if test="maincolorTag2 != null">
+        #{maincolorTag2,jdbcType=INTEGER},
+      </if>
+      <if test="maincolorTag3 != null">
+        #{maincolorTag3,jdbcType=INTEGER},
+      </if>
+      <if test="upcolorTag1 != null">
+        #{upcolorTag1,jdbcType=INTEGER},
+      </if>
+      <if test="upcolorTag2 != null">
+        #{upcolorTag2,jdbcType=INTEGER},
+      </if>
+      <if test="upcolorTag3 != null">
+        #{upcolorTag3,jdbcType=INTEGER},
+      </if>
+      <if test="lowcolorTag1 != null">
+        #{lowcolorTag1,jdbcType=INTEGER},
+      </if>
+      <if test="lowcolorTag2 != null">
+        #{lowcolorTag2,jdbcType=INTEGER},
+      </if>
+      <if test="lowcolorTag3 != null">
+        #{lowcolorTag3,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=TINYINT},
+      </if>
+      <if test="wheels != null">
+        #{wheels,jdbcType=TINYINT},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=TINYINT},
+      </if>
+      <if test="bag != null">
+        #{bag,jdbcType=TINYINT},
+      </if>
+      <if test="handbag != null">
+        #{handbag,jdbcType=TINYINT},
+      </if>
+      <if test="glasses != null">
+        #{glasses,jdbcType=TINYINT},
+      </if>
+      <if test="umbrella != null">
+        #{umbrella,jdbcType=TINYINT},
+      </if>
+      <if test="umbrellaColorTag != null">
+        #{umbrellaColorTag,jdbcType=INTEGER},
+      </if>
+      <if test="angle != null">
+        #{angle,jdbcType=SMALLINT},
+      </if>
+      <if test="tubeid != null">
+        #{tubeid,jdbcType=INTEGER},
+      </if>
+      <if test="objid != null">
+        #{objid,jdbcType=INTEGER},
+      </if>
+      <if test="startframeidx != null">
+        #{startframeidx,jdbcType=INTEGER},
+      </if>
+      <if test="endframeidx != null">
+        #{endframeidx,jdbcType=INTEGER},
+      </if>
+      <if test="startframepts != null">
+        #{startframepts,jdbcType=INTEGER},
+      </if>
+      <if test="endframepts != null">
+        #{endframepts,jdbcType=INTEGER},
+      </if>
+      <if test="frameidx != null">
+        #{frameidx,jdbcType=INTEGER},
+      </if>
+      <if test="width != null">
+        #{width,jdbcType=SMALLINT},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=SMALLINT},
+      </if>
+      <if test="xywh != null">
+        #{xywh,jdbcType=VARCHAR},
+      </if>
+      <if test="distance != null">
+        #{distance,jdbcType=REAL},
+      </if>
+      <if test="faceImgurl != null">
+        #{faceImgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="peccancy != null">
+        #{peccancy,jdbcType=SMALLINT},
+      </if>
+      <if test="bikeColor != null">
+        #{bikeColor,jdbcType=INTEGER},
+      </if>
+      <if test="bikeGenre != null">
+        #{bikeGenre,jdbcType=INTEGER},
+      </if>
+      <if test="seatingCount != null">
+        #{seatingCount,jdbcType=INTEGER},
+      </if>
+      <if test="helmet != null">
+        #{helmet,jdbcType=TINYINT},
+      </if>
+      <if test="helmetColorTag1 != null">
+        #{helmetColorTag1,jdbcType=INTEGER},
+      </if>
+      <if test="helmetColorTag2 != null">
+        #{helmetColorTag2,jdbcType=INTEGER},
+      </if>
+      <if test="lamShape != null">
+        #{lamShape,jdbcType=SMALLINT},
+      </if>
+      <if test="bikeHasPlate != null">
+        #{bikeHasPlate,jdbcType=TINYINT},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inserttime != null">
+        #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recogId != null">
+        #{recogId,jdbcType=VARCHAR},
+      </if>
+      <if test="slaveIp != null">
+        #{slaveIp,jdbcType=VARCHAR},
+      </if>
+      <if test="coatStyle != null">
+        #{coatStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="trousersStyle != null">
+        #{trousersStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="retrycount != null">
+        #{retrycount,jdbcType=INTEGER},
+      </if>
+      <if test="respirator != null">
+        #{respirator,jdbcType=INTEGER},
+      </if>
+      <if test="cap != null">
+        #{cap,jdbcType=INTEGER},
+      </if>
+      <if test="hairStyle != null">
+        #{hairStyle,jdbcType=INTEGER},
+      </if>
+      <if test="coatTexture != null">
+        #{coatTexture,jdbcType=INTEGER},
+      </if>
+      <if test="trousersTexture != null">
+        #{trousersTexture,jdbcType=INTEGER},
+      </if>
+    </trim>
+    </insert>
+
+    <!-- updateByPrimaryKeySelective -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.keensense.dataconvert.biz.entity.ObjextResult">
+        update objext_result
+        <set>
+          <if test="serialnumber != null">
+            serialnumber = #{serialnumber,jdbcType=VARCHAR},
+          </if>
+          <if test="cameraid != null">
+            cameraid = #{cameraid,jdbcType=BIGINT},
+          </if>
+          <if test="vlprResultId != null">
+            vlpr_result_id = #{vlprResultId,jdbcType=BIGINT},
+          </if>
+          <if test="imgurl != null">
+            imgurl = #{imgurl,jdbcType=VARCHAR},
+          </if>
+          <if test="bigimgurl != null">
+            bigimgurl = #{bigimgurl,jdbcType=VARCHAR},
+          </if>
+          <if test="objtype != null">
+            objtype = #{objtype,jdbcType=SMALLINT},
+          </if>
+          <if test="maincolorTag1 != null">
+            maincolor_tag_1 = #{maincolorTag1,jdbcType=INTEGER},
+          </if>
+          <if test="maincolorTag2 != null">
+            maincolor_tag_2 = #{maincolorTag2,jdbcType=INTEGER},
+          </if>
+          <if test="maincolorTag3 != null">
+            maincolor_tag_3 = #{maincolorTag3,jdbcType=INTEGER},
+          </if>
+          <if test="upcolorTag1 != null">
+            upcolor_tag_1 = #{upcolorTag1,jdbcType=INTEGER},
+          </if>
+          <if test="upcolorTag2 != null">
+            upcolor_tag_2 = #{upcolorTag2,jdbcType=INTEGER},
+          </if>
+          <if test="upcolorTag3 != null">
+            upcolor_tag_3 = #{upcolorTag3,jdbcType=INTEGER},
+          </if>
+          <if test="lowcolorTag1 != null">
+            lowcolor_tag_1 = #{lowcolorTag1,jdbcType=INTEGER},
+          </if>
+          <if test="lowcolorTag2 != null">
+            lowcolor_tag_2 = #{lowcolorTag2,jdbcType=INTEGER},
+          </if>
+          <if test="lowcolorTag3 != null">
+            lowcolor_tag_3 = #{lowcolorTag3,jdbcType=INTEGER},
+          </if>
+          <if test="sex != null">
+            sex = #{sex,jdbcType=TINYINT},
+          </if>
+          <if test="age != null">
+            age = #{age,jdbcType=TINYINT},
+          </if>
+          <if test="wheels != null">
+            wheels = #{wheels,jdbcType=TINYINT},
+          </if>
+          <if test="size != null">
+            `size` = #{size,jdbcType=TINYINT},
+          </if>
+          <if test="bag != null">
+            bag = #{bag,jdbcType=TINYINT},
+          </if>
+          <if test="handbag != null">
+            handbag = #{handbag,jdbcType=TINYINT},
+          </if>
+          <if test="glasses != null">
+            glasses = #{glasses,jdbcType=TINYINT},
+          </if>
+          <if test="umbrella != null">
+            umbrella = #{umbrella,jdbcType=TINYINT},
+          </if>
+          <if test="umbrellaColorTag != null">
+            umbrella_color_tag = #{umbrellaColorTag,jdbcType=INTEGER},
+          </if>
+          <if test="angle != null">
+            angle = #{angle,jdbcType=SMALLINT},
+          </if>
+          <if test="tubeid != null">
+            tubeid = #{tubeid,jdbcType=INTEGER},
+          </if>
+          <if test="objid != null">
+            objid = #{objid,jdbcType=INTEGER},
+          </if>
+          <if test="startframeidx != null">
+            startframeidx = #{startframeidx,jdbcType=INTEGER},
+          </if>
+          <if test="endframeidx != null">
+            endframeidx = #{endframeidx,jdbcType=INTEGER},
+          </if>
+          <if test="startframepts != null">
+            startframepts = #{startframepts,jdbcType=INTEGER},
+          </if>
+          <if test="endframepts != null">
+            endframepts = #{endframepts,jdbcType=INTEGER},
+          </if>
+          <if test="frameidx != null">
+            frameidx = #{frameidx,jdbcType=INTEGER},
+          </if>
+          <if test="width != null">
+            width = #{width,jdbcType=SMALLINT},
+          </if>
+          <if test="height != null">
+            height = #{height,jdbcType=SMALLINT},
+          </if>
+          <if test="xywh != null">
+            xywh = #{xywh,jdbcType=VARCHAR},
+          </if>
+          <if test="distance != null">
+            distance = #{distance,jdbcType=REAL},
+          </if>
+          <if test="faceImgurl != null">
+            face_imgurl = #{faceImgurl,jdbcType=VARCHAR},
+          </if>
+          <if test="peccancy != null">
+            peccancy = #{peccancy,jdbcType=SMALLINT},
+          </if>
+          <if test="bikeColor != null">
+            bike_color = #{bikeColor,jdbcType=INTEGER},
+          </if>
+          <if test="bikeGenre != null">
+            bike_genre = #{bikeGenre,jdbcType=INTEGER},
+          </if>
+          <if test="seatingCount != null">
+            seating_count = #{seatingCount,jdbcType=INTEGER},
+          </if>
+          <if test="helmet != null">
+            helmet = #{helmet,jdbcType=TINYINT},
+          </if>
+          <if test="helmetColorTag1 != null">
+            helmet_color_tag_1 = #{helmetColorTag1,jdbcType=INTEGER},
+          </if>
+          <if test="helmetColorTag2 != null">
+            helmet_color_tag_2 = #{helmetColorTag2,jdbcType=INTEGER},
+          </if>
+          <if test="lamShape != null">
+            lam_shape = #{lamShape,jdbcType=SMALLINT},
+          </if>
+          <if test="bikeHasPlate != null">
+            bike_has_plate = #{bikeHasPlate,jdbcType=TINYINT},
+          </if>
+          <if test="createtime != null">
+            createtime = #{createtime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="inserttime != null">
+            inserttime = #{inserttime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="recogId != null">
+            recog_id = #{recogId,jdbcType=VARCHAR},
+          </if>
+          <if test="slaveIp != null">
+            slave_ip = #{slaveIp,jdbcType=VARCHAR},
+          </if>
+          <if test="coatStyle != null">
+            coat_style = #{coatStyle,jdbcType=VARCHAR},
+          </if>
+          <if test="trousersStyle != null">
+            trousers_style = #{trousersStyle,jdbcType=VARCHAR},
+          </if>
+          <if test="retrycount != null">
+            retrycount = #{retrycount,jdbcType=INTEGER},
+          </if>
+          <if test="respirator != null">
+            respirator = #{respirator,jdbcType=INTEGER},
+          </if>
+          <if test="cap != null">
+            cap = #{cap,jdbcType=INTEGER},
+          </if>
+          <if test="hairStyle != null">
+            hair_style = #{hairStyle,jdbcType=INTEGER},
+          </if>
+          <if test="coatTexture != null">
+            coat_texture = #{coatTexture,jdbcType=INTEGER},
+          </if>
+          <if test="trousersTexture != null">
+            trousers_texture = #{trousersTexture,jdbcType=INTEGER},
+          </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- updateByPrimaryKey -->
+    <update id="updateByPrimaryKey" parameterType="com.keensense.dataconvert.biz.entity.ObjextResult">
+        update objext_result
+        set serialnumber = #{serialnumber,jdbcType=VARCHAR},
+          cameraid = #{cameraid,jdbcType=BIGINT},
+          vlpr_result_id = #{vlprResultId,jdbcType=BIGINT},
+          imgurl = #{imgurl,jdbcType=VARCHAR},
+          bigimgurl = #{bigimgurl,jdbcType=VARCHAR},
+          objtype = #{objtype,jdbcType=SMALLINT},
+          maincolor_tag_1 = #{maincolorTag1,jdbcType=INTEGER},
+          maincolor_tag_2 = #{maincolorTag2,jdbcType=INTEGER},
+          maincolor_tag_3 = #{maincolorTag3,jdbcType=INTEGER},
+          upcolor_tag_1 = #{upcolorTag1,jdbcType=INTEGER},
+          upcolor_tag_2 = #{upcolorTag2,jdbcType=INTEGER},
+          upcolor_tag_3 = #{upcolorTag3,jdbcType=INTEGER},
+          lowcolor_tag_1 = #{lowcolorTag1,jdbcType=INTEGER},
+          lowcolor_tag_2 = #{lowcolorTag2,jdbcType=INTEGER},
+          lowcolor_tag_3 = #{lowcolorTag3,jdbcType=INTEGER},
+          sex = #{sex,jdbcType=TINYINT},
+          age = #{age,jdbcType=TINYINT},
+          wheels = #{wheels,jdbcType=TINYINT},
+          `size` = #{size,jdbcType=TINYINT},
+          bag = #{bag,jdbcType=TINYINT},
+          handbag = #{handbag,jdbcType=TINYINT},
+          glasses = #{glasses,jdbcType=TINYINT},
+          umbrella = #{umbrella,jdbcType=TINYINT},
+          umbrella_color_tag = #{umbrellaColorTag,jdbcType=INTEGER},
+          angle = #{angle,jdbcType=SMALLINT},
+          tubeid = #{tubeid,jdbcType=INTEGER},
+          objid = #{objid,jdbcType=INTEGER},
+          startframeidx = #{startframeidx,jdbcType=INTEGER},
+          endframeidx = #{endframeidx,jdbcType=INTEGER},
+          startframepts = #{startframepts,jdbcType=INTEGER},
+          endframepts = #{endframepts,jdbcType=INTEGER},
+          frameidx = #{frameidx,jdbcType=INTEGER},
+          width = #{width,jdbcType=SMALLINT},
+          height = #{height,jdbcType=SMALLINT},
+          xywh = #{xywh,jdbcType=VARCHAR},
+          distance = #{distance,jdbcType=REAL},
+          face_imgurl = #{faceImgurl,jdbcType=VARCHAR},
+          peccancy = #{peccancy,jdbcType=SMALLINT},
+          bike_color = #{bikeColor,jdbcType=INTEGER},
+          bike_genre = #{bikeGenre,jdbcType=INTEGER},
+          seating_count = #{seatingCount,jdbcType=INTEGER},
+          helmet = #{helmet,jdbcType=TINYINT},
+          helmet_color_tag_1 = #{helmetColorTag1,jdbcType=INTEGER},
+          helmet_color_tag_2 = #{helmetColorTag2,jdbcType=INTEGER},
+          lam_shape = #{lamShape,jdbcType=SMALLINT},
+          bike_has_plate = #{bikeHasPlate,jdbcType=TINYINT},
+          createtime = #{createtime,jdbcType=TIMESTAMP},
+          inserttime = #{inserttime,jdbcType=TIMESTAMP},
+          recog_id = #{recogId,jdbcType=VARCHAR},
+          slave_ip = #{slaveIp,jdbcType=VARCHAR},
+          coat_style = #{coatStyle,jdbcType=VARCHAR},
+          trousers_style = #{trousersStyle,jdbcType=VARCHAR},
+          retrycount = #{retrycount,jdbcType=INTEGER},
+          respirator = #{respirator,jdbcType=INTEGER},
+          cap = #{cap,jdbcType=INTEGER},
+          hair_style = #{hairStyle,jdbcType=INTEGER},
+          coat_texture = #{coatTexture,jdbcType=INTEGER},
+          trousers_texture = #{trousersTexture,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <!-- 根据map更新数据 -->
+    <update id="updateSerialNumberByMap" parameterType="Map">
+    UPDATE ${params.ymdTableName}
+    <if test="params.serialValue != null">
+        SET serialnumber = '${params.serialValue}'
+    </if>
+    WHERE
+    <if test="params.serialKey != null">
+        serialnumber = '${params.serialKey}'
+    </if>
+    </update>
+</mapper>

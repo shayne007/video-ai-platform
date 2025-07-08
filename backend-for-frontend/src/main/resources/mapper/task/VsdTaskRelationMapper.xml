@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.VsdTaskRelationMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.VsdTaskRelation" id="vsdTaskRelationMap">
+        <result property="id" column="id"/>
+        <result property="taskId" column="task_id"/>
+        <result property="serialnumber" column="serialnumber"/>
+        <result property="cameraFileId" column="camera_file_id"/>
+        <result property="fromType" column="from_type"/>
+        <result property="createtime" column="createtime"/>
+        <result property="createuser" column="createuser"/>
+        <result property="c1" column="c1"/>
+        <result property="c2" column="c2"/>
+    </resultMap>
+</mapper>

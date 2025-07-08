@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.BrandModelMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.BrandModel" id="brandModelMap">
+        <result property="id" column="id"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="carSeries" column="car_series"/>
+        <result property="modelsName" column="models_name"/>
+        <result property="carKind" column="car_kind"/>
+        <result property="carKindId" column="car_kind_id"/>
+    </resultMap>
+
+    <select id="selectAllCarBrand"  resultType="java.lang.String"  >
+        select DISTINCT(t.brand_name) from brand_model t where t.brand_name is not null
+    </select>
+
+    <select id="selectAllCarSeries"  resultType="com.keensense.admin.entity.task.BrandModel" >
+        select t.car_series as carSeries from brand_model t
+        where t.car_series is not null and t.car_series != ''
+        GROUP BY t.car_series
+    </select>
+
+    <select id="selectAllCarKind"  resultType="com.keensense.admin.entity.task.BrandModel" >
+        select t.car_kind as carKind,  t.car_kind_id as carKindId from brand_model t
+        where t.car_kind_id is not null
+        <if test="carKindId != null" >
+            and t.car_kind_id = #{carKindId}
+        </if>
+        GROUP BY t.car_kind, t.car_kind_id
+    </select>
+
+</mapper>

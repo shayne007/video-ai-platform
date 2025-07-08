@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    #    使用druid数据源
+    druid:
+      name: test
+      url: jdbc:mysql://172.16.1.68:3306/keensense_densecrowd?characterEncoding=utf-8&allowMultiQueries=true
+      username: root
+      password: Ast4HS
+      driverClass: com.mysql.jdbc.Driver
+      maxActive: 20
+      initialSize: 5
+      maxWait: 60000
+      minIdle: 5
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall
+      filter:
+        stat:
+          logSlowSql: true
+          #         慢查询的时间秒
+          slowSqlMillis: 1000
+          mergeSql: true
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*/*Mapper.xml
+
+feign:
+  hystrix:
+    enabled: true
+
+druid:
+  loginUsername: qst
+  loginPassword: qst**0808
+  wall:
+    multiStatementAllow: true
+    noneBaseStatementAllow: true
+
+swagger:
+  title: 人群密度检测API
+  description: 人群密度检测API
+  version: 1.0.0
+  license: Powered By keensense_densecrowd_inittable.sql
+  licenseUrl: null
+  terms-of-service-url: null
+  contact:
+    name: null
+    email: null
+    url: null

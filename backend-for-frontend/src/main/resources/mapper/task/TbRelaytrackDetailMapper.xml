@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.TbRelaytrackDetailMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.TbRelaytrackDetail" id="tbRelaytrackDetailMap">
+        <result property="id" column="id"/>
+        <result property="taskId" column="task_id"/>
+        <result property="cameraId" column="camera_id"/>
+        <result property="cameraName" column="camera_name"/>
+        <result property="analysisId" column="analysis_id"/>
+        <result property="analysisStatus" column="analysis_status"/>
+        <result property="analysisProgress" column="analysis_progress"/>
+        <result property="createTime" column="create_time"/>
+        <result property="finishTime" column="finish_time"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="getNameMap" resultType="java.util.HashMap">
+      select GROUP_CONCAT(ID) as ids,GROUP_CONCAT(NAME) as names from camera where id in (select t1.camera_id from tb_relaytrack_detail t1 where t1.task_id=#{taskId})
+    </select>
+</mapper>

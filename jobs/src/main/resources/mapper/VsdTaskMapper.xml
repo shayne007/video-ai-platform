@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.job.mapper.VsdTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keensense.job.entity.VsdTask">
+        <id column="id" property="id" />
+        <result column="serialnumber" property="serialnumber" />
+        <result column="type" property="type" />
+        <result column="progress" property="progress" />
+        <result column="isvalid" property="isvalid" />
+        <result column="param" property="param" />
+        <result column="status" property="status" />
+        <result column="reserve" property="reserve" />
+        <result column="retrycount" property="retrycount" />
+        <result column="slaveip" property="slaveip" />
+        <result column="endtime" property="endtime" />
+        <result column="createtime" property="createtime" />
+        <result column="userserialnumber" property="userserialnumber" />
+        <result column="entrytime" property="entrytime" />
+        <result column="framerate" property="framerate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, serialnumber, type, progress, isvalid, param, status, reserve, retrycount, slaveip, endtime, createtime, userserialnumber, entrytime, framerate
+    </sql>
+
+</mapper>

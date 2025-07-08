@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.densecrowd.mapper.task.CameraMapper">
+
+    <resultMap type="com.keensense.densecrowd.entity.task.Camera" id="cameraMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="cameratype" column="cameratype"/>
+        <result property="category" column="category"/>
+        <result property="type" column="type"/>
+        <result property="region" column="region"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="direction" column="direction"/>
+        <result property="location" column="location"/>
+        <result property="status" column="status"/>
+        <result property="dsc" column="dsc"/>
+        <result property="brandid" column="brandid"/>
+        <result property="brandname" column="brandname"/>
+        <result property="model" column="model"/>
+        <result property="ip" column="ip"/>
+        <result property="port1" column="port1"/>
+        <result property="port2" column="port2"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="channel" column="channel"/>
+        <result property="extcameraid" column="extcameraid"/>
+        <result property="admindept" column="admindept"/>
+        <result property="admin" column="admin"/>
+        <result property="telephone" column="telephone"/>
+        <result property="address" column="address"/>
+        <result property="url" column="url"/>
+        <result property="follwarea" column="follwarea"/>
+        <result property="thumbNail" column="thumb_nail"/>
+        <result property="cameragroupid" column="cameragroupid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="selectByPrimaryKey" resultType="com.keensense.densecrowd.vo.CameraVo" parameterType="java.lang.Long" >
+        select
+        c.id, c.`name`, c.cameratype, c.region, au.unit_name AS regionName, c.type, c.longitude, c.latitude, c.direction,
+        c.location, c.`status`, c.dsc, c.brandid, c.brandname, c.model, c.ip, c.port1, c.port2, c.account, c.`password`, c.channel,
+        c.extcameraid, c.admindept, c.admin, c.telephone, c.address, c.url, c.follwarea, c.thumb_nail, c.cameragroupid
+        from camera c LEFT JOIN ctrl_unit au ON c.region = au.unit_identity
+        where c.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectCameraIsvalidList"  resultType="com.keensense.densecrowd.vo.CameraVo"
+            parameterType="java.util.Map">
+        SELECT
+        c.id as id,
+        c.brandname as brandname,
+        c.ip as ip,
+        c.address as address,
+        c.`name` as name,
+        c.cameratype as cameratype,
+        c.extcameraid as extcameraid,
+        c.url as url,
+        if(r.task_status=-1,null,r.serialnumber) as serialnumber,
+        r.task_status as task_status,
+        c.thumb_nail as thumbNail,
+        c.region,
+        IFNULL(r.isvalid,0) as isvalid,
+        c.status,
+        c.create_time,
+        if(r.task_status=-1,null,r.serialnumber) as taskId,
+        c.category,
+        c.longitude,
+        c.latitude,
+        c.direction,
+        c.location
+        FROM
+        camera c
+        LEFT JOIN vsd_task_relation r ON c.id = r.camera_file_id
+        and r.from_type in (1, 4)
+        and r.task_status != -1
+        WHERE 1=1
+            and	c.cameratype in (1, 2)
+        <if test="param.name != null and param.name != '' ">
+            and c.name LIKE #{param.name, jdbcType=VARCHAR}
+        </if>
+        <if test="param.isAnalysis != null and param.isAnalysis != '' ">
+            and IFNULL(r.isvalid, 0) = #{param.isAnalysis, jdbcType=VARCHAR}
+        </if>
+        <if test="param.areaId != null and param.areaId != '' ">
+            and c.region = #{param.areaId, jdbcType=VARCHAR}
+        </if>
+        order by c.create_time desc,c.NAME desc
+    </select>
+
+    <select id="selectNewStartCamera"  resultType="com.keensense.densecrowd.vo.CameraVo" parameterType="java.lang.Integer">
+        SELECT
+        c.id as id,
+        c.brandname as brandname,
+        c.ip as ip,
+        c.address as address,
+        c.`name` as name,
+        c.cameratype as cameratype,
+        c.extcameraid as extcameraid,
+        c.url as url,
+        if(r.task_status=-1,null,r.serialnumber) as serialnumber,
+        r.task_status as task_status,
+        c.thumb_nail as thumbNail,
+        t.unit_name as regionName,
+        c.region,
+        IFNULL(r.isvalid,0) as isvalid,
+        c.status,
+        c.create_time,
+        if(r.task_status=-1,null,r.serialnumber) as taskId,
+        c.category,
+        c.longitude,
+        c.latitude,
+        c.direction,
+        c.location
+        FROM
+        camera c
+        LEFT JOIN vsd_task_relation r ON c.id = r.camera_file_id
+        LEFT JOIN ctrl_unit t ON t.unit_identity = c.region
+        WHERE 1=1
+        and r.from_type in (1, 4)
+        and r.isvalid = 1
+        order by r.last_update_time desc
+        limit 0,#{num,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryNameBySerialnumber" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT c.name FROM camera c, vsd_task_relation v WHERE v.serialnumber = #{serialnumber, jdbcType=VARCHAR} and
+        v.camera_file_id = c.id
+    </select>
+
+    <select id="selectCameraByCameraType" resultType="com.keensense.densecrowd.vo.CameraVo" parameterType="java.util.Map">
+        select
+        al.ID as id,
+        al.NAME as name,
+        al.STATUS as status,
+        al.LATITUDE as latitude,
+        al.LONGITUDE as longitude,
+        al.url as url,
+        al.address,
+        al.type,
+        al.region as regionExt,
+        CONCAT(au.unit_name) regionName
+        from camera al
+        left join ctrl_unit au on al.region=au.unit_identity
+        where 1= 1
+        and al.cameratype in (1,2)
+        order by al.create_time desc,al.ID desc
+    </select>
+
+    <select id="selectOnlineAndIpCCameraList" resultType="com.keensense.densecrowd.vo.CameraVo"
+            parameterType="java.util.Map">
+        SELECT
+        c.id as id,
+        c.brandname as brandname,
+        c.ip as ip,
+        c.address as address,
+        c.`name` as name,
+        c.cameratype as cameratype,
+        c.extcameraid as extcameraid,
+        c.url as url,
+        if(r.task_status=-1,null,r.serialnumber) as serialnumber,
+        r.task_status as task_status,
+        c.thumb_nail as thumbNail,
+        c.region,
+        IFNULL(r.isvalid,0) as isvalid,
+        c.status,
+        c.create_time,
+        if(r.task_status=-1,null,r.serialnumber) as taskId,
+        c.category,
+        c.longitude,
+        c.latitude,
+        c.direction,
+        c.location,
+        c.alarm_threshold as alarmThreshold
+        FROM
+        camera c
+        LEFT JOIN vsd_task_relation r ON c.id = r.camera_file_id and r.task_status != -1
+        and r.from_type in (1, 4)
+        WHERE 1=1
+        <if test="params.cameraType != null and params.cameraType != '' ">
+            and c.cameratype = #{params.cameraType,jdbcType=VARCHAR}
+        </if>
+        <if test="params.cameraName != null and params.cameraName != '' ">
+            and c.name LIKE #{params.cameraName,jdbcType=VARCHAR}
+        </if>
+        <if test="params.isvalid != null and params.isvalid != '' ">
+            and IFNULL(r.isvalid, 0) = #{params.isvalid,jdbcType=VARCHAR}
+        </if>
+        <if test="params.status != null and params.status != '' ">
+            and c.status = #{params.status,jdbcType=VARCHAR}
+        </if>
+        <if test="params.task_status != null and params.task_status != '' ">
+            and r.task_status = #{params.task_status,jdbcType=VARCHAR}
+        </if>
+        <if test="params.region != null and params.region != '' ">
+            and c.region = #{params.region,jdbcType=VARCHAR}
+        </if>
+        order by c.create_time desc,c.NAME desc
+    </select>
+</mapper>

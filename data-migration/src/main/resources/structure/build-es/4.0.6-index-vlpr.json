@@ -1,0 +1,288 @@
+{
+  "LocationInfo": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "analysisid": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "bigimgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "bright": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "cameraid": {
+    "index": "true",
+    "type": "long"
+  },
+  "carBright": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "carcolor": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "carlogo": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "carspeed": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "confidence": {
+    "index": "true",
+    "type": "long"
+  },
+  "costTime": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "crash": {
+    "index": "true",
+    "type": "long"
+  },
+  "createtime": {
+    "type": "date"
+  },
+  "danger": {
+    "index": "true",
+    "type": "long"
+  },
+  "direction": {
+    "index": "true",
+    "type": "long"
+  },
+  "endframeidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "endframepts": {
+    "index": "true",
+    "type": "long"
+  },
+  "face": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "face_url1": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "face_url2": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "featuredataurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "frameIdx": {
+    "index": "true",
+    "type": "long"
+  },
+  "hasCall": {
+    "index": "true",
+    "type": "long"
+  },
+  "hasDrop": {
+    "index": "true",
+    "type": "long"
+  },
+  "height": {
+    "index": "true",
+    "type": "long"
+  },
+  "id": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "imageURL": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "imgurl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "inserttime": {
+    "type": "date"
+  },
+  "isObjextResult": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "labelInfoData": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "license": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "licenseattribution": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "locationBottom": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "locationLeft": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "locationRight": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "locationTop": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "mainBelt": {
+    "index": "true",
+    "type": "long"
+  },
+  "objid": {
+    "index": "true",
+    "type": "long"
+  },
+  "objtype": {
+    "index": "true",
+    "type": "long"
+  },
+  "paper": {
+    "index": "true",
+    "type": "long"
+  },
+  "peccancy": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "platecolor": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "platetype": {
+    "index": "true",
+    "type": "long"
+  },
+  "rack": {
+    "index": "true",
+    "type": "long"
+  },
+  "retrycount": {
+    "index": "true",
+    "type": "long"
+  },
+  "secondBelt": {
+    "index": "true",
+    "type": "long"
+  },
+  "serialNum": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "serialnumber": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "slaveip": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "spareTire": {
+    "index": "true",
+    "type": "long"
+  },
+  "startframeidx": {
+    "index": "true",
+    "type": "long"
+  },
+  "startframepts": {
+    "index": "true",
+    "type": "long"
+  },
+  "sun": {
+    "index": "true",
+    "type": "long"
+  },
+  "sunRoof": {
+    "index": "true",
+    "type": "long"
+  },
+  "sychronized": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "tag": {
+    "index": "true",
+    "type": "long"
+  },
+  "taskid": {
+    "index": "true",
+    "type": "long"
+  },
+  "unitIdentity": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleBootom": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleBrand": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleConfidence": {
+    "index": "true",
+    "type": "long"
+  },
+  "vehicleKind": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleLeft": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleResion": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleRight": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleSeries": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleStyle": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleTop": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "vehicleUrl": {
+    "index": "true",
+    "type": "keyword"
+  },
+  "width": {
+    "index": "true",
+    "type": "long"
+  },
+  "xywh": {
+    "index": "true",
+    "type": "keyword"
+  }
+}

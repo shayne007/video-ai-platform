@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.dataconvert.biz.dao.VsdTaskMapper">
+    <!-- BaseResultMap -->
+    <resultMap id="BaseResultMap" type="com.keensense.dataconvert.biz.entity.VsdTask">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="serialnumber" jdbcType="VARCHAR" property="serialnumber" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="progress" jdbcType="SMALLINT" property="progress" />
+        <result column="isvalid" jdbcType="SMALLINT" property="isvalid" />
+        <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="reserve" jdbcType="VARCHAR" property="reserve" />
+        <result column="retrycount" jdbcType="SMALLINT" property="retrycount" />
+        <result column="slaveip" jdbcType="VARCHAR" property="slaveip" />
+        <result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+        <result column="userserialnumber" jdbcType="VARCHAR" property="userserialnumber" />
+        <result column="entrytime" jdbcType="TIMESTAMP" property="entrytime" />
+        <result column="framerate" jdbcType="INTEGER" property="framerate" />
+    </resultMap>
+
+    <!-- BaseResultMap -->
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.keensense.dataconvert.biz.entity.VsdTask">
+        <result column="param" jdbcType="LONGVARCHAR" property="param" />
+    </resultMap>
+
+    <!-- Base_Column_List -->
+    <sql id="Base_Column_List">
+        id, serialnumber, `type`, progress, isvalid, status, reserve, retrycount, slaveip,
+        endtime, createtime, userserialnumber, entrytime, framerate
+    </sql>
+
+    <!-- Blob_Column_List -->
+    <sql id="Blob_Column_List">
+      param
+    </sql>
+
+    <!-- selectByPrimaryKey -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+        select
+            <include refid="Base_Column_List" />
+            ,
+            <include refid="Blob_Column_List" />
+            from vsd_task
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 查询所有的任务列表 -->
+    <select id="selectAllList" resultType="com.keensense.dataconvert.biz.entity.VsdTask">
+    select <include refid="Base_Column_List" /> ,  <include refid="Blob_Column_List" />
+      from vsd_task
+    where
+    </select>
+
+    <!-- deleteByPrimaryKey -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from vsd_task
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!-- insert -->
+    <insert id="insert" parameterType="com.keensense.dataconvert.biz.entity.VsdTask">
+    insert into vsd_task (id, serialnumber, type,
+      progress, isvalid, status,
+      reserve, retrycount, slaveip,
+      endtime, createtime, userserialnumber,
+      entrytime, framerate, param
+      )
+    values (#{id,jdbcType=BIGINT}, #{serialnumber,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+      #{progress,jdbcType=SMALLINT}, #{isvalid,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT},
+      #{reserve,jdbcType=VARCHAR}, #{retrycount,jdbcType=SMALLINT}, #{slaveip,jdbcType=VARCHAR},
+      #{endtime,jdbcType=TIMESTAMP}, #{createtime,jdbcType=TIMESTAMP}, #{userserialnumber,jdbcType=VARCHAR},
+      #{entrytime,jdbcType=TIMESTAMP}, #{framerate,jdbcType=INTEGER}, #{param,jdbcType=LONGVARCHAR}
+      )
+    </insert>
+
+    <!-- insertSelective -->
+    <insert id="insertSelective" parameterType="com.keensense.dataconvert.biz.entity.VsdTask">
+    insert into vsd_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serialnumber != null">
+        serialnumber,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="progress != null">
+        progress,
+      </if>
+      <if test="isvalid != null">
+        isvalid,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="reserve != null">
+        reserve,
+      </if>
+      <if test="retrycount != null">
+        retrycount,
+      </if>
+      <if test="slaveip != null">
+        slaveip,
+      </if>
+      <if test="endtime != null">
+        endtime,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="userserialnumber != null">
+        userserialnumber,
+      </if>
+      <if test="entrytime != null">
+        entrytime,
+      </if>
+      <if test="framerate != null">
+        framerate,
+      </if>
+      <if test="param != null">
+        param,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serialnumber != null">
+        #{serialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=SMALLINT},
+      </if>
+      <if test="isvalid != null">
+        #{isvalid,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="reserve != null">
+        #{reserve,jdbcType=VARCHAR},
+      </if>
+      <if test="retrycount != null">
+        #{retrycount,jdbcType=SMALLINT},
+      </if>
+      <if test="slaveip != null">
+        #{slaveip,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userserialnumber != null">
+        #{userserialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="entrytime != null">
+        #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="framerate != null">
+        #{framerate,jdbcType=INTEGER},
+      </if>
+      <if test="param != null">
+        #{param,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+    </insert>
+
+    <!-- updateByPrimaryKeySelective -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.keensense.dataconvert.biz.entity.VsdTask">
+    update vsd_task
+    <set>
+      <if test="serialnumber != null">
+        serialnumber = #{serialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        progress = #{progress,jdbcType=SMALLINT},
+      </if>
+      <if test="isvalid != null">
+        isvalid = #{isvalid,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="reserve != null">
+        reserve = #{reserve,jdbcType=VARCHAR},
+      </if>
+      <if test="retrycount != null">
+        retrycount = #{retrycount,jdbcType=SMALLINT},
+      </if>
+      <if test="slaveip != null">
+        slaveip = #{slaveip,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        endtime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userserialnumber != null">
+        userserialnumber = #{userserialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="entrytime != null">
+        entrytime = #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="framerate != null">
+        framerate = #{framerate,jdbcType=INTEGER},
+      </if>
+      <if test="param != null">
+        param = #{param,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- updateByPrimaryKeyWithBLOBs -->
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.keensense.dataconvert.biz.entity.VsdTask">
+        update vsd_task
+            set serialnumber = #{serialnumber,jdbcType=VARCHAR},
+                type = #{type,jdbcType=VARCHAR},
+                progress = #{progress,jdbcType=SMALLINT},
+                isvalid = #{isvalid,jdbcType=SMALLINT},
+                status = #{status,jdbcType=SMALLINT},
+                reserve = #{reserve,jdbcType=VARCHAR},
+                retrycount = #{retrycount,jdbcType=SMALLINT},
+                slaveip = #{slaveip,jdbcType=VARCHAR},
+                endtime = #{endtime,jdbcType=TIMESTAMP},
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+                userserialnumber = #{userserialnumber,jdbcType=VARCHAR},
+                entrytime = #{entrytime,jdbcType=TIMESTAMP},
+                framerate = #{framerate,jdbcType=INTEGER},
+                param = #{param,jdbcType=LONGVARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- updateByPrimaryKey -->
+    <update id="updateByPrimaryKey" parameterType="com.keensense.dataconvert.biz.entity.VsdTask">
+        update vsd_task
+            set serialnumber = #{serialnumber,jdbcType=VARCHAR},
+              type = #{type,jdbcType=VARCHAR},
+              progress = #{progress,jdbcType=SMALLINT},
+              isvalid = #{isvalid,jdbcType=SMALLINT},
+              status = #{status,jdbcType=SMALLINT},
+              reserve = #{reserve,jdbcType=VARCHAR},
+              retrycount = #{retrycount,jdbcType=SMALLINT},
+              slaveip = #{slaveip,jdbcType=VARCHAR},
+              endtime = #{endtime,jdbcType=TIMESTAMP},
+              createtime = #{createtime,jdbcType=TIMESTAMP},
+              userserialnumber = #{userserialnumber,jdbcType=VARCHAR},
+              entrytime = #{entrytime,jdbcType=TIMESTAMP},
+              framerate = #{framerate,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

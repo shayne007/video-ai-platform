@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keensense.job.mapper.CameraMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keensense.job.entity.Camera">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="cameratype" property="cameratype" />
+        <result column="type" property="type" />
+        <result column="region" property="region" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="direction" property="direction" />
+        <result column="location" property="location" />
+        <result column="status" property="status" />
+        <result column="dsc" property="dsc" />
+        <result column="brandid" property="brandid" />
+        <result column="brandname" property="brandname" />
+        <result column="model" property="model" />
+        <result column="ip" property="ip" />
+        <result column="port1" property="port1" />
+        <result column="port2" property="port2" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="channel" property="channel" />
+        <result column="extcameraid" property="extcameraid" />
+        <result column="admindept" property="admindept" />
+        <result column="admin" property="admin" />
+        <result column="telephone" property="telephone" />
+        <result column="address" property="address" />
+        <result column="url" property="url" />
+        <result column="follwarea" property="follwarea" />
+        <result column="thumb_nail" property="thumbNail" />
+        <result column="cameragroupid" property="cameragroupid" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, cameratype, type, region, longitude, latitude, direction, location, status, dsc, brandid, brandname, model, ip, port1, port2, account, password, channel, extcameraid, admindept, admin, telephone, address, url, follwarea, thumb_nail AS thumbNail, cameragroupid, create_time AS createTime
+    </sql>
+
+    <select id="selectAllCameras" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from camera
+    </select>
+
+    <insert id="insertCamera" parameterType="com.keensense.job.entity.Camera" >
+        insert into camera
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="cameratype != null" >
+                cameratype,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="region != null" >
+                region,
+            </if>
+            <if test="longitude != null" >
+                longitude,
+            </if>
+            <if test="latitude != null" >
+                latitude,
+            </if>
+            <if test="direction != null" >
+                direction,
+            </if>
+            <if test="location != null" >
+                location,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="dsc != null" >
+                dsc,
+            </if>
+            <if test="brandid != null" >
+                brandid,
+            </if>
+            <if test="brandname != null" >
+                brandname,
+            </if>
+            <if test="model != null" >
+                model,
+            </if>
+            <if test="ip != null" >
+                ip,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="lastUpdateUserId != null" >
+                LAST_UPDATE_USER_ID,
+            </if>
+            <if test="lastUpdatedTime != null" >
+                LAST_UPDATED_TIME,
+            </if>
+            <if test="orderbyCode != null" >
+                ORDERBY_CODE,
+            </if>
+            <if test="isValid != null" >
+                IS_VALID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="cameratype != null" >
+                #{cameratype,jdbcType=DECIMAL},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=DECIMAL},
+            </if>
+            <if test="region != null" >
+                #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null" >
+                #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null" >
+                #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="direction != null" >
+                #{direction,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null" >
+                #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=DECIMAL},
+            </if>
+            <if test="dsc != null" >
+                #{dsc,jdbcType=VARCHAR},
+            </if>
+            <if test="brandid != null" >
+                #{brandid,jdbcType=DECIMAL},
+            </if>
+            <if test="brandname != null" >
+                #{brandname,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null" >
+                #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null" >
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateUserId != null" >
+                #{lastUpdateUserId,jdbcType=DECIMAL},
+            </if>
+            <if test="lastUpdatedTime != null" >
+                #{lastUpdatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderbyCode != null" >
+                #{orderbyCode,jdbcType=DECIMAL},
+            </if>
+            <if test="isValid != null" >
+                #{isValid,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateCameraByPrimaryKey" parameterType="com.keensense.job.entity.Camera" >
+        update app_features_detail
+        <set >
+            <if test="classCode != null" >
+                CLASS_CODE = #{classCode,jdbcType=DECIMAL},
+            </if>
+            <if test="featuresCode != null" >
+                FEATURES_CODE = #{featuresCode,jdbcType=DECIMAL},
+            </if>
+            <if test="featuresName != null" >
+                FEATURES_NAME = #{featuresName,jdbcType=VARCHAR},
+            </if>
+            <if test="fullCode != null" >
+                FULL_CODE = #{fullCode,jdbcType=VARCHAR},
+            </if>
+            <if test="widgetType != null" >
+                WIDGET_TYPE = #{widgetType,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null" >
+                CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateUserId != null" >
+                LAST_UPDATE_USER_ID = #{lastUpdateUserId,jdbcType=DECIMAL},
+            </if>
+            <if test="lastUpdatedTime != null" >
+                LAST_UPDATED_TIME = #{lastUpdatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderbyCode != null" >
+                ORDERBY_CODE = #{orderbyCode,jdbcType=DECIMAL},
+            </if>
+            <if test="isValid != null" >
+                IS_VALID = #{isValid,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+</mapper>

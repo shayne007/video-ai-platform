@@ -1,0 +1,25 @@
+ <tr style='height:1.0cm'>
+  <td width=69 style='width:51.9pt;border:solid black 1.0pt;border-top:none;
+  padding:0cm 5.4pt 0cm 5.4pt;height:1.0cm'>
+  <p class=MsoNormal align=center style='margin-right:-5.4pt;text-align:center'><span
+  lang=EN-US style='font-family:"Times New Roman",serif'>###recordIndex###</span></p>
+  </td>
+  <td width=118 style='width:88.2pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:1.0cm'>
+  <p class=MsoNormal align=center style='margin-right:-5.4pt;text-align:center'><span
+   lang=EN-US>###recordImgUrl###</span></p>
+  </td>
+  <td width=93 style='width:70.05pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:1.0cm'>
+  <p class=MsoNormal align=center style='margin-right:-5.4pt;text-align:center'><span
+  style='font-family:宋体'>###recordCname###</span></p>
+  </td>
+  <td width=185 style='width:138.85pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:1.0cm'>
+  <p class=MsoNormal style='margin-right:-5.4pt;text-indent:21.0pt'><span
+  lang=EN-US style='font-family:"Times New Roman",serif'>###recordTime###</span></p>
+  </td>
+ </tr>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.lawcase.TbCaseArchiveVideoMapper">
+
+    <resultMap type="com.keensense.admin.entity.lawcase.TbCaseArchiveVideo" id="tbCaseArchiveVideoMap">
+        <result property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileType" column="file_type"/>
+        <result property="fileRemotePath" column="file_remote_path"/>
+        <result property="fileLocalPath" column="file_local_path"/>
+        <result property="happenPeriod" column="happen_period"/>
+        <result property="isProof" column="is_proof"/>
+        <result property="videoStartTime" column="video_start_time"/>
+        <result property="videoEndTime" column="video_end_time"/>
+        <result property="relatePictureUrl" column="relate_picture_url"/>
+        <result property="caseCode" column="case_code"/>
+        <result property="serialnumber" column="serialnumber"/>
+        <result property="cameraId" column="camera_id"/>
+        <result property="deleted" column="deleted"/>
+        <result property="version" column="version"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="videoDownloadId" column="video_download_id"/>
+    </resultMap>
+
+    <select id="getCaseArchiveInfoVideoList" resultType="com.keensense.admin.vo.CaseArchiveVideoVo" parameterType="java.lang.String">
+        select
+        *,
+        b.name AS cameraName,
+        date_format(a.create_time,'%Y-%m-%d %H:%i:%s') AS createTimeStr,
+        date_format(a.video_start_time,'%Y-%m-%d %H:%i:%s') AS videoStartTimeStr,
+        v.progress AS progress,
+        v.transfer_status AS transferStatus
+        from tb_case_archive_video a
+        LEFT JOIN camera b  on a.camera_id =b.id
+        LEFT JOIN  tb_case_video_download v on a.video_download_id=v.id
+        where a.deleted=0 and a.camera_id is not null and a.create_time is not null
+        <if test="caseCode != null and caseCode != ''">
+            and a.case_code =#{caseCode,jdbcType=VARCHAR}
+        </if>
+        <if test="videoDownloadId != null and videoDownloadId != ''">
+            and a.video_download_id =#{videoDownloadId,jdbcType=VARCHAR}
+        </if>
+        ORDER BY createTimeStr
+
+    </select>
+
+    <select id="selectExistsArchiveVideo" parameterType="com.keensense.admin.entity.lawcase.TbCaseArchiveVideo" resultType="com.keensense.admin.entity.lawcase.TbCaseArchiveVideo">
+        select * from tb_case_archive_video
+        where 1=1
+        <if test="fileName != null" >
+            and file_name = #{fileName,jdbcType=VARCHAR}
+        </if>
+        <if test="fileType != null" >
+            and file_type = #{fileType,jdbcType=INTEGER}
+        </if>
+        <if test="fileRemotePath != null" >
+            and file_remote_path = #{fileRemotePath,jdbcType=VARCHAR}
+        </if>
+        <if test="fileLocalPath != null" >
+            and file_local_path = #{fileLocalPath,jdbcType=VARCHAR}
+        </if>
+        <if test="happenPeriod != null" >
+            and happen_period = #{happenPeriod,jdbcType=INTEGER}
+        </if>
+        <if test="isProof != null" >
+            and is_proof = #{isProof,jdbcType=BIT}
+        </if>
+        <if test="videoStartTime != null" >
+            and video_start_time = #{videoStartTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="videoEndTime != null" >
+            and video_end_time = #{videoEndTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="relatePictureUrl != null" >
+            and relate_picture_url = #{relatePictureUrl,jdbcType=VARCHAR}
+        </if>
+        <if test="caseCode != null" >
+            and case_code = #{caseCode,jdbcType=VARCHAR}
+        </if>
+        <if test="serialnumber != null" >
+            and serialnumber = #{serialnumber,jdbcType=VARCHAR}
+        </if>
+        <if test="cameraId != null" >
+            and camera_id = #{cameraId,jdbcType=BIGINT}
+        </if>
+        <if test="deleted != null" >
+            and deleted = #{deleted,jdbcType=BIT}
+        </if>
+        <if test="version != null" >
+            and version = #{version,jdbcType=INTEGER}
+        </if>
+        <if test="createTime != null" >
+            and create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createUser != null" >
+            and create_user = #{createUser,jdbcType=VARCHAR}
+        </if>
+        <if test="lastUpdateTime != null" >
+            and last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

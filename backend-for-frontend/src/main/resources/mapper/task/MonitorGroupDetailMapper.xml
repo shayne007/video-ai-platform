@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.keensense.admin.mapper.task.MonitorGroupDetailMapper" >
+  <resultMap id="monitorGroupDetailMap" type="com.keensense.admin.entity.task.MonitorGroupDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="monitor_group_id" property="monitorGroupId" jdbcType="BIGINT" />
+    <result column="camera_id" property="cameraId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="BIGINT" />
+  </resultMap>
+
+    <!--使用 vsd_task_relation 进行判断监控点任务启停-->
+    <select id="selectMonitorGroupDetailList" resultMap="monitorGroupDetailMap"
+            parameterType="java.lang.Long" >
+        SELECT
+        tb_mgd.id AS id,
+        tb_mgd.monitor_group_id,
+        tb_mgd.camera_id,
+        tb_mgd.create_time,
+        c. NAME AS cameraName,
+        cu.unit_name AS regionName,
+        c_isvalid AS isValid,
+        c_serialnumber AS serialnumber
+        FROM
+        tb_monitor_group_detail tb_mgd
+        LEFT JOIN (
+        SELECT
+        tmgd.id AS tmgd_id,
+        vtr.isvalid AS c_isvalid,
+        vtr.serialnumber AS c_serialnumber
+        FROM
+        tb_monitor_group tmg
+        LEFT JOIN tb_monitor_group_detail tmgd ON tmg.id = tmgd.monitor_group_id
+        LEFT JOIN vsd_task_relation vtr ON vtr.camera_file_id = tmgd.camera_id
+        WHERE
+        tmg.id = #{monitorGroupId,jdbcType=BIGINT}
+        AND vtr.from_type in (1,4,6)
+        ) AS tbs ON tmgd_id = tb_mgd.id
+        LEFT JOIN camera c ON tb_mgd.camera_id = c.id
+        LEFT JOIN ctrl_unit cu ON cu.unit_identity = c.region
+        WHERE
+        tb_mgd.monitor_group_id = #{monitorGroupId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectMonitorGroupSerialnumber" resultType="java.lang.String" parameterType="java.lang.Long" >
+        SELECT
+        vt.serialnumber
+        FROM
+        tb_monitor_group_detail tmgd
+        INNER JOIN vsd_task_relation vt ON vt.camera_id = tmgd.camera_id
+        WHERE
+        tmgd.monitor_group_id = #{monitorGroupId,jdbcType=BIGINT}
+        AND vt.from_type in (1,4,6)
+    </select>
+
+    <select id="selectMonitorGroupRealTask" resultType="java.lang.String" parameterType="java.lang.Long" >
+        SELECT
+        vt.serialnumber
+        FROM
+        tb_monitor_group_detail tmgd
+        inner JOIN vsd_task_relation vt ON vt.camera_id = tmgd.camera_id
+        WHERE
+        tmgd.monitor_group_id = #{monitorGroupId}
+        AND vt.from_type in (1,4,6)
+        AND vt.isvalid = 1
+    </select>
+
+    <select id="selectCameraByMonitorGroupId" parameterType="java.lang.Long" resultType="java.lang.String" >
+        SELECT
+        tmgd.camera_id cameraId
+        FROM
+        tb_monitor_group_detail tmgd
+        inner JOIN vsd_task_relation vt ON vt.camera_id = tmgd.camera_id
+        WHERE
+        vt.from_type in (1,4,6)
+        AND tmgd.monitor_group_id = #{monitorGroupId}
+        group by tmgd.camera_id
+    </select>
+</mapper>

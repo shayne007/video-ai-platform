@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.densecrowd.mapper.sys.SysUserMapper">
+
+    <resultMap type="com.keensense.densecrowd.entity.sys.SysUser" id="sysUserMap">
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="realName" column="real_name"/>
+        <result property="tel" column="tel"/>
+        <result property="remark" column="remark"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="isvalid" column="isvalid"/>
+        <result property="isDeptAdmin" column="is_dept_admin"/>
+        <result property="themes" column="themes"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="getAllDeptId" resultType="java.lang.String">
+       select distinct u.dept_id from sys_user u where u.dept_id is not null and u.dept_id != '';
+  </select>
+
+    <select id="selectUsersByPage" resultType="com.keensense.densecrowd.dto.UserVo" parameterType="java.util.Map">
+        select
+        t.USER_ID userId, t.USERNAME username, t.REAL_NAME realName,
+        t.TEL  tel, t.REMARK remark, t.DEPT_ID deptId, t.ISVALID isvalid, t.IS_DEPT_ADMIN isDeptAdmin,
+        t.THEMES themes, t.CREATE_USER_ID createUserId, t.CREATE_USER_NAME createUserName,
+        date_format(t.CREATE_TIME,'%Y-%m-%d') AS createTime,b.DEPT_NAME as deptName
+        from sys_user t
+        left join sys_dept b on b.DEPT_number=t.DEPT_ID
+        where 1 = 1
+        <if test="record.createUserId != null and record.createUserId != ''">
+            and t.CREATE_USER_ID = #{record.createUserId,jdbcType=DECIMAL}
+        </if>
+        <if test="record.username != null and record.username != ''">
+            and t.USERNAME like #{record.username,jdbcType=VARCHAR}
+        </if>
+        <if test="record.realName != null and record.realName != ''">
+            and t.REAL_NAME like #{record.realName,jdbcType=VARCHAR}
+        </if>
+        order by t.CREATE_TIME desc, t.USER_ID
+    </select>
+
+    <select id="selectUserById" resultMap="sysUserMap" parameterType="java.lang.Long">
+        select * from sys_user where user_id = #{userId}
+    </select>
+</mapper>

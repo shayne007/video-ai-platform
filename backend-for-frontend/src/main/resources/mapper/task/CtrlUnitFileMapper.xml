@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.CtrlUnitFileMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.CtrlUnitFile" id="ctrlUnitFileMap">
+        <result property="id" column="id"/>
+        <result property="fileType" column="file_type"/>
+        <result property="fileSuffix" column="file_suffix"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileNameafterupload" column="file_nameafterupload"/>
+        <result property="filePathafterupload" column="file_pathafterupload"/>
+        <result property="fileLocalPath" column="file_local_path"/>
+        <result property="ctrlUnitId" column="ctrl_unit_id"/>
+        <result property="cameraId" column="camera_id"/>
+        <result property="fileDescription" column="file_description"/>
+        <result property="thumbNail" column="thumb_nail"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="entryTime" column="entry_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="serialnumber" column="serialnumber"/>
+        <result property="transcodingId" column="transcoding_id"/>
+        <result property="transcodingProgress" column="transcoding_progress"/>
+        <result property="frameCount" column="frame_count"/>
+        <result property="framerate" column="framerate"/>
+        <result property="resolution" column="resolution"/>
+        <result property="transcodeStatus" column="transcode_status"/>
+        <result property="tasticsentityid" column="tasticsentityid"/>
+        <result property="fileFtpPath" column="file_ftp_path"/>
+        <result property="slaveIp" column="slave_ip"/>
+        <result property="autoAnalysisFlag" column="auto_analysis_flag"/>
+        <result property="interestParam" column="interest_param"/>
+        <result property="uninterestParam" column="uninterest_param"/>
+    </resultMap>
+
+    <select id="queryOfflineVideo"  resultType="com.keensense.admin.entity.task.CtrlUnitFile"  parameterType="java.util.Map">
+        <include refid="queryOfflineVideoSql"/>
+        <if test="params.fileName != null and params.fileName !=''">
+            and	t.file_name like CONCAT('%', #{params.fileName},'%')
+        </if>
+        <if test="params.ctrlUnitId != null and params.ctrlUnitId !=''">
+            and	t.id = #{params.ctrlUnitId}
+        </if>
+        <if test="params.status != null and params.status !='' or params.status == 0">
+            and	r.task_status = #{params.status}
+        </if>
+        order by t.create_time desc
+    </select>
+    <select id="queryOfflineVideoByFileId"  resultType="com.keensense.admin.entity.task.CtrlUnitFile"  parameterType="java.util.Map">
+        <include refid="queryOfflineVideoSql"/>
+        and t.id = #{fileId}
+    </select>
+    <sql id="queryOfflineVideoSql">
+        select
+        t.*,
+        r.serialnumber as seriNum,
+        r.task_progress as analysisProgress,
+        r.task_id as taskId,
+        r.task_status as taskStatus,
+        r.type as objType
+        from ctrl_unit_file t
+        LEFT JOIN vsd_task_relation r ON r.camera_file_id = t.id
+        where t.file_type = 2 and t.del_flag is null and t.auto_analysis_flag is not null
+    </sql>
+
+    <select id="selectCtrlUnitFileByTask" resultMap="ctrlUnitFileMap">
+        SELECT * FROM ctrl_unit_file WHERE transcode_status=1 and id NOT IN ( SELECT camera_file_id FROM vsd_task_relation WHERE task_status not in (-1) and from_type IN (2, 6))
+        AND auto_analysis_flag=1 ORDER BY create_time ASC LIMIT 3
+    </select>
+
+    <select id="selectRecentInterest"  resultType="com.keensense.admin.entity.task.CtrlUnitFile" >
+        select *
+        from ctrl_unit_file t
+        where camera_id = #{cameraId}
+        order by create_time desc limit 1
+    </select>
+</mapper>

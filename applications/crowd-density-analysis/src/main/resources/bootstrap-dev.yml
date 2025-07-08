@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.1.68:9848
+        enabled: true
+      config:
+        file-extension: yaml
+        server-addr: 172.16.1.68:9848
+        shared-dataids: keensense-densecrowd-prod.yaml
+        refreshable-dataids: keensense-densecrowd-prod.yaml
+logging:
+  config: classpath:logs/config/logback-spring.xml

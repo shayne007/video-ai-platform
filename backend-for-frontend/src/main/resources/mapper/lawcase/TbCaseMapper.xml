@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.lawcase.TbCaseMapper">
+
+    <resultMap type="com.keensense.admin.entity.lawcase.TbCase" id="tbCaseMap">
+        <result property="id" column="id"/>
+        <result property="caseCode" column="case_code"/>
+        <result property="caseName" column="case_name"/>
+        <result property="caseOptionId" column="case_option_id"/>
+        <result property="caseStatus" column="case_status"/>
+        <result property="caseDetail" column="case_detail"/>
+        <result property="caseStartTime" column="case_start_time"/>
+        <result property="caseEndTime" column="case_end_time"/>
+        <result property="caseLocation" column="case_location"/>
+        <result property="caseHandleUser" column="case_handle_user"/>
+        <result property="caseHandleInvestor" column="case_handle_investor"/>
+        <result property="caseLongitude" column="case_longitude"/>
+        <result property="caseLatitude" column="case_latitude"/>
+        <result property="caseStationId" column="case_station_id"/>
+        <result property="trackImageUrl" column="track_image_url"/>
+        <result property="deleted" column="deleted"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="version" column="version"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+    </resultMap>
+
+    <select id="getLatestUpdateTime" resultType="java.sql.Timestamp">
+      SELECT max(last_update_time) as update_time
+		from tb_case
+			WHERE deleted = 0
+    </select>
+
+    <select id="selectTbCaseByPage" parameterType="java.util.List" resultType="com.keensense.admin.vo.TbCaseVo">
+        SELECT
+        tc.id as id,
+        tc.case_name AS caseName,
+        tc.case_code as caseCode,
+        tc.case_status AS caseStatus,
+        date_format(tc.create_time,'%Y-%m-%d %H:%i:%s') AS createTimeStr,
+        tc.case_handle_user as caseHandleUser
+        FROM
+        tb_case tc
+        where 1=1
+        <if test="params.caseStatus != null" >
+            and    tc.case_status = #{params.caseStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="params.caseName != null and ''!=params.caseName" >
+            and    tc.case_name like #{params.caseName,jdbcType=VARCHAR}
+        </if>
+        order by tc.create_time desc, tc.id desc
+    </select>
+
+</mapper>

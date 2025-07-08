@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.CarBrandModelMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.CarBrandModel" id="carBrandModelMap">
+        <result property="id" column="id"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="carSeriesId" column="car_series_id"/>
+        <result property="carSeriesName" column="car_series_name"/>
+        <result property="carYearId" column="car_year_id"/>
+        <result property="carYearName" column="car_year_name"/>
+        <result property="carKindId" column="car_kind_id"/>
+        <result property="carKindName" column="car_kind_name"/>
+        <result property="carFullId" column="car_full_id"/>
+        <result property="carFullName" column="car_full_name"/>
+        <result property="c1" column="c1"/>
+        <result property="c2" column="c2"/>
+        <result property="c3" column="c3"/>
+    </resultMap>
+
+</mapper>

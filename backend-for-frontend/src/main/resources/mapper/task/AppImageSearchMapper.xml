@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.AppImageSearchMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.AppImageSearch" id="appImageSearchMap">
+        <result property="searchId" column="SEARCH_ID"/>
+        <result property="objextType" column="OBJEXT_TYPE"/>
+        <result property="imageUrl" column="IMAGE_URL"/>
+        <result property="cameraAddress" column="CAMERA_ADDRESS"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="streamAnsSerialnumbers" column="STREAM_ANS_SERIALNUMBERS"/>
+        <result property="serialnumber" column="SERIALNUMBER"/>
+        <result property="progress" column="PROGRESS"/>
+        <result property="createUserId" column="CREATE_USER_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="ret" column="RET"/>
+        <result property="responseMsg" column="RESPONSE_MSG"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="batchId" column="BATCH_ID"/>
+        <result property="type" column="TYPE"/>
+        <result property="c1" column="c1"/>
+        <result property="c2" column="c2"/>
+        <result property="c3" column="C3"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,128 @@
+spring:
+  datasource:
+    #    使用druid数据源
+    druid:
+      name: test
+      url: jdbc:mysql://172.16.1.11:3306/keensense_u2s?characterEncoding=utf-8&allowMultiQueries=true
+      username: root
+      password: Ast4HS
+      driverClass: com.mysql.jdbc.Driver
+      maxActive: 20
+      initialSize: 5
+      maxWait: 60000
+      minIdle: 5
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall
+      filter:
+        stat:
+          logSlowSql: true
+          #         慢查询的时间秒
+          slowSqlMillis: 0
+          mergeSql: true
+  redis:
+    host: 172.16.1.11
+    port: 16379
+    password:
+    timeout: 60000
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    database:
+      base: 1
+      count: 2
+  kafka:
+    bootstrap-servers: 172.16.1.11:39092
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: u2s-mqtt
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      auto-commit-interval: 1000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      max-poll-records: 100
+      # 单位只支持配M和G
+      max-partition-fetch-bytes: 1G
+      # 单位只支持配M和G
+      fetch-max-bytes: 1G
+      # 单位只支持配M和G
+      fetch-min-bytes: 1G
+      # 单位 毫秒
+      fetch-max-wait-ms: 20000
+      #有值就不监听,停止消费
+      stop-listener:
+    listener:
+      concurrency: 2
+      poll-timeout: 3000
+
+mqtt:
+  host: tcp://172.16.1.11:1883
+  username: donganuser
+  password: da2018529
+  topic: eastcoast/identification
+  clientid: server13
+  #有值就走GB1400转换
+  gbStandard:
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*/*Mapper.xml
+
+feign:
+  hystrix:
+    enabled: true
+
+druid:
+  loginUsername: qst
+  loginPassword: qst**0808
+  wall:
+    multiStatementAllow: true
+    noneBaseStatementAllow: true
+
+swagger:
+  title: 快检接口管理API
+  description: 快检接口管理API
+  version: 1.0.0
+  license: Powered By keensense
+  licenseUrl: null
+  terms-of-service-url: null
+  contact:
+    name: null
+    email: null
+    url: null
+
+imagesearch:
+  #过滤项，vehiclecolor：车身颜色，wheels：非机动车类型，coatcolor1：非机动车上身颜色
+  optimizeItems: vehiclecolor,wheels,coatcolor1
+  #保留相似度top目标数
+  top: 3
+  enable: false
+  #色系配置
+  colorGroups:
+  #黑:1, 白:2, 灰:3, 红:4, 蓝:5, 黄:6, 橙:7, 棕:8, 绿:9, 紫:10, 粉红:12
+    - 2,3,16777215,11842740,11711154
+    - 12,4,10,16743167,9983,9576596
+    - 6,7,37887,65535
+    - 8,5,1,5263440,8761028,8327170,16724484,12423793,15311656,343174,2111058,0,37887
+  #二次排序控制
+  secondSort: false
+  #置顶功能开关
+  topgetMem: true
+#人脸特征提取对应 0.千视通 1.格林
+comConfig:
+  face:
+    feature: 0

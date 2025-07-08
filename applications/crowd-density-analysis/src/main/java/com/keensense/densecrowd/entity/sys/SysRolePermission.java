@@ -1,0 +1,44 @@
+package com.keensense.densecrowd.entity.sys;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+
+/**
+ * code generator
+ *
+ * @author code generator
+ * @date 2019-06-08 20:11:51
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("sys_role_permission_dev")
+public class SysRolePermission extends Model<SysRolePermission> {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 表id
+	 */
+	@TableId
+	private Long rolePermissionId;
+	/**
+	 * 角色id
+	 */
+	private Long roleId;
+	/**
+	 * 权限id
+	 */
+	private Long permissionId;
+
+  /**
+   * 主键值
+   */
+  @Override
+  protected Serializable pkVal() {
+    return this.rolePermissionId;
+  }
+}

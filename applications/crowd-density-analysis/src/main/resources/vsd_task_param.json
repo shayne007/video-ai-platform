@@ -1,0 +1,27 @@
+{
+    "url": "",
+    "startFrameIndex": 0,
+    "endFrameIndex": 0,
+    "analysisCfg": {
+        "objMinSize": 0,
+        "objMinTimeInMs": 0,
+        "sensitivity": 0,
+         "scene":0,
+        "udrSetting": {
+        "isInterested":false,
+        "udrNum":0,
+        "udrVertices":[]
+      	},
+        "outputDSFactor": 2
+    },
+    "searchCfg": { 
+        "targetTypes": ["HUMAN","VEHICLE","BIKE"],
+        "mode": "ACCURATE",
+        "tripArea": [],
+        "tripWires": [],
+        "dominantColor": [],
+        "humanUpperBodyColor": [],
+        "humanLowerBodyColor": [],
+        "queryImage": "url"
+    }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.task.ObjextTrackMapper">
+
+    <resultMap type="com.keensense.admin.entity.task.ObjextTrack" id="objextTrackMap">
+        <result property="id" column="id"/>
+        <result property="serialnumber" column="serialnumber"/>
+        <result property="cameraid" column="cameraid"/>
+        <result property="tracktime" column="tracktime"/>
+        <result property="objtype" column="objtype"/>
+        <result property="resultid" column="resultid"/>
+        <result property="info1" column="info1"/>
+        <result property="info2" column="info2"/>
+        <result property="info3" column="info3"/>
+    </resultMap>
+    <select id="queryObjextTrackResultListBySerialnumber" resultType="java.util.HashMap">
+      select t1.id,t1.serialnumber,t1.cameraid,t2.`name`,t1.tracktime,t1.objtype,t1.resultid,t1.search_status,t2.longitude,t2.latitude,t1.info1,t1.info2,t1.info3 from objext_track t1 left outer join camera t2 on t1.cameraid=t2.id where serialnumber=#{serialnumber} order by t1.tracktime asc
+    </select>
+</mapper>

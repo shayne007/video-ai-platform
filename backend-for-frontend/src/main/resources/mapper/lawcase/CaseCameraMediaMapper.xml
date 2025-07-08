@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.lawcase.CaseCameraMediaMapper">
+
+    <resultMap type="com.keensense.admin.entity.lawcase.CaseCameraMedia" id="caseCameraMediaMap">
+        <result property="id" column="ID"/>
+        <result property="fileType" column="FILE_TYPE"/>
+        <result property="fileSuffix" column="FILE_SUFFIX"/>
+        <result property="fileName" column="FILE_NAME"/>
+        <result property="fileNameafterupload" column="FILE_NAMEAFTERUPLOAD"/>
+        <result property="filePathafterupload" column="FILE_PATHAFTERUPLOAD"/>
+        <result property="fileBigImage" column="FILE_BIG_IMAGE"/>
+        <result property="videobitId" column="VIDEOBIT_ID"/>
+        <result property="targetAppeartime" column="TARGET_APPEARTIME"/>
+        <result property="fileDescription" column="FILE_DESCRIPTION"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="createUserid" column="CREATE_USERID"/>
+        <result property="thumbNail" column="THUMB_NAIL"/>
+        <result property="fileSize" column="FILE_SIZE"/>
+        <result property="useruploadvideoid" column="USERUPLOADVIDEOID"/>
+        <result property="useruploadPath" column="USERUPLOAD_PATH"/>
+        <result property="useruploadStatus" column="USERUPLOAD_STATUS"/>
+        <result property="c1" column="C1"/>
+        <result property="c2" column="C2"/>
+        <result property="c3" column="C3"/>
+        <result property="c4" column="C4"/>
+        <result property="c5" column="C5"/>
+        <result property="clueType" column="clue_type"/>
+        <result property="c6" column="C6"/>
+        <result property="c7" column="C7"/>
+        <result property="c8" column="C8"/>
+        <result property="verifyingStatus" column="VERIFYING_STATUS"/>
+        <result property="syncStatus" column="sync_status"/>
+        <result property="lawcaseid" column="lawcaseId"/>
+        <result property="picInfo" column="pic_info"/>
+    </resultMap>
+
+
+    <select id="selectByList" parameterType="java.lang.String" resultType="com.keensense.admin.vo.CaseCameraMediaVo">
+     select
+	     b.latitude  as latitude,
+	     b.longitude  as  longitude,
+	     MIN(a.c7) AS c8,MAX(a.c7) AS c7,c3,c6,a.`FILE_NAMEAFTERUPLOAD`,c.`unit_name` as file_name
+	     from case_camera_media  a
+	     LEFT JOIN camera b  on a.c6 =b.id
+	     JOIN ctrl_unit c  ON b.`region`=c.`unit_identity`
+	     where a.c6 is not null and a.c7 is not null and b.latitude is not null  and  b.latitude !=""
+	     and a.lawcaseId =#{lawcaseId,jdbcType=VARCHAR}
+	     group by a.c6 ORDER BY c7
+  </select>
+
+    <select id="queryCurrentTaskCameras" parameterType="java.lang.String" resultType="com.keensense.admin.vo.CaseCameraMediaVo">
+        select a.ID,a.longitude,a.latitude,
+        a.c7 AS c7,a.c3 as c3,a.c6 as c6,a.FILE_NAMEAFTERUPLOAD as fileNameafterupload, a.FILE_PATHAFTERUPLOAD filePathafterupload
+        from case_camera_media  a
+        where a.c6 is not null and a.c7 is not null
+        and a.lawcaseId =#{lawcaseId,jdbcType=VARCHAR}
+        ORDER BY c7
+  </select>
+
+    <select id="selectExistsImage"  parameterType="com.keensense.admin.entity.lawcase.CaseCameraMedia" resultType="java.lang.Integer">
+        select count(1) from   case_camera_media
+        where 1=1
+        <if test="record.id != null">
+            AND  ID = #{record.id,jdbcType=VARCHAR}
+        </if>
+        <if test="record.fileType != null">
+            AND FILE_TYPE = #{record.fileType,jdbcType=VARCHAR}
+        </if>
+        <if test="record.fileSuffix != null">
+            AND FILE_SUFFIX = #{record.fileSuffix,jdbcType=VARCHAR}
+        </if>
+        <if test="record.fileName != null">
+            AND FILE_NAME = #{record.fileName,jdbcType=VARCHAR}
+        </if>
+        <if test="record.fileNameafterupload != null">
+            AND FILE_NAMEAFTERUPLOAD = #{record.fileNameafterupload,jdbcType=VARCHAR}
+        </if>
+        <if test="record.filePathafterupload != null">
+            AND FILE_PATHAFTERUPLOAD = #{record.filePathafterupload,jdbcType=VARCHAR}
+        </if>
+        <if test="record.videobitId != null">
+            AND VIDEOBIT_ID = #{record.videobitId,jdbcType=BIGINT}
+        </if>
+        <if test="record.targetAppeartime != null">
+            AND TARGET_APPEARTIME = #{record.targetAppeartime,jdbcType=VARCHAR}
+        </if>
+        <if test="record.fileDescription != null">
+            AND FILE_DESCRIPTION = #{record.fileDescription,jdbcType=VARCHAR}
+        </if>
+        <if test="record.createTime != null">
+            AND CREATE_TIME = #{record.createTime,jdbcType=VARCHAR}
+        </if>
+        <if test="record.createUserid != null">
+            AND CREATE_USERID = #{record.createUserid,jdbcType=VARCHAR}
+        </if>
+        <if test="record.thumbNail != null">
+            AND THUMB_NAIL = #{record.thumbNail,jdbcType=VARCHAR}
+        </if>
+        <if test="record.fileSize != null">
+            AND FILE_SIZE = #{record.fileSize,jdbcType=VARCHAR}
+        </if>
+        <if test="record.useruploadvideoid != null">
+            AND USERUPLOADVIDEOID = #{record.useruploadvideoid,jdbcType=VARCHAR}
+        </if>
+        <if test="record.useruploadPath != null">
+            AND USERUPLOAD_PATH = #{record.useruploadPath,jdbcType=VARCHAR}
+        </if>
+        <if test="record.useruploadStatus != null">
+            AND USERUPLOAD_STATUS = #{record.useruploadStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c1 != null">
+            AND C1 = #{record.c1,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c2 != null">
+            AND C2 = #{record.c2,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c3 != null">
+            AND C3 = #{record.c3,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c4 != null">
+            AND C4 = #{record.c4,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c5 != null">
+            AND C5 = #{record.c5,jdbcType=VARCHAR}
+        </if>
+        <if test="record.clueType != null">
+            AND clue_type = #{record.clueType,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c6 != null">
+            AND C6 = #{record.c6,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c7 != null">
+            AND C7 = #{record.c7,jdbcType=VARCHAR}
+        </if>
+        <if test="record.c8 != null">
+            AND C8 = #{record.c8,jdbcType=VARCHAR}
+        </if>
+        <if test="record.verifyingStatus != null">
+            AND VERIFYING_STATUS = #{record.verifyingStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="record.syncStatus != null">
+            AND sync_status = #{record.syncStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="record.lawcaseid != null">
+            AND lawcaseId = #{record.lawcaseid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+</mapper>

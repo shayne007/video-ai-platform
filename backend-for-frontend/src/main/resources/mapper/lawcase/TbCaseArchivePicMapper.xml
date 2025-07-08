@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keensense.admin.mapper.lawcase.TbCaseArchivePicMapper">
+
+    <resultMap type="com.keensense.admin.entity.lawcase.TbCaseArchivePic" id="tbCaseArchivePicMap">
+        <result property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="objType" column="obj_type"/>
+        <result property="picId" column="pic_id"/>
+        <result property="picBigPath" column="pic_big_path"/>
+        <result property="picInfo" column="pic_info"/>
+        <result property="caseCode" column="case_code"/>
+        <result property="picThumbPath" column="pic_thumb_path"/>
+        <result property="happenPeriod" column="happen_period"/>
+        <result property="serialnumber" column="serialnumber"/>
+        <result property="cameraId" column="camera_id"/>
+        <result property="deleted" column="deleted"/>
+        <result property="version" column="version"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+    </resultMap>
+
+
+    <select id="selectCaseInfoArchivePicList" resultType="com.keensense.admin.vo.CaseArchivePicVo" parameterType="java.lang.String">
+        select
+          *,
+          b.name AS cameraName,
+          a.camera_id AS cameraId,
+          date_format(a.create_time,'%Y-%m-%d %H:%i:%s') AS createTimeStr
+        from tb_case_archive_pic a
+        LEFT JOIN camera b  on a.camera_id =b.id
+        where a.deleted=0 and a.camera_id is not null and a.create_time is not null
+        and a.case_code =#{caseCode,jdbcType=VARCHAR}
+        ORDER BY createTimeStr
+    </select>
+
+
+    <select id="queryCurrentPicCamerasByCaseCode" parameterType="java.lang.String" resultType="com.keensense.admin.vo.CaseArchivePicVo">
+        select
+        date_format(a.create_time,'%Y-%m-%d %H:%i:%s') AS startTimeStr,b.name AS cameraName,a.camera_id as cameraId,a.pic_thumb_path AS picThumbPath
+        from tb_case_archive_pic  a
+          LEFT JOIN camera b  on a.camera_id =b.id
+        where a.deleted=0 and a.camera_id is not null and a.create_time is not null
+        and a.case_code =#{caseCode,jdbcType=VARCHAR}
+        ORDER BY startTimeStr
+    </select>
+
+    <select id="selectExistsArchivePic" parameterType="com.keensense.admin.entity.lawcase.TbCaseArchivePic" resultType="java.lang.Integer">
+        select count(*) from tb_case_archive_pic
+        where 1=1
+        <if test="fileName != null" >
+            and file_name = #{fileName,jdbcType=VARCHAR}
+        </if>
+        <if test="objType != null" >
+            and obj_type = #{objType,jdbcType=INTEGER}
+        </if>
+        <if test="picId != null" >
+            and pic_id = #{picId,jdbcType=VARCHAR}
+        </if>
+        <if test="picBigPath != null" >
+            and pic_big_path = #{picBigPath,jdbcType=VARCHAR}
+        </if>
+        <if test="caseCode != null" >
+            and case_code = #{caseCode,jdbcType=VARCHAR}
+        </if>
+        <if test="picThumbPath != null" >
+            and pic_thumb_path = #{picThumbPath,jdbcType=VARCHAR}
+        </if>
+        <if test="happenPeriod != null" >
+            and happen_period = #{happenPeriod,jdbcType=INTEGER}
+        </if>
+        <if test="serialnumber != null" >
+            and serialnumber = #{serialnumber,jdbcType=VARCHAR}
+        </if>
+        <if test="cameraId != null" >
+            and camera_id = #{cameraId,jdbcType=BIGINT}
+        </if>
+        <if test="deleted != null" >
+            and deleted = #{deleted,jdbcType=BIT}
+        </if>
+        <if test="version != null" >
+            and version = #{version,jdbcType=INTEGER}
+        </if>
+        <if test="createTime != null" >
+            and create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createUser != null" >
+            and create_user = #{createUser,jdbcType=VARCHAR}
+        </if>
+        <if test="lastUpdateTime != null" >
+            and last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+</mapper>

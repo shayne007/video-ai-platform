@@ -1,0 +1,68 @@
+package com.keensense.admin.entity.task;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+
+/**
+ * code generator
+ *
+ * @author code generator
+ * @date 2019-06-08 20:11:51
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("car_color_model")
+public class CarColorModel extends Model<CarColorModel> {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 主键ID
+	 */
+	@TableId
+	private Integer id;
+	/**
+	 * 颜色ID
+	 */
+	private Integer colorId;
+	/**
+	 * RGB颜色标签
+	 */
+	private Integer colorRgbTag;
+	/**
+	 * BGR颜色标签
+	 */
+	private Integer colorBgrTag;
+	/**
+	 * 十六进制颜色标签
+	 */
+	private String colorHexTag;
+	/**
+	 * 颜色名
+	 */
+	private String colorName;
+	/**
+	 * 模糊颜色名
+	 */
+	private String fuzzyColor;
+	/**
+	 * 颜色code
+	 */
+	private String colorCode;
+	/**
+	 * 对应前端插件颜色value
+	 */
+	private String colorNumber;
+
+  /**
+   * 主键值
+   */
+  @Override
+  protected Serializable pkVal() {
+    return this.id;
+  }
+}
