@@ -20,7 +20,6 @@ import com.keensense.task.service.ITbAnalysisTaskService;
 import com.keensense.task.util.DateUtil;
 import com.keensense.task.util.TaskParamValidUtil;
 import com.keensense.task.util.VideoExceptionUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -649,8 +648,8 @@ public class TbAnalysisTaskServiceImpl extends ServiceImpl<TbAnalysisTaskMapper,
      * @return: java.lang.String
      */
     private String setSqlStatus(String statusStr) {
-        if (StringUtil.isNotNull(statusStr)) {
-            if (!StringUtil.isInteger(statusStr)) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(statusStr)) {
+            if (!org.apache.commons.lang3.StringUtils.isNumeric(statusStr)) {
                 throw VideoExceptionUtil.getValidException("status必须是整数!");
             }
             StringBuilder sb = new StringBuilder();

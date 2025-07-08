@@ -10,12 +10,11 @@ import com.keensense.task.util.TaskParamValidUtil;
 import com.keensense.task.util.VideoExceptionUtil;
 import com.keensense.task.util.picture.SdkUtils;
 import com.keensense.task.util.picture.StringUtils;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -56,11 +56,11 @@ public class PictureController extends BaseController {
         try {
             byte[] picBy = null;
             // 获取图片
-            if (PatternUtil.isMatch(picture, "^(http|ftp).*$", Pattern.CASE_INSENSITIVE)) {
+            if (PatternMatchUtils.simpleMatch(picture, "^(http|ftp).*$")) {
                 picBy = downloadPicture(picture);
             } else {
                 // base64解析
-                picBy = Base64.decode(picture.getBytes());
+                picBy = Base64.decode(Arrays.toString(picture.getBytes()));
             }
             picBy = this.getPictureByte(picBy);
             if (picBy.length > PictureConstants.MAX_UPLOAD_SIZE) {
@@ -69,7 +69,7 @@ public class PictureController extends BaseController {
             }
 
             String structResult = SdkUtils.objectDetectionOnImage(picBy);
-            if (StringUtil.isNull(structResult)) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(structResult)) {
                 throw VideoExceptionUtil.getValidException("图片结构化失败");
             }
             JSONObject resultObj = JSON.parseObject(structResult);
@@ -102,7 +102,7 @@ public class PictureController extends BaseController {
         Integer objType = TaskParamValidUtil.isPositiveInteger(paramJson, "objtype", -1,
                 PictureConstants.OBJ_TYPE_HUMAN, PictureConstants.OBJ_TYPE_BIKE);
         String picture = TaskParamValidUtil.validString(paramJson, "picture", true);
-        byte[] picBy = Base64.decode(picture.getBytes());
+        byte[] picBy = Base64.decode(Arrays.toString(picture.getBytes()));
         picBy = this.getPictureByte(picBy);
         if (picBy.length > PictureConstants.MAX_UPLOAD_SIZE) {
             log.info("=============picture length: " + picBy.length);
@@ -186,11 +186,11 @@ public class PictureController extends BaseController {
     private byte[] getPictureByte(byte[] picBy) {
         String suffix = StringUtils.getExtension(picBy);
         log.info("=================根据base64获取图片的格式：" + suffix);
-        if (StringUtil.isNull(suffix)) {
+        if (org.apache.commons.lang3.StringUtils.isEmpty(suffix)) {
             throw VideoExceptionUtil.getValidException("不支持的图片格式");
         }
 
-        if (PatternUtil.isNotMatch(suffix, "^(jpg|jpeg)$", Pattern.CASE_INSENSITIVE)) {
+        if (PatternMatchUtils.simpleMatch(suffix, "^(jpg|jpeg)$")) {
             picBy = StringUtils.forJpg(picBy);
             if (picBy.length == 0) {
                 throw VideoExceptionUtil.getValidException("不支持的图片格式");

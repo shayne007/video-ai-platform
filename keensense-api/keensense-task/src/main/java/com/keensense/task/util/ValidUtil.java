@@ -1,6 +1,7 @@
 package com.keensense.task.util;
 
-import com.loocme.sys.util.PatternUtil;
+
+import org.springframework.util.PatternMatchUtils;
 
 /**
  * @Description: 常规校验类
@@ -32,7 +33,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isPositiveIntegerAndZero(String a){
-        return PatternUtil.isMatch(a, "^(0|\\+?[1-9][0-9]*)$");
+        return PatternMatchUtils.simpleMatch(a, "^(0|\\+?[1-9][0-9]*)$");
     }
 
     /**
@@ -41,7 +42,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isInteger(String a){
-        return PatternUtil.isMatch(a, "^-?\\d+$");
+        return PatternMatchUtils.simpleMatch(a, "^-?\\d+$");
     }
 
     /**
@@ -50,7 +51,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isFloat(String a){
-        return PatternUtil.isMatch(a, "^([1-9]\\d*|0)(\\.\\d*)?$");
+        return PatternMatchUtils.simpleMatch(a, "^([1-9]\\d*|0)(\\.\\d*)?$");
     }
 
     /**
@@ -59,7 +60,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isOffice(String a){
-        return PatternUtil.isMatch(a, "^\\s*(http|ftp|https|file|/).*$");
+        return PatternMatchUtils.simpleMatch(a, "^\\s*(http|ftp|https|file|/).*$");
     }
 
     /**
@@ -68,7 +69,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isTimeLegal(String patternString) {
-        return patternString.length() == TIME_LEGAL_LENGTH && PatternUtil.isMatch(patternString, MATCH_TIME_FORMAT);
+        return patternString.length() == TIME_LEGAL_LENGTH && PatternMatchUtils.simpleMatch(patternString, MATCH_TIME_FORMAT);
     }
 
     /**
@@ -77,7 +78,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isIp(String a){
-        return PatternUtil.isMatch(a, "^(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])\\." +
+        return PatternMatchUtils.simpleMatch(a, "^(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])\\." +
                 "(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])\\." +
                 "(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])$");
     }
@@ -88,7 +89,7 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     public static boolean isPort(String a){
-        return PatternUtil.isMatch(a, "^([0-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-4]\\d{4}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$");
+        return PatternMatchUtils.simpleMatch(a, "^([0-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-4]\\d{4}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$");
     }
 
 }

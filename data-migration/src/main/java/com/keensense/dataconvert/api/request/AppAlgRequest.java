@@ -3,6 +3,7 @@ package com.keensense.dataconvert.api.request;
 import cn.hutool.core.date.SystemClock;
 import com.alibaba.fastjson.JSON;
 import com.keensense.dataconvert.api.util.HttpClientResult;
+import com.keensense.dataconvert.api.util.HttpClientUtils;
 import com.keensense.dataconvert.api.util.http.HttpConnectPoolUtil;
 import com.keensense.dataconvert.biz.common.consts.CommonConst;
 import org.apache.commons.httpclient.HttpStatus;
@@ -61,9 +62,9 @@ public class AppAlgRequest implements java.io.Serializable{
     public String httpClientPost(String url, String paramsJson) throws Exception {
         long startTime,endTime,costTime;
         double qps;
-        startTime = SystemClock.now();
+        startTime = System.currentTimeMillis();
         HttpClientResult httpClientResult = HttpConnectPoolUtil.doPostJson(url, paramsJson);
-        endTime = SystemClock.now();
+        endTime = System.currentTimeMillis();
         costTime = endTime-startTime;
         qps = (CommonConst.RECOG_FEATURE_PIC_BATCH * 1.0 / (costTime/1000));
         logger.info("=== [接口性能]-HttpClientPost-QPS:[{}(r/s)],costTime:[{}(ms)] ...",String.format("%.2f", qps),costTime);
@@ -106,10 +107,10 @@ public class AppAlgRequest implements java.io.Serializable{
      * @throws Exception
      */
     public static HttpResponse getHttpResponse(String url, String content) throws Exception{
-        HttpResponse response = Request.Post(url)
-                .connectTimeout(CONNECT_TIME_OUT).socketTimeout(SOCKET_TIME_OUT).useExpectContinue()
-                .version(HttpVersion.HTTP_1_1).bodyString(content, ContentType.APPLICATION_JSON)
-                .execute().returnResponse();
+        HttpResponse response = HttpClientUtils.doPost(url);
+//                .connectTimeout(CONNECT_TIME_OUT).socketTimeout(SOCKET_TIME_OUT).useExpectContinue()
+//                .version(HttpVersion.HTTP_1_1).bodyString(content, ContentType.APPLICATION_JSON)
+//                .execute().returnResponse();
         return response;
     }
 

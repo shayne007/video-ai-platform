@@ -1,11 +1,6 @@
 package com.keensense.task.util.picture;
 
 import com.keensense.task.constants.PictureConstants;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

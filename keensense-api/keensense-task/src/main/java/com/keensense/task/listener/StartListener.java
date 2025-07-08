@@ -1,5 +1,6 @@
 package com.keensense.task.listener;
 
+import com.keensense.dataconvert.framework.common.utils.file.FileUtil;
 import com.keensense.task.async.listener.QueueListener;
 import com.keensense.task.async.AsyncQueueConstants;
 import com.keensense.task.config.NacosConfig;
@@ -10,18 +11,19 @@ import com.keensense.task.search.SearchHttp;
 import com.keensense.task.util.DeleteTaskUtil;
 import com.keensense.task.util.ValidUtil;
 import com.keensense.task.util.VideoExceptionUtil;
-import com.loocme.sys.util.FileUtil;
-import com.loocme.sys.util.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.util.SystemPropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -89,14 +91,14 @@ public class StartListener implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
-    private static void loadHostId() {
+    private static void loadHostId() throws IOException {
         File hostIdFile = null;
-        if (SystemUtil.isLinux) {
+        if (SystemUtils.getEnvironmentVariable("os","").equalsIgnoreCase("linux")) {
             hostIdFile = new File("/etc/slaveHostId.txt");
         } else {
             hostIdFile = new File("D:/slaveHostId.txt");
         }
-        if (!FileUtil.isExist(hostIdFile)) {
+        if (!Files.exists(hostIdFile.toPath())) {
             MasterSchedule.setMasterId(DeleteTaskUtil.getUuid());
             if (!hostIdFile.exists()) {
                 hostIdFile.getParentFile().mkdirs();
@@ -104,12 +106,12 @@ public class StartListener implements ApplicationListener<ContextRefreshedEvent>
             try {
                 boolean isCreate = hostIdFile.createNewFile();
                 if (isCreate) {
-                    FileUtil.write(hostIdFile, MasterSchedule.getMasterId());
+                    Files.write(hostIdFile.toPath(), MasterSchedule.getMasterId().getBytes());
                 }
             } catch (IOException e) {
             }
         } else {
-            MasterSchedule.setMasterId(FileUtil.read(hostIdFile));
+            MasterSchedule.setMasterId(Files.readAllLines(hostIdFile.toPath()).get(0));
         }
     }
 

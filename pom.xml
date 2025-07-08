@@ -99,7 +99,7 @@
 
 
     <modules>
-<!--        <module>keensense-api</module>-->
+        <module>keensense-api</module>
         <module>applications</module>
         <module>monitor</module>
         <module>gateway</module>

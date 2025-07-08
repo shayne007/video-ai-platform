@@ -1,7 +1,7 @@
 package com.keensense.task.util.oldclean;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;

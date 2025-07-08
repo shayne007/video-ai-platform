@@ -4,10 +4,10 @@ import com.keensense.task.listener.StartListener;
 import com.keensense.task.lock.zk.ZkDistributeLock;
 import com.keensense.task.mapper.CfgMemPropsMapper;
 import com.keensense.task.mapper.VsdSlaveMapper;
-import com.loocme.sys.constance.DateFormatConst;
-import com.loocme.sys.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.Date;
 public class TurnIntoMasterTimer {
 
     @Autowired
-    public TurnIntoMasterTimer(CfgMemPropsMapper cfgMemPropsMapper, VsdSlaveMapper vsdSlaveMapper){
+    public TurnIntoMasterTimer(CfgMemPropsMapper cfgMemPropsMapper, VsdSlaveMapper vsdSlaveMapper) {
         this.cfgMemPropsMapper = cfgMemPropsMapper;
         this.vsdSlaveMapper = vsdSlaveMapper;
     }
@@ -40,13 +40,13 @@ public class TurnIntoMasterTimer {
         log.info(">>>>>>zk lock:{}", StartListener.zkDistributeLock.hasCurrentLock());
         if (isMaster) {
             // 校验并更新数据库代表存活
-            if (0 == cfgMemPropsMapper.heart(MasterSchedule.getMasterId(), DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_))) {
+            if (0 == cfgMemPropsMapper.heart(MasterSchedule.getMasterId(), DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"))) {
                 setIsMaster(false);
             }
         } else {
             cfgMemPropsMapper.updateConfig();
             // 抢占成为master
-            if (cfgMemPropsMapper.changeMaster(MasterSchedule.getMasterId(), DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_)) == 1) {
+            if (cfgMemPropsMapper.changeMaster(MasterSchedule.getMasterId(), DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss")) == 1) {
                 setIsMaster(true);
             }
         }

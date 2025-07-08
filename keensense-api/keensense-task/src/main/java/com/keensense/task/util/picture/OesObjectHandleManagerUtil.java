@@ -1,11 +1,12 @@
 package com.keensense.task.util.picture;
 
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.FileUtil;
-import com.loocme.sys.util.StringUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.keensense.dataconvert.framework.common.utils.file.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @Description: 获取配置信息
@@ -38,16 +39,16 @@ public class OesObjectHandleManagerUtil {
     /**格林车辆识别编码为2*/
     private static final int GSTL_TYPE = 2;
 
-    public static void initGstl(){
+    public static void initGstl() throws IOException {
         File file = new File(OBJEXT_JSON);
         if(!file.exists()){
             file = new File(SUMMARY_JSON);
         }
         if(file.exists()){
-            Var manageConfigVar = Var.fromJson(FileUtil.read(file));
+            JSONObject manageConfigVar = JSONObject.parseObject(FileUtil.txt2String(file));
             String enable = manageConfigVar.getString("vlpr_further_recog.enable");
             String replaceFature = manageConfigVar.getString("vlpr_further_recog.replace_feature");
-            if(StringUtil.isNotNull(enable) && StringUtil.isNotNull(replaceFature)
+            if(StringUtils.isNotEmpty(enable) && StringUtils.isNotEmpty(replaceFature)
                     && Boolean.valueOf(enable) && Integer.valueOf(replaceFature) == GSTL_TYPE){
                 isGstl = true;
                 gstlUrl = manageConfigVar.getString("vlpr_further_recog.vlpr_url");

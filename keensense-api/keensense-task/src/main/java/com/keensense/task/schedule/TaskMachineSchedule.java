@@ -21,7 +21,6 @@ import com.keensense.task.service.IVsdTaskBitService;
 import com.keensense.task.service.IVsdTaskService;
 import com.keensense.task.util.DateUtil;
 import com.keensense.task.util.IpUtils;
-import com.loocme.sys.util.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -462,11 +461,11 @@ public class TaskMachineSchedule {
         for (VsdBitMachine vsdBitMachine : list) {
             JSONObject result = bitTaskService.queryTaskByMachine(vsdBitMachine.getUrl());
             //只在查询成功后才进行后续处理
-            if (BitCommonConst.SUCCESS == MapUtil.getInteger(result, "status")) {
+            if (BitCommonConst.SUCCESS == result.getInteger("status")) {
                 //盒子当前使用路数
-                int useRoute = MapUtil.getInteger(result, "useRoute");
+                int useRoute = result.getInteger("useRoute");
                 //盒子总路数
-                int allRoute = MapUtil.getInteger(result, "allRoute");
+                int allRoute = result.getInteger("allRoute");
                 JSONArray serialNumberList = result.getJSONArray("serialnumberList");
                 Map<String, VsdTaskBit> vsdTaskBitMap = getVsdTaskBitMap(vsdBitMachine.getId());
                 //如果盒子中的任务不包含在MAP中，则表示该任务为异常数据，发起停止请求

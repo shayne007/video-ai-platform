@@ -1,7 +1,7 @@
 package com.keensense.task.util.oldclean;
 
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class ShellUtil {
         }
 
         String command = "sh " + DELETE_PICTURE_OBJEXT +" ";
-        if(StringUtil.isNotNull(ymd)){
+        if(StringUtils.isNotEmpty(ymd)){
             command += PICTURE_ROOT + "/" + ymd + "/ " + serialnumber;
         }else{
             command +=  PICTURE_ROOT + " " + serialnumber;

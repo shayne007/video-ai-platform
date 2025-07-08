@@ -2,14 +2,14 @@ package com.keensense.task.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.keensense.common.config.SpringContext;
 import com.keensense.common.exception.VideoException;
 import com.keensense.task.config.NacosConfig;
 import com.keensense.task.constants.ObjextTaskConstants;
 import com.keensense.task.entity.VasUrlEntity;
 import com.keensense.task.constants.TaskConstants;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -150,7 +150,7 @@ public class TaskParamValidUtil {
                 throw VideoExceptionUtil.getValidException("serialnumber不能为空!");
             }
         } else {
-            if (PatternUtil.isNotMatch(serialnumber, MATCH_SERIALNUMBER)) {
+            if (PatternMatchUtils.simpleMatch(serialnumber, MATCH_SERIALNUMBER)) {
                 throw VideoExceptionUtil.getValidException("serialnumber只能是最多64位的英文、数字");
             }
         }
@@ -526,7 +526,7 @@ public class TaskParamValidUtil {
      */
     private static String getAnalyIp(String vasSlice) {
         String vasAnalyIp = nacosConfig.getVasIp();
-        if (StringUtil.isNotNull(vasAnalyIp)) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(vasAnalyIp)) {
             return "srvip=" + vasAnalyIp + "&";
         } else {
             return vasSlice + "&";
@@ -540,7 +540,7 @@ public class TaskParamValidUtil {
      */
     private static String getAnalyPort(String vasSlice) {
         String vasAnalyPort = nacosConfig.getVasPort();
-        if (StringUtil.isNotNull(vasAnalyPort)) {
+        if (!StringUtils.isEmpty(vasAnalyPort)) {
             return "srvport=" + vasAnalyPort + "&";
         } else {
             return vasSlice + "&";
@@ -556,7 +556,7 @@ public class TaskParamValidUtil {
      */
     private static void setTripDirValue(JSONObject tripWire, String value, int loopIndex) {
         if (ValidUtil.isInteger(value)) {
-            Integer dir = StringUtil.getInteger(value);
+            Integer dir = Integer.parseInt(value);
             if (dir < DIR_MIN_VALUE || dir > DIR_MAX_VALUE) {
                 throw VideoExceptionUtil.getValidException("tripWire[" + loopIndex + "][0]的取值范围为[" + DIR_MIN_VALUE + "," + DIR_MAX_VALUE + "]");
             }
@@ -577,7 +577,7 @@ public class TaskParamValidUtil {
      */
     private static void setTripWireValue(JSONObject tripWire, String key, String value, int loopIndex, int index) {
         if (ValidUtil.isFloat(value)) {
-            tripWire.put(key, StringUtil.getFloat(value));
+            tripWire.put(key, value);
         } else {
             throw getTripWireException(loopIndex, index);
         }

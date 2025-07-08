@@ -2,17 +2,15 @@ package com.keensense.task.schedule;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.keensense.dataconvert.framework.common.utils.file.FileUtil;
 import com.keensense.task.util.IpUtils;
 import com.keensense.task.util.ValidUtil;
-import com.keensense.task.util.oldclean.MysqlUtil;
-import com.loocme.sys.util.FileUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @Description:
@@ -45,10 +43,10 @@ public class MasterSchedule {
     }
 
     @Deprecated
-    public static void getLocalIp(){
+    public static void getLocalIp() throws IOException {
         //读取objext的配置文件
-        String fileStr = FileUtil.read(new File(OBJEXT_PATH));
-        if (StringUtil.isNotNull(fileStr)) {
+        String fileStr = FileUtil.txt2String(new File(OBJEXT_PATH));
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(fileStr)) {
             JSONObject jsonObject = JSON.parseObject(fileStr);
             String ip = jsonObject.getString("ip");
             if(ValidUtil.isIp(ip)){

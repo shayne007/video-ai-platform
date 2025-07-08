@@ -8,8 +8,6 @@ import com.keensense.task.constants.TaskConstants;
 import com.keensense.task.entity.VsdTask;
 import com.keensense.task.mapper.VsdTaskMapper;
 import com.keensense.task.service.IBitTaskService;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

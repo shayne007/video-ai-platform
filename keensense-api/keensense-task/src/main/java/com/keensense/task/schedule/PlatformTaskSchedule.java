@@ -12,31 +12,21 @@ import com.keensense.task.mapper.TbAnalysisDetailMapper;
 import com.keensense.task.service.ITbAnalysisTaskService;
 import com.keensense.task.service.IVsdTaskService;
 import com.keensense.task.thread.PlatformDownloadThread;
+import com.keensense.task.util.DateUtil;
 import com.keensense.task.util.TbAnalysisDetailUtil;
 import com.keensense.task.util.TranscodeHttpUtils;
-import com.loocme.sys.entities.FtpConnection;
-import com.keensense.task.util.DateUtil;
-import com.loocme.sys.util.FtpUtil;
-import com.loocme.sys.util.ListUtil;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.ThreadUtil;
-import com.loocme.sys.util.ThreadUtil.ExecutorService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 /**
  * @Description: 联网录像下载线程  (已弃用)
@@ -54,7 +44,7 @@ public class PlatformTaskSchedule {
     private static final Map<String, Long> CURR_DOWNLOAD_IDMAP = new HashMap<>();
     private static byte[] downloadLock = new byte[1];
 
-    private static final ExecutorService SERVICE = ThreadUtil.newFixedThreadPool(20);
+    private static final ExecutorService SERVICE = Executors.newFixedThreadPool(20);
 
     @Autowired
     private TbAnalysisDetailMapper tbAnalysisDetailMapper;
@@ -114,7 +104,7 @@ public class PlatformTaskSchedule {
             wrapper.notIn("id", keyId);
         }
         List<TbAnalysisDetail> detailList = tbAnalysisDetailMapper.selectList(wrapper);
-        if (ListUtil.isNotNull(detailList)) {
+        if (CollectionUtils.isNotEmpty(detailList)) {
             for (TbAnalysisDetail detail : detailList) {
                 while (DOWNLOAD_CURR_THREAD.get() >= nacosConfig.getAnalysisThreadCount()) {
                     try {
@@ -171,7 +161,8 @@ public class PlatformTaskSchedule {
                 // 转码失败，删除下载文件
                 String ftpUser = "chiwailam";
                 String ftpPass = "abcd1234!";
-                String[] downloadFileInfos = PatternUtil.getMatch(detail.getDownloadFile(), "^.*(\\\\|/)([^/\\\\]+)#([0-9\\.]+)$");
+//                String[] downloadFileInfos = PatternUtil.getMatch(detail.getDownloadFile(), "^.*(\\\\|/)([^/\\\\]+)#([0-9\\.]+)$");
+                String[] downloadFileInfos = new String[]{};
                 deleteFtpFile(downloadFileInfos[3], ftpUser, ftpPass, "", downloadFileInfos[2]);
             } else {
                 // 分析失败，删除文件
@@ -207,17 +198,17 @@ public class PlatformTaskSchedule {
      * @return: void
      */
     private void deleteFtpFile(String server, String user, String password, String path, String filePath) {
-        FtpConnection ftpConn = null;
-        try {
-            ftpConn = FtpUtil.getInstance(server, 21, user, password, path);
-            ftpConn.delete(filePath);
-        } catch (Exception e) {
-            log.error("deleteFtpFile failed", e);
-        } finally {
-            if (ftpConn != null) {
-                ftpConn.close();
-            }
-        }
+//        FtpConnection ftpConn = null;
+//        try {
+//            ftpConn = FtpUtil.getInstance(server, 21, user, password, path);
+//            ftpConn.delete(filePath);
+//        } catch (Exception e) {
+//            log.error("deleteFtpFile failed", e);
+//        } finally {
+//            if (ftpConn != null) {
+//                ftpConn.close();
+//            }
+//        }
     }
 
     /***
@@ -226,7 +217,8 @@ public class PlatformTaskSchedule {
      * @return: java.lang.String[]
      */
     private String[] getFtpParam(String url) {
-        return PatternUtil.getMatch(url, "^ftp://([^:]+):([^@]+)@(\\d+\\.\\d+\\.\\d+\\.\\d+)(.*)/([^/]+)$");
+//        return PatternUtil.getMatch(url, "^ftp://([^:]+):([^@]+)@(\\d+\\.\\d+\\.\\d+\\.\\d+)(.*)/([^/]+)$");
+        return new String[]{};
     }
 
     /***
@@ -243,9 +235,10 @@ public class PlatformTaskSchedule {
         String addTransCodeTaskResponse = TranscodeHttpUtils.getHttp(fileInfos[0],
                 TcInterfaceConstants.ADD_TRANSCODE_TASK, paramMap);
         log.info("添加转码返回报文：" + addTransCodeTaskResponse);
-        String[] retArr = PatternUtil.getMatch(addTransCodeTaskResponse.replaceAll("\r\n", " "),
-                "^.*\"ret\"[^:]*:(\\d+)[^,]*,.*\"id\"[^:]*:\\s*([a-zA-Z0-9]+)[^a-zA-Z0-9]*$",
-                Pattern.CASE_INSENSITIVE);
+//        String[] retArr = PatternUtil.getMatch(addTransCodeTaskResponse.replaceAll("\r\n", " "),
+//                "^.*\"ret\"[^:]*:(\\d+)[^,]*,.*\"id\"[^:]*:\\s*([a-zA-Z0-9]+)[^a-zA-Z0-9]*$",
+//                Pattern.CASE_INSENSITIVE);
+        String[] retArr = new String[]{};
         if (retArr != null && retArr.length == 3 && "0".equals(retArr[1])) {
             // 调用转码成功
             detail = TbAnalysisDetailUtil.updateProgress(detail, TbAnalysisDetailUtil.TRANSCODE, 0, null);
@@ -279,10 +272,11 @@ public class PlatformTaskSchedule {
         paramMap.put("id", detail.getTranscodeId());
         String addTransCodeTaskResponse = TranscodeHttpUtils.getHttp(fileInfos[0],
                 TcInterfaceConstants.QUERY_TRANSCODE_STATUS, paramMap);
-        addTransCodeTaskResponse = PatternUtil.getMatch(
-                addTransCodeTaskResponse.replaceAll("\r\n", " "), "^[^{]*(\\{.*})[^}]*$",
-                Pattern.CASE_INSENSITIVE, 1);
-        log.info("获取转码进度返回报文：" + addTransCodeTaskResponse);
+//        addTransCodeTaskResponse = PatternUtil.getMatch(
+//                addTransCodeTaskResponse.replaceAll("\r\n", " "), "^[^{]*(\\{.*})[^}]*$",
+//                Pattern.CASE_INSENSITIVE, 1);
+
+                log.info("获取转码进度返回报文：" + addTransCodeTaskResponse);
         JSONObject resultObj = TransConstants.getTransCodeResult(addTransCodeTaskResponse);
         if (resultObj != null) {
             Integer status = TransConstants.getTransStatus(resultObj);

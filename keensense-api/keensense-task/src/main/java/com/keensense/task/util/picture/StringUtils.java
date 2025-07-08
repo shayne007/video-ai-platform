@@ -1,16 +1,11 @@
 package com.keensense.task.util.picture;
 
-import com.sun.jimi.core.Jimi;
-import com.sun.jimi.core.JimiException;
-import com.sun.jimi.core.JimiWriter;
-import com.sun.jimi.core.options.JPGOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import java.awt.image.ImageProducer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,21 +55,21 @@ public class StringUtils {
      * @return byte[]
      */
     public static byte[] forJpg(byte[] picBy) {
-        try (InputStream input = new ByteArrayInputStream(picBy);
-             ByteArrayOutputStream ots = new ByteArrayOutputStream()){
-            JPGOptions options = new JPGOptions();
-            options.setQuality(100);
-            ImageProducer image = Jimi.getImageProducer(input);
-            JimiWriter writer = Jimi.createJimiWriter(Jimi.getEncoderTypes()[3], ots);
-            writer.setSource(image);
-            writer.setOptions(options);
-            writer.putImage(ots);
-            return ots.toByteArray();
-        }  catch (JimiException e) {
-            log.error("forJpg JimiException failed", e);
-        } catch (IOException e) {
-            log.error("forJpg IOException failed", e);
-        }
+//        try (InputStream input = new ByteArrayInputStream(picBy);
+//             ByteArrayOutputStream ots = new ByteArrayOutputStream()){
+//            JPGOptions options = new JPGOptions();
+//            options.setQuality(100);
+//            ImageProducer image = Jimi.getImageProducer(input);
+//            JimiWriter writer = Jimi.createJimiWriter(Jimi.getEncoderTypes()[3], ots);
+//            writer.setSource(image);
+//            writer.setOptions(options);
+//            writer.putImage(ots);
+//            return ots.toByteArray();
+//        }  catch (JimiException e) {
+//            log.error("forJpg JimiException failed", e);
+//        } catch (IOException e) {
+//            log.error("forJpg IOException failed", e);
+//        }
         return EMPTY_ARRAY;
     }
 
