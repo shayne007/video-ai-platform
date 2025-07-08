@@ -1,0 +1,18 @@
+server:
+  port: 9889
+spring:
+  application:
+    name: keensense-u2s-job
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
+        enabled: true
+      config:
+        file-extension: yaml
+        server-addr: ${NACOS_HOST}
+        shared-dataids: keensense-u2s-job.yaml
+        refreshable-dataids: keensense-u2s-job.yaml
+logging:
+  #config: /logs/config/logback-spring.xml
+  config: classpath:logs/config/logback-spring.xml

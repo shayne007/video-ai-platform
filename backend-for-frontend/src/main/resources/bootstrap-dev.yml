@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.1.131:9848
+        enabled: true
+      config:
+        file-extension: yaml
+        server-addr: 172.16.1.131:9848
+        shared-dataids: keensense-admin-prod.yaml,keensense-admin-enumeration.yaml,keensense-admin-shunde.yaml
+        refreshable-dataids: keensense-admin-prod.yaml,keensense-admin-enumeration.yaml,keensense-admin-shunde.yaml
+logging:
+  config: classpath:logs/config/logback-spring.xml
+
+

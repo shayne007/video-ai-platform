@@ -1,0 +1,20 @@
+server:
+  port: 9888
+  servlet:
+      context-path: /u2s
+  max-http-header-size: 10000000
+  connection-timeout : 120000
+spring:
+  application:
+    name: keensense-admin
+  profiles:
+    #dev|prod|docker
+    active: dev
+  servlet:
+      multipart:
+        enabled: true
+        max-file-size: 3000MB
+        max-request-size: 3000MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

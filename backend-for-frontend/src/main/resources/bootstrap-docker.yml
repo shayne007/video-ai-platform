@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST_PORT}
+        enabled: true
+      config:
+        file-extension: yaml
+        server-addr: ${NACOS_HOST_PORT}
+        shared-dataids: keensense-admin-prod.yaml,keensense-admin-enumeration.yaml
+        refreshable-dataids: keensense-admin-prod.yaml,keensense-admin-enumeration.yaml
+logging:
+  #config: /logs/config/logback-spring.xml
+  config: classpath:logs/config/logback-spring.xml

@@ -7,7 +7,7 @@
     <groupId>com.keensense</groupId>
     <artifactId>platform</artifactId>
     <packaging>pom</packaging>
-    <version>${platform.version}</version>
+    <version>1.0.1</version>
 
     <properties>
         <platform.version>1.0.1</platform.version>
@@ -99,10 +99,14 @@
 
 
     <modules>
-        <module>keensense-common</module>
-        <module>keensense-gateway</module>
-        <module>keensense-api</module>
-        <module>keensense-visual</module>
+<!--        <module>keensense-api</module>-->
+        <module>applications</module>
+        <module>monitor</module>
+        <module>gateway</module>
+        <module>common-sdk</module>
+        <module>jobs</module>
+        <module>data-migration</module>
+        <module>backend-for-frontend</module>
     </modules>
 
     <build>

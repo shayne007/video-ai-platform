@@ -1,0 +1,50 @@
+#################################### server port config start ##########################################################
+server:
+  port: 9095
+#################################### server port config end ############################################################
+
+#################################### spring config start   #############################################################
+spring:
+  profiles:
+    active: prod
+  tomcat:
+    max-http-post-size: -1
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    cache: false
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
+    servlet:
+      content-type: text/html
+#################################### spring config end   ###############################################################
+
+#################################### mybatis config  start #############################################################
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.keensense.dataconvert.biz.entity
+#################################### mybatis config  end   #############################################################
+
+#################################### page_helper config  start #########################################################
+pagehelper:
+  helperDialect: mysql
+  reasonable: false
+  support-methods-arguments: true
+  params: count=countSql
+#################################### page_helper config  end   #########################################################
+
+#################################### kafka config  start   #############################################################
+kafka:
+  enabled: true
+#################################### kafka config  end   ###############################################################
+
+#################################### swagger config  start   ###########################################################
+swagger:
+  enabled: true
+#################################### swagger config  end     ###########################################################
+
+#################################### ehcache config  start   ###########################################################
+ehcache:
+  enabled: true
+#################################### ehcache config  end   #############################################################
