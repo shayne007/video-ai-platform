@@ -1,11 +1,8 @@
 package com.keensense.common.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.ws.WebsocketClient;
-import com.loocme.sys.util.FileUtil;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -31,7 +28,6 @@ import java.util.List;
 public class MasSnapshotUtil {
 
     /**
-     * @param url
      * @return Base64 字符串
      */
     public static String getMasSnapshotBase64(String masMasterIp, String masMasterPort, String channelId) throws Exception {
@@ -40,7 +36,6 @@ public class MasSnapshotUtil {
     }
 
     /**
-     * @param url
      * @return byte 数组
      */
     public static byte[] getMasSnapshotByte(String masMasterIp, String masMasterPort, String channelId) throws Exception {
@@ -100,7 +95,7 @@ public class MasSnapshotUtil {
 
 
         log.info("msg:" + msg);
-        JSONObject jsonResp = JSONObject.fromObject(msg);
+        JSONObject jsonResp = JSONObject.parseObject(msg);
         param = new JSONObject();
         param.put("request", "stop");
         param.put("seq", 123);
@@ -197,7 +192,7 @@ public class MasSnapshotUtil {
             String response = websocketClient.getResponse();
             System.out.println("收到nodeAddr服务端消息:" + response);
             if (!StringUtils.isEmpty(response)) {
-                JSONObject jsonObject = JSONObject.fromObject(response);
+                JSONObject jsonObject = JSONObject.parseObject(response);
                 masNodeIp = jsonObject.get("nodeIp") + ":" + jsonObject.get("port");
             }
         } catch (Exception e) {

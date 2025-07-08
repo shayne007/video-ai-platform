@@ -3,11 +3,12 @@ package com.keensense.picturestream.common;
 import com.keensense.picturestream.entity.PictureInfo;
 import com.keensense.picturestream.output.IResultSend;
 import com.keensense.picturestream.util.IDUtil;
-import com.loocme.sys.util.ThreadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -15,7 +16,7 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 public class ResultSendThreads implements Runnable {
 
-    private static ThreadUtil.ExecutorService service = null;
+    private static ExecutorService service = null;
     private static IResultSend resultSendImpl;
     private static final int SEND_NUMBER = 100;
     private static int capacity = 3;
@@ -34,7 +35,7 @@ public class ResultSendThreads implements Runnable {
     }
 
     public static void initCapacity(int capacityNum, IResultSend resultSend) {
-        service = ThreadUtil.newFixedThreadPool(capacity);
+        service = Executors.newFixedThreadPool(capacity);
         capacity = capacityNum;
         resultSendImpl = resultSend;
     }

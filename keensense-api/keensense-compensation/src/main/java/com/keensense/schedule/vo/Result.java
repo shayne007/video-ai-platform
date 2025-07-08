@@ -6,6 +6,10 @@ import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Data
 @Table(name = "bike_result,objext_result,vlpr_result,face_result")

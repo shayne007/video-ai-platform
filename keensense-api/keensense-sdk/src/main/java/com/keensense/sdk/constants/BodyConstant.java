@@ -3,10 +3,6 @@ package com.keensense.sdk.constants;
 import com.keensense.common.config.SpringContext;
 import com.keensense.sdk.algorithm.IBodySdkInvoke;
 import com.keensense.sdk.algorithm.impl.QstBodySdkInvokeImpl;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import sun.reflect.misc.ReflectUtil;
-
 /**
  * @description:
  * @author jingege
@@ -23,13 +19,13 @@ public class BodyConstant
     public static boolean setBodySdkInvoke(String classpath)
     {
         Object tHandler = null;
-        try {
-            tHandler = ReflectUtil.newInstance(classpath.getClass());
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            tHandler = ReflectUtil.newInstance(classpath.getClass());
+//        } catch (InstantiationException e) {
+//            throw new RuntimeException(e);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
         if (tHandler instanceof IBodySdkInvoke)
         {
             iBodySdkInvoke = (IBodySdkInvoke) tHandler;

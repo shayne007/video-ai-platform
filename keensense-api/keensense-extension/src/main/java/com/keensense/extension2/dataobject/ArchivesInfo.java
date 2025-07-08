@@ -1,10 +1,10 @@
 package com.keensense.extension2.dataobject;
 
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Table;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Data

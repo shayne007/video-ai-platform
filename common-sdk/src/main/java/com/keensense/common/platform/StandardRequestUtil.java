@@ -1,6 +1,8 @@
 package com.keensense.common.platform;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.platform.bo.feature.DumpQuery;
 import com.keensense.common.platform.bo.video.AnalysisResultBo;
 import com.keensense.common.platform.bo.video.ObjextTaskBo;
@@ -15,10 +17,7 @@ import com.keensense.common.platform.enums.ObjTypeEnum;
 import com.keensense.common.util.HttpU2sGetUtil;
 import com.keensense.common.util.StandardHttpUtil;
 import com.keensense.common.validator.ValidatorUtils;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -181,10 +180,10 @@ public class StandardRequestUtil {
         String objextType = analysisResultBo.getObjType();
         if (String.valueOf(ObjTypeEnum.PERSON.getValue()).equals(objextType)) {
             PersonResult personResult = analysisResultBo.getPersonResult();
-            if (StringUtil.isNotNull(analysisResultBo.getSourceId())) {
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(analysisResultBo.getSourceId())) {
                 params.put("Person.SourceID", analysisResultBo.getSourceId());
             }
-            if (StringUtil.isNotNull(analysisResultBo.getSerialnumber())) {
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(analysisResultBo.getSerialnumber())) {
                 params.put("Person.SerialNumber.In", analysisResultBo.getSerialnumber());
             }
             if (StringUtils.isNotEmpty(analysisResultBo.getIds())) {
@@ -288,10 +287,10 @@ public class StandardRequestUtil {
             }
         } else if (String.valueOf(ObjTypeEnum.CAR.getValue()).equals(objextType)) {
             VlprResult vlprResult = analysisResultBo.getVlprResult();
-            if (StringUtil.isNotNull(analysisResultBo.getSourceId())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSourceId())) {
                 params.put("MotorVehicle.SourceID", analysisResultBo.getSourceId());
             }
-            if (StringUtil.isNotNull(analysisResultBo.getSerialnumber())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSerialnumber())) {
                 params.put("MotorVehicle.SerialNumber.In", analysisResultBo.getSerialnumber());
             }
             if (null != vlprResult) {
@@ -392,10 +391,10 @@ public class StandardRequestUtil {
         } else if (String.valueOf(ObjTypeEnum.BIKE.getValue()).equals(objextType)) {
             NonMotorVehiclesResult nonMotorVehiclesResult = analysisResultBo.getNonMotorVehiclesResult();
             String ot = "NonMotorVehicle";
-            if (StringUtil.isNotNull(analysisResultBo.getSourceId())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSourceId())) {
                 params.put(ot + ".SourceID", analysisResultBo.getSourceId());
             }
-            if (StringUtil.isNotNull(analysisResultBo.getSerialnumber())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSerialnumber())) {
                 params.put(ot + ".SerialNumber.In", analysisResultBo.getSerialnumber());
             }
             if (null != nonMotorVehiclesResult) {
@@ -491,7 +490,7 @@ public class StandardRequestUtil {
             if (StringUtils.isNotEmpty(analysisResultBo.getIds())) {
                 params.put("Faces.Id.In", analysisResultBo.getIds());
             }
-            if (StringUtil.isNotNull(analysisResultBo.getSerialnumber())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSerialnumber())) {
                 params.put("Faces.SerialNumber.In", analysisResultBo.getSerialnumber());
             }
             if (StringUtils.isNotEmpty(analysisResultBo.getDeviceId())) {
@@ -513,13 +512,13 @@ public class StandardRequestUtil {
                 params.put("Faces.MarkTime.Order", analysisResultBo.getOrder());
             }
         } else {
-            if (StringUtil.isNotNull(analysisResultBo.getIds())) {
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(analysisResultBo.getIds())) {
                 params.put("Result.Id.In", analysisResultBo.getIds());
             }
-            if (StringUtil.isNotNull(analysisResultBo.getSourceId())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSourceId())) {
                 params.put("Result.SourceID", analysisResultBo.getSourceId());
             }
-            if (StringUtil.isNotNull(analysisResultBo.getSerialnumber())) {
+            if (StringUtils.isNotEmpty(analysisResultBo.getSerialnumber())) {
                 params.put("Result.SerialNumber.In", analysisResultBo.getSerialnumber());
             }
             if (StringUtils.isNotEmpty(analysisResultBo.getDeviceId())) {

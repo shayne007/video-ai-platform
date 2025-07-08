@@ -1,8 +1,5 @@
 package com.keensense.extension.service.impl;
 
-import cn.jiuling.plugin.extend.featureclust.FaceFeatureClusterSpringRedis;
-import cn.jiuling.plugin.extend.featureclust.ReidFeatureClusterSpringRedis;
-import cn.jiuling.plugin.extend.featureclust.entity.ReidRecord;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -27,10 +24,10 @@ import com.keensense.extension.util.IDUtil;
 import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.sys.utils.DbPropUtil;
-import com.loocme.sys.datastruct.Var;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -104,7 +101,9 @@ public class ArchiveClustServiceImpl implements IArchivesClustService {
         try {
             initLib();
             ArchivesConstant.initAngle();
-            Map<Integer, List<String>> cluster = FaceFeatureClusterSpringRedis.cluster();
+            // 人脸聚类算法模块调用
+//            Map<Integer, List<String>> cluster = FaceFeatureClusterSpringRedis.cluster();
+            Map<Integer, List<String>> cluster = new HashMap<>();
             if (cluster.isEmpty()) {
                 return;
             }
@@ -119,7 +118,7 @@ public class ArchiveClustServiceImpl implements IArchivesClustService {
         } catch (Exception e) {
             log.error("startFaceClust", e);
         } finally {
-            FaceFeatureClusterSpringRedis.endCluster(faceRedisTemplate);
+//            FaceFeatureClusterSpringRedis.endCluster(faceRedisTemplate);
         }
     }
 
@@ -139,7 +138,7 @@ public class ArchiveClustServiceImpl implements IArchivesClustService {
             AID = IDUtil.uuid();
             getArchives(mapRid, faceIds, ArchivesConstant.ARCHIVES_FACE_BOTTOM);
             AID = IDUtil.uuid();
-            FaceFeatureClusterSpringRedis.removeCluster(faceRedisTemplate, mapRid);
+//            FaceFeatureClusterSpringRedis.removeCluster(faceRedisTemplate, mapRid);
         }
     }
 
@@ -216,11 +215,11 @@ public class ArchiveClustServiceImpl implements IArchivesClustService {
             //建档，正侧低头
             JSONObject jsonObject = faceJsonArray.getJSONObject(0);
             String url = jsonObject.getString("ImgUrl");
-            Var json = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(url);
-            String faceFeature = json.getString(FEATURE_VECTOR);
+            Map<String, Object> json = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(url);
+            String faceFeature = (String) json.get(FEATURE_VECTOR);
 
             /*判断是否有与档案已经加入搜图模块比对上的，若有，则根据人脸比对成功，使用搜图出的结果*/
-            Var similars = FaceConstant.getFaceSdkInvoke().getSimilars(archiveFaceLib, faceFeature,
+            Map<String, Object> similars = FaceConstant.getFaceSdkInvoke().getSimilars(archiveFaceLib, faceFeature,
                     DbPropUtil.getFloat("face.archives.compare.threshold", 0.75f) * 100, 100);
             String[] featureIds = ArchivesConstant.getSearchResultIds(similars);
             if (featureIds != null && featureIds.length > 0) {
@@ -460,80 +459,80 @@ public class ArchiveClustServiceImpl implements IArchivesClustService {
         try {
             initCameraRelation();
             for (String relationId : CAMERA_RELATION_LIST.keySet()) {
-                List<List<ReidRecord>> clusterList = ReidFeatureClusterSpringRedis.cluster(bodyRedisTemplate,
-                        new ArrayList<>(CAMERA_RELATION_LIST.get(relationId)),
-                        DbPropUtil.getDouble("body.feature.cluster", 0.9d), nacosConfig.getAlgoBodyCluster());
-                for (List<ReidRecord> reidRecordList : clusterList) {
-                    Map<String, Object> map = initPersonParams(reidRecordList, true);
-                    dealPersonEsInfo(map, reidRecordList);
-                }
+//                List<List<ReidRecord>> clusterList = ReidFeatureClusterSpringRedis.cluster(bodyRedisTemplate,
+//                        new ArrayList<>(CAMERA_RELATION_LIST.get(relationId)),
+//                        DbPropUtil.getDouble("body.feature.cluster", 0.9d), nacosConfig.getAlgoBodyCluster());
+//                for (List<ReidRecord> reidRecordList : clusterList) {
+//                    Map<String, Object> map = initPersonParams(reidRecordList, true);
+//                    dealPersonEsInfo(map, reidRecordList);
+//                }
             }
         } catch (Exception e) {
             log.error("startBodyClust", e);
         }
     }
 
-    /***
-     * @description: isSelectAid true条件有aid false条件无aid
-     * @return: java.util.Map<java.lang.String, java.lang.Object>
-     */
-    private Map<String, Object> initPersonParams(List<ReidRecord> reidRecordList, boolean isSelectAid) {
-        String type = "Person";
-        StringBuilder personSbr = new StringBuilder();
-        Map<String, Object> map = new HashMap<>();
-        for (ReidRecord reidRecord : reidRecordList) {
-            personSbr.append(",");
-            personSbr.append(reidRecord.getId());
-        }
-        map.put(type + ".PersonID.In", personSbr.substring(1));
-        map.put(type + ".PageRecordNum", reidRecordList.size() + 1);
-        map.put(type + ".RecordStartNo", 1);
-        if (isSelectAid) {
-
-            map.put(type + ".ArchivesID", "NotNull");
-        } else {
-            map.put(type + ".ArchivesID", "Null");
-        }
-        return map;
-    }
-
-    /***
-     * @description: 处理人形聚类数据，如果有aid，取第一个更新无aid的数据，均无则跳出
-     * @param map
-     * @param reidRecordList
-     * @return: boolean
-     */
-    private boolean dealPersonEsInfo(Map<String, Object> map, List<ReidRecord> reidRecordList) {
-        String respContent = microSearchFeign.getBodys(map);
-        JSONArray bodyJsonArray = JSONObject.parseObject(respContent).getJSONObject("PersonListObject").getJSONArray("PersonObject");
-        if (bodyJsonArray.isEmpty()) {
-            return false;
-        } else {
-            JSONObject jsonObject = bodyJsonArray.getJSONObject(0);
-            String archivesId = jsonObject.getString("ArchivesID");
-            if (StringUtils.isNotBlank(archivesId)) {
-                map.clear();
-                map = initPersonParams(reidRecordList, false);
-                String content = microSearchFeign.getBodys(map);
-                JSONArray jsonArray = JSONObject.parseObject(content).getJSONObject("PersonListObject").getJSONArray("PersonObject");
-                List<String> newbodyList = new ArrayList<>();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    JSONObject bodyJsonObject = jsonArray.getJSONObject(i);
-                    newbodyList.add(bodyJsonObject.getString("PersonID"));
-                }
-                if (CollectionUtils.isNotEmpty(newbodyList)) {
-                    updateEsBody(newbodyList, archivesId, ArchivesConstant.TRACE_SOURCE_BODY);
-                }
-            }
-            return true;
-        }
-    }
+//    /***
+//     * @description: isSelectAid true条件有aid false条件无aid
+//     * @return: java.util.Map<java.lang.String, java.lang.Object>
+//     */
+//    private Map<String, Object> initPersonParams(List<ReidRecord> reidRecordList, boolean isSelectAid) {
+//        String type = "Person";
+//        StringBuilder personSbr = new StringBuilder();
+//        Map<String, Object> map = new HashMap<>();
+//        for (ReidRecord reidRecord : reidRecordList) {
+//            personSbr.append(",");
+//            personSbr.append(reidRecord.getId());
+//        }
+//        map.put(type + ".PersonID.In", personSbr.substring(1));
+//        map.put(type + ".PageRecordNum", reidRecordList.size() + 1);
+//        map.put(type + ".RecordStartNo", 1);
+//        if (isSelectAid) {
+//
+//            map.put(type + ".ArchivesID", "NotNull");
+//        } else {
+//            map.put(type + ".ArchivesID", "Null");
+//        }
+//        return map;
+//    }
+//
+//    /***
+//     * @description: 处理人形聚类数据，如果有aid，取第一个更新无aid的数据，均无则跳出
+//     * @param map
+//     * @param reidRecordList
+//     * @return: boolean
+//     */
+//    private boolean dealPersonEsInfo(Map<String, Object> map, List<ReidRecord> reidRecordList) {
+//        String respContent = microSearchFeign.getBodys(map);
+//        JSONArray bodyJsonArray = JSONObject.parseObject(respContent).getJSONObject("PersonListObject").getJSONArray("PersonObject");
+//        if (bodyJsonArray.isEmpty()) {
+//            return false;
+//        } else {
+//            JSONObject jsonObject = bodyJsonArray.getJSONObject(0);
+//            String archivesId = jsonObject.getString("ArchivesID");
+//            if (StringUtils.isNotBlank(archivesId)) {
+//                map.clear();
+//                map = initPersonParams(reidRecordList, false);
+//                String content = microSearchFeign.getBodys(map);
+//                JSONArray jsonArray = JSONObject.parseObject(content).getJSONObject("PersonListObject").getJSONArray("PersonObject");
+//                List<String> newbodyList = new ArrayList<>();
+//                for (int i = 0; i < jsonArray.size(); i++) {
+//                    JSONObject bodyJsonObject = jsonArray.getJSONObject(i);
+//                    newbodyList.add(bodyJsonObject.getString("PersonID"));
+//                }
+//                if (CollectionUtils.isNotEmpty(newbodyList)) {
+//                    updateEsBody(newbodyList, archivesId, ArchivesConstant.TRACE_SOURCE_BODY);
+//                }
+//            }
+//            return true;
+//        }
+//    }
 
     @Override
     public void addArchivesBodyInfo(Float bodyQuality, Integer angle, String archivesId, String bodyImgUrl, String bodyFeature) {
         if (StringUtils.isBlank(bodyFeature)) {
-            Var var = BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(BodyConstant.BODY_TYPE, bodyImgUrl);
-            bodyFeature = var.getString("featureVector");
+            Map<String,Object> var = BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(BodyConstant.BODY_TYPE, bodyImgUrl);
+            bodyFeature = (String) var.get("featureVector");
         }
         if (bodyQuality != null && bodyQuality >= DbPropUtil.getFloat("body.archives.quality.threshold", 0.7f)) {
 

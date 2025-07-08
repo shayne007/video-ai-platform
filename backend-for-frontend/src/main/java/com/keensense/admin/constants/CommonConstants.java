@@ -1,8 +1,6 @@
 package com.keensense.admin.constants;
 
 import com.keensense.admin.util.PropertiesUtil;
-import io.swagger.models.auth.In;
-import scala.Int;
 
 import java.util.HashMap;
 import java.util.Map;

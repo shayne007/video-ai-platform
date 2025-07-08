@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.HttpClientUtil;
 import com.keensense.common.util.ReponseCode;
 import com.keensense.commonlib.config.NacosConfig;
 import com.keensense.commonlib.constants.CommonLibConstant;
@@ -30,13 +31,9 @@ import com.keensense.sdk.algorithm.impl.StFaceSdkInvokeImpl;
 import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.CommonConst;
 import com.keensense.sdk.constants.FaceConstant;
-import com.loocme.sys.datastruct.Var;
 
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
 import java.util.*;
 
-import com.loocme.sys.util.StringUtil;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -151,21 +148,21 @@ public class CommonInfoServiceImpl extends ServiceImpl<CommonInfoMapper,CommonIn
         if (type == CommonConst.OBJ_TYPE_FACE && !(FaceConstant.getFaceSdkInvoke() instanceof QstFaceSdkInvokeImpl)) {
             if (StringUtils.isEmpty(searchFeature)) {
                 IFaceSdkInvoke faceSdk = FaceConstant.getFaceSdkInvoke();
-                Var faceInfoVar = faceSdk.getPicAnalyzeOne(commonLibDTO.getBaseData());
+                Map<String,Object> faceInfoVar = faceSdk.getPicAnalyzeOne(commonLibDTO.getBaseData());
                 if (faceInfoVar == null) {
                     throw new VideoException(-1, "图片未提取到特征");
                 }
-                searchFeature = faceInfoVar.getString("featureVector");
+                searchFeature = (String) faceInfoVar.get("featureVector");
             }
             resultList = AlgoSearchUtil.getNonQstFacesByFeature(LibIds, searchFeature, threshold, maxResult);
         } else {
             if (StringUtils.isEmpty(searchFeature)) {
                 IBodySdkInvoke bodySdk = BodyConstant.getBodySdkInvoke();
-                Var bodyFeatureInfo = bodySdk.getPicAnalyzeOne(type, commonLibDTO.getBaseData());
+                Map<String,Object> bodyFeatureInfo = bodySdk.getPicAnalyzeOne(type, commonLibDTO.getBaseData());
                 if (bodyFeatureInfo == null) {
                     throw new VideoException(-1, "图片未提取到特征");
                 }
-                searchFeature = bodyFeatureInfo.getString("featureVector");
+                searchFeature = (String) bodyFeatureInfo.get("featureVector");
             }
 
             resultList = AlgoSearchUtil.getQstSearchByParams(LibIds, searchFeature, threshold, type, maxResult);
@@ -178,10 +175,10 @@ public class CommonInfoServiceImpl extends ServiceImpl<CommonInfoMapper,CommonIn
     public IPage<CommonLibVO> listLibrary(CommonLibQueryDto dto, PageDto page) {
         LambdaQueryWrapper<CommonInfo> wrapper = Wrappers.lambdaQuery();
 
-        if (StringUtil.isNotNull(dto.getId())) {
+        if (StringUtils.isNotEmpty(dto.getId())) {
             wrapper = wrapper.eq(CommonInfo::getId, dto.getId());
         }
-        if (StringUtil.isNotNull(dto.getName())) {
+        if (StringUtils.isNotEmpty(dto.getName())) {
             wrapper = wrapper.eq(CommonInfo::getName, dto.getName());
         }
         IPage<CommonInfo> iPage = baseMapper.selectPage(new Page<>((page.getPageNo() - 1) * page.getPageSize(), page.getPageSize()), wrapper);
@@ -200,23 +197,18 @@ public class CommonInfoServiceImpl extends ServiceImpl<CommonInfoMapper,CommonIn
 
     @Override
     public boolean uploadToDevice(String repo, Integer type) {
-        Var params = Var.newObject();
-        params.set("repo", repo);
-        params.set("type", type);
-        params.set("deviceID", 0);
+        Map<String,Object> params = new HashMap<>();
+        params.put("repo", repo);
+        params.put("type", type);
+        params.put("deviceID", 0);
 
         String resp = "";
         String url = "http://" + configCenter.getFeatureExtractUrl().split(":")[0] + ":39082/uploadtodevice";
-        try {
-            resp = PostUtil
-                .requestContent(url, "application/json;charset=utf-8", params.toString());
-            JSONObject jsonObject = JSON.parseObject(resp);
-            if (jsonObject.getInteger("error_code") == 0) {
-                return true;
-            }
-        } catch (HttpConnectionException e) {
-            log.error("search fail url:{}  params:{}", url, params.toString());
-            log.error(e.getMessage(), e);
+        resp = HttpClientUtil
+                .requestPost(url, "application/json;charset=utf-8", params.toString());
+        JSONObject jsonObject = JSON.parseObject(resp);
+        if (jsonObject.getInteger("error_code") == 0) {
+            return true;
         }
         return false;
     }

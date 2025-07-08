@@ -19,14 +19,15 @@ import com.keensense.picturestream.output.IResultSend;
 import com.keensense.picturestream.output.impl.ResultSendImpl;
 import com.keensense.picturestream.util.IDUtil;
 import com.keensense.picturestream.util.ImageBaseUtil;
-import com.loocme.sys.util.ListUtil;
-import com.loocme.sys.util.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Description:
@@ -51,7 +52,7 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
 
 
     private void run() {
-        final ThreadUtil.ExecutorService service = ThreadUtil.newFixedThreadPool(2);
+        final ExecutorService service = Executors.newFixedThreadPool(2);
         NacosConfig nacosConfig = SpringContext.getBean(NacosConfig.class);
         log.info("start");
         // 初始化下载图片队列大小
@@ -88,7 +89,7 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
             while (flag) {
                 try {
                     picInfoList = pictureStream.loadPictureRecords();
-                    if (ListUtil.isNotNull(picInfoList)) {
+                    if (!CollectionUtils.isEmpty(picInfoList)) {
                         log.info("load picture records to download succ:" + picInfoList.size());
                         // 交给多线程处理下载
                         for (int j = 0; j < picInfoList.size(); j++) {

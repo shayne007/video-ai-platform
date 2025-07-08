@@ -1,16 +1,14 @@
-package com.keensense.search.utils;
-
+package com.keensense.common.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by zhanx xiaohui on 2019-02-26.
- */
+
 public class ResponseUtil {
-    private ResponseUtil(){}
+    private ResponseUtil() {
+    }
 
     public static final long STATUS_CODE_FAILED = 7;
     public static final long STATUS_CODE_OK = 0;
@@ -29,7 +27,7 @@ public class ResponseUtil {
         return object;
     }
 
-    public static JSONObject createFailedResponse(String id, String requestUrl, long statusCode,String statusString){
+    public static JSONObject createFailedResponse(String id, String requestUrl, long statusCode, String statusString) {
         JSONObject object = new JSONObject();
         object.put("Id", id);
         object.put("StatusCode", statusCode);
@@ -50,13 +48,13 @@ public class ResponseUtil {
         return object.toJSONString();
     }
 
-    public static JSONObject genereteInsertResponse(JSONObject object){
+    public static JSONObject genereteInsertResponse(JSONObject object) {
         JSONArray array = new JSONArray();
         array.add(object);
         return genereteInsertResponse(array);
     }
 
-    public static JSONObject genereteInsertResponse(JSONArray array){
+    public static JSONObject genereteInsertResponse(JSONArray array) {
         JSONObject responseObject = new JSONObject();
         responseObject.put("ResponseStatusObject", array);
         JSONObject response = new JSONObject();
@@ -65,10 +63,3 @@ public class ResponseUtil {
         return response;
     }
 }
-
-/**
- * @program: data
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-02-26 11:43
- **/

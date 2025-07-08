@@ -12,7 +12,6 @@ import com.keensense.dataconvert.biz.entity.ObjextResult;
 import com.keensense.dataconvert.biz.entity.VlprResult;
 import com.keensense.dataconvert.biz.service.ElasticSearchService;
 import com.keensense.dataconvert.framework.common.ext.spring.SpringContextHolder;
-import com.loocme.sys.util.ListUtil;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkResponse;

@@ -6,7 +6,7 @@ import com.keensense.admin.util.Ftp;
 import com.keensense.admin.util.PropertiesUtil;
 import com.keensense.admin.util.StringUtils;
 import com.keensense.common.util.R;
-import com.loocme.security.encrypt.Base64;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Arrays;
 
 /**
  * @Author: zengyc
@@ -131,7 +132,7 @@ public class CommonController {
             String picture = caseService.getPictureStr(id);
             byte[] bytes = null;
             if (StringUtils.isNotEmptyString(picture)) {
-                bytes = Base64.decode(picture.getBytes());
+                bytes = Base64.decode(Arrays.toString(picture.getBytes()));
             }
             if (null == bytes) {
                 return R.error("图片获取失败");

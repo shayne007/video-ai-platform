@@ -9,7 +9,6 @@ import com.keensense.schedule.vo.NonMotorVehiclesResult;
 import com.keensense.schedule.vo.PersonResult;
 import com.keensense.schedule.vo.Result;
 import com.keensense.schedule.vo.VlprResult;
-import com.loocme.plugin.spring.comp.SqlExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,18 +105,18 @@ public class DataCompensateTimer {
             }
         }
 
-        SqlExecutor executor = SqlExecutor.getInstance(dataSource);
-        for (Object obj : objects) {
-            executor.insert(obj);
-        }
-        int r = executor.commit();
+//        SqlExecutor executor = SqlExecutor.getInstance(dataSource);
+//        for (Object obj : objects) {
+//            executor.insert(obj);
+//        }
+//        int r = executor.commit();
 
-        if (objects.size() == r) {
-            log.info("====saveEs succ,commit count is {},delete file {}", r, file);
-            IoUtil.deleteFile(file);
-        } else {
-            log.error("=====saveEs fail, Do not delete files.");
-        }
+//        if (objects.size() == r) {
+//            log.info("====saveEs succ,commit count is {},delete file {}", r, file);
+//            IoUtil.deleteFile(file);
+//        } else {
+//            log.error("=====saveEs fail, Do not delete files.");
+//        }
     }
 
 }

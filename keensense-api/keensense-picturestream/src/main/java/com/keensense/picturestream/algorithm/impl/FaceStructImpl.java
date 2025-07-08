@@ -2,19 +2,16 @@ package com.keensense.picturestream.algorithm.impl;/**
  * Created by zhanx xiaohui on 2019/7/6.
  */
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.keensense.common.util.HttpClientUtil;
 import com.keensense.picturestream.algorithm.IFaceStruct;
 import com.keensense.picturestream.entity.PictureInfo;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.datastruct.WeekArray;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -30,30 +27,30 @@ public class FaceStructImpl implements IFaceStruct {
     private static String faceUrl = "http://127.0.0.1:18051/keensense/qstface/getFacesOnImageBase64";
 
     @Override
-    public void init(Var params) {
-        String url = params.getString("face_qst_recog.face_url");
-        if (StringUtil.isNotNull(url)) {
+    public void init(Map<String,Object> params) {
+        String url = (String) params.get("face_qst_recog.face_url");
+        if (StringUtils.isNotEmpty(url)) {
             setFaceUrl(url + "/keensense/qstface/getFacesOnImageBase64");
         }
     }
 
     @Override
     public void recog(PictureInfo pictureInfo) {
-        if (StringUtil.isNull(pictureInfo.getPicBase64())) {
+        if (StringUtils.isEmpty(pictureInfo.getPicBase64())) {
             return;
         }
-        Var respVar = getStructInfo(pictureInfo.getPicBase64());
-        if (respVar != null && !respVar.isNull()) {
-            getFaceArray(respVar).foreach(new IVarForeachHandler() {
-
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void execute(String index, Var resultVar) {
-                    resultVar.set("AlgoSource", PictureInfo.RECOG_TYPE_FACE);
-                    pictureInfo.addResult(resultVar);
-                }
-            });
+        Map<String,Object> respVar = getStructInfo(pictureInfo.getPicBase64());
+        if (respVar != null && !respVar.isEmpty()) {
+//            getFaceArray(respVar).foreach(new IVarForeachHandler() {
+//
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public void execute(String index, Var resultVar) {
+//                    resultVar.set("AlgoSource", PictureInfo.RECOG_TYPE_FACE);
+//                    pictureInfo.addResult(resultVar);
+//                }
+//            });
         }
     }
 
@@ -68,22 +65,22 @@ public class FaceStructImpl implements IFaceStruct {
             picBaseArray[i] = pictureInfo.getPicBase64();
             i++;
         }
-        Var respVar = getStructInfo(picBaseArray);
-        if (respVar != null && !respVar.isNull()) {
-            getFaceArray(respVar).foreach(new IVarForeachHandler() {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void execute(String index, Var resultVar) {
-                    resultVar.set("AlgoSource", PictureInfo.RECOG_TYPE_FACE);
-                    int indexInt = Integer.parseInt(index);
-                    if (indexInt < pictureList.size()) {
-                        pictureList.get(indexInt).addResult(resultVar);
-                    } else {
-                        log.error("face struct error indexInt=" + indexInt + "//json " + respVar.toString());
-                    }
-                }
-            });
+        Map<String,Object> respVar = getStructInfo(picBaseArray);
+        if (respVar != null && !respVar.isEmpty()) {
+//            getFaceArray(respVar).foreach(new IVarForeachHandler() {
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public void execute(String index, Map<String,Object> resultVar) {
+//                    resultVar.put("AlgoSource", PictureInfo.RECOG_TYPE_FACE);
+//                    int indexInt = Integer.parseInt(index);
+//                    if (indexInt < pictureList.size()) {
+//                        pictureList.get(indexInt).addResult(resultVar);
+//                    } else {
+//                        log.error("face struct error indexInt=" + indexInt + "//json " + respVar.toString());
+//                    }
+//                }
+//            });
         }
     }
 
@@ -98,25 +95,25 @@ public class FaceStructImpl implements IFaceStruct {
      * @param picBase64
      * @return
      */
-    public static Var getStructInfo(String... picBase64) {
-        Var returnVar = Var.newObject();
+    public static Map<String,Object> getStructInfo(String... picBase64) {
+        Map<String,Object> returnVar = new HashMap<>();
         try {
-            String rslt = PostUtil.requestContent(faceUrl, "application/json", getStructParams(picBase64));
-            if (StringUtil.isNull(rslt)) {
+            String rslt = HttpClientUtil.requestPost(faceUrl, "application/json", getStructParams(picBase64));
+            if (StringUtils.isEmpty(rslt)) {
                 return null;
             }
-            Var objextsVar = Var.fromJson(rslt.replaceAll("\n", "")
+            JSONObject objextsVar = (JSONObject) JSONObject.parseObject(rslt.replaceAll("\n", "")
                     .replaceAll("\t", "")).get("list");
-            if (objextsVar != null && !objextsVar.isNull()) {
-                objextsVar.foreach(new IVarForeachHandler() {
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void execute(String index, Var resultVar) {
-                        String faces = "faces";
-                        returnVar.set(faces, resultVar.get(faces));
-                    }
-                });
+            if (objextsVar != null && !objextsVar.isEmpty()) {
+//                objextsVar.foreach(new IVarForeachHandler() {
+//                    private static final long serialVersionUID = 1L;
+//
+//                    @Override
+//                    public void execute(String index, Var resultVar) {
+//                        String faces = "faces";
+//                        returnVar.set(faces, resultVar.get(faces));
+//                    }
+//                });
             }
         } catch (Exception e) {
             log.error("objExt getStructInfo error", e);
@@ -130,10 +127,10 @@ public class FaceStructImpl implements IFaceStruct {
      * @param arrs 图片base64编码字符串，支持多个
      */
     public static String getStructParams(String... arrs) {
-        Var paramVar = Var.newObject();
+        Map<String,Object> paramVar = new HashMap<>();
         //固定List长度
         List<String> imageList = new ArrayList<>(Arrays.asList(arrs));
-        paramVar.set("images", imageList);
+        paramVar.put("images", imageList);
         return paramVar.toString();
     }
     
@@ -142,8 +139,8 @@ public class FaceStructImpl implements IFaceStruct {
      * @param var   json
      * @return: com.loocme.sys.datastruct.WeekArray
      */
-    private WeekArray getFaceArray(Var var){
-        return var.getArray("faces");
+    private JSONArray getFaceArray(Map<String,Object> var){
+        return (JSONArray) var.get("faces");
     }
 
     public static void setFaceUrl(String faceUrl) {

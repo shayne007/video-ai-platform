@@ -1,6 +1,5 @@
 package com.keensense.extension.timer;
 
-import cn.jiuling.plugin.extend.featureclust.ReidFeatureClusterSpringRedis;
 import com.keensense.extension.service.IArchivesClustService;
 import com.keensense.extension.service.impl.ArchiveInfoServiceImpl;
 import com.keensense.extension.util.BodyLibraryUtil;
@@ -88,7 +87,7 @@ public class LibraryManagerTimer {
     public void startBodyClust() {
         try {
             archivesClustService.startBodyClust();
-            ReidFeatureClusterSpringRedis.clean(bodyRedisTemplate);
+//            ReidFeatureClusterSpringRedis.clean(bodyRedisTemplate);
         } catch (Exception e) {
             log.info("start body cluster timer error", e);
         }

@@ -1,6 +1,5 @@
 package com.keensense.task.listener;
 
-import com.keensense.dataconvert.framework.common.utils.file.FileUtil;
 import com.keensense.task.async.listener.QueueListener;
 import com.keensense.task.async.AsyncQueueConstants;
 import com.keensense.task.config.NacosConfig;
@@ -19,18 +18,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import org.springframework.util.SystemPropertyUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @Description: 启动加载

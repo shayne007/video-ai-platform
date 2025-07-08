@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.ResponseUtil;
 import com.keensense.search.domain.APEResult;
 import com.keensense.search.domain.EventResult;
 import com.keensense.search.domain.VehicleflowrateResult;

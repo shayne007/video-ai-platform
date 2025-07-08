@@ -69,12 +69,12 @@
             <version>1.5.20</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.keensense</groupId>
-            <artifactId>data-migration</artifactId>
-            <version>1.0.1</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.keensense</groupId>-->
+<!--            <artifactId>data-migration</artifactId>-->
+<!--            <version>1.0.1</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

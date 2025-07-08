@@ -5,18 +5,19 @@ import com.keensense.picturestream.config.NacosConfig;
 import com.keensense.picturestream.entity.PictureInfo;
 import com.keensense.picturestream.util.IDUtil;
 import com.keensense.picturestream.util.ImageBaseUtil;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
-import com.loocme.sys.util.ThreadUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.PatternMatchUtils;
 import sun.net.www.protocol.ftp.FtpURLConnection;
 
 @Slf4j
@@ -24,18 +25,18 @@ public class DownloadImageThreads {
 
     private DownloadImageThreads(){}
 
-    private static ThreadUtil.QueueExecutorService service = null;
+    private static ExecutorService service = null;
     private static NacosConfig nacosConfig = SpringContext.getBean(NacosConfig.class);
 
     public static void initCapacity(int capacity) {
         if (0 >= capacity) {
             capacity = 40;
         }
-        service = ThreadUtil.newQueueThreadPool(capacity);
+        service = Executors.newFixedThreadPool(capacity);
     }
 
     public static void downloadResource(final PictureInfo picInfo) {
-        if (StringUtil.isNull(picInfo.getPicUrl())) {
+        if (StringUtils.isEmpty(picInfo.getPicUrl())) {
             picInfo.setStatus(PictureInfo.STATUS_DOWNLOAD_FAIL);
             log.info(String.format("[%s] download picture faield. the picture url is empty.", picInfo.getExtendId()));
             ResultSendThreads.sendError(picInfo);
@@ -46,9 +47,9 @@ public class DownloadImageThreads {
             return;
         }
 
-        if (PatternUtil.isMatch(picInfo.getPicUrl(), "^(http|ftp).*")) {
+        if (PatternMatchUtils.simpleMatch(picInfo.getPicUrl(), "^(http|ftp).*")) {
             picInfo.setStatus(PictureInfo.STATUS_DOWNLOADING);
-             service.execute((o)->{
+             service.execute(()->{
                 Thread.currentThread().setName(IDUtil.threadName("downloadPic"));
                 downloadImage(picInfo);
             });

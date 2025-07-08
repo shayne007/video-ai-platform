@@ -1,5 +1,6 @@
 package com.keensense.sdk.algorithm.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.keensense.common.exception.VideoException;
 import com.keensense.sdk.algorithm.IBodySdkInvoke;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
@@ -74,36 +75,36 @@ public class StQstFaceSdkInvokeImpl implements IFaceSdkInvoke {
     }
 
     @Override
-    public Var getSimilars(String regIds, String feature, float threshold, int maxResult) throws VideoException {
+    public Map<String,Object> getSimilars(String regIds, String feature, float threshold, int maxResult) throws VideoException {
         return getSimilars(regIds, feature, threshold, maxResult, "", "");
     }
 
     @Override
-    public Var getSimilars(String regIds, String feature, float threshold, int maxResult, String startTime, String endTime) throws VideoException {
-        Var result = sdkInvoke.getSimilars(CommonConst.OBJ_TYPE_FACE, regIds, feature,
+    public Map<String,Object> getSimilars(String regIds, String feature, float threshold, int maxResult, String startTime, String endTime) throws VideoException {
+        Map<String,Object> result = sdkInvoke.getSimilars(CommonConst.OBJ_TYPE_FACE, regIds, feature,
                 threshold, maxResult, false, startTime, endTime, 2);
         JSONArray resultJson = new JSONArray();
-        if (result != null) {
-            result.foreach(new IVarForeachHandler() {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void execute(String paramString, Var tempVar) {
-                    JSONObject tempJson = new JSONObject();
-                    Float score = tempVar.getFloat("score") * 100;
-                    if (score > threshold) {
-                        tempJson.put("score", score);
-                        JSONObject faceJson = new JSONObject();
-                        faceJson.put("id", tempVar.getString("uuid"));
-                        faceJson.put("faceGroupId", tempVar.getString("task"));
-                        tempJson.put("face", faceJson);
-                        resultJson.add(tempJson);
-                    }
-                }
-            });
-        }
-        Var resultVar = Var.fromJson(resultJson.toString());
-        return resultVar;
+//        if (result != null) {
+//            result.foreach(new IVarForeachHandler() {
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public void execute(String paramString, Var tempVar) {
+//                    JSONObject tempJson = new JSONObject();
+//                    Float score = tempVar.getFloat("score") * 100;
+//                    if (score > threshold) {
+//                        tempJson.put("score", score);
+//                        JSONObject faceJson = new JSONObject();
+//                        faceJson.put("id", tempVar.getString("uuid"));
+//                        faceJson.put("faceGroupId", tempVar.getString("task"));
+//                        tempJson.put("face", faceJson);
+//                        resultJson.add(tempJson);
+//                    }
+//                }
+//            });
+//        }
+//        Var resultVar = Var.fromJson(resultJson.toString());
+        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.keensense.common.util;
 
-import com.loocme.sys.util.StringUtil;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author ycl
@@ -15,7 +16,7 @@ public class Messenger {
     public static String acceptMsg() {
         try {
             String s = MSGER.get();
-            if (StringUtil.isNull(s)) {
+            if (StringUtils.isEmpty(s)) {
                 return "0";
             }
             return s;

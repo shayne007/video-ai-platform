@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import com.keensense.common.util.DateUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -17,7 +18,6 @@ import com.keensense.picturestream.config.NacosConfig;
 import com.keensense.picturestream.entity.PictureInfo;
 import com.keensense.picturestream.input.IPictureStream;
 import com.keensense.picturestream.util.IDUtil;
-import com.loocme.sys.util.DateUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,9 +73,9 @@ public class PictureStreamKafkaImpl implements IPictureStream {
         pictureInfo.setExt(jsonObject.getString("ext"));
         pictureInfo.setInterceptFlag(jsonObject.getBoolean("intercept_flag"));
         pictureInfo.setKeensenseFlag(jsonObject.getBoolean("keensense_flag"));
-        pictureInfo.setEnterTime(DateUtil.getDate(jsonObject.getString("enter_time")).getTime());
-        pictureInfo.setCaptureTime(DateUtil.getDate(jsonObject.getString("capture_time")).getTime());
-        pictureInfo.setLeaveTime(DateUtil.getDate(jsonObject.getString("leave_time")).getTime());
+        pictureInfo.setEnterTime(DateUtil.parseDate(jsonObject.getString("enter_time")).getTime());
+        pictureInfo.setCaptureTime(DateUtil.parseDate(jsonObject.getString("capture_time")).getTime());
+        pictureInfo.setLeaveTime(DateUtil.parseDate(jsonObject.getString("leave_time")).getTime());
         pictureInfo.addRecogTypeList(jsonObject.getString("recog_type"));
         return pictureInfo;
     }

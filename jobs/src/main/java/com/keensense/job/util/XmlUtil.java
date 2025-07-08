@@ -3,7 +3,6 @@ package com.keensense.job.util;
 import com.keensense.job.config.VasUrlConfig;
 import com.keensense.job.entity.Camera;
 import com.keensense.job.entity.CtrlUnit;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -161,7 +160,7 @@ public class XmlUtil {
             ctrlUnit.setUnitLevel(2L);//初始化为根节点
             ctrlUnit.setIsLeaf(0L);//初始化为非叶子节点
             String parentId = contents.get(2);
-            if (StringUtil.isNotNull(parentId)){
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(parentId)){
                 ctrlUnit.setLongNumber(parentId + "!" + contents.get(1));
             }else{
                 ctrlUnit.setLongNumber(contents.get(1));

@@ -1,9 +1,7 @@
 package com.keensense.dataconvert.api.util;
 
 import cn.hutool.core.io.FileUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.keensense.dataconvert.biz.common.consts.ConfigPathConstant;
+import com.keensense.common.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +41,7 @@ public class BuildEsIndexUtil {
         InputStream buildEsStream = BuildEsIndexUtil.class.getClassLoader().getResourceAsStream(path);
         List<String> columns = null;
         try {
-            columns = com.keensense.dataconvert.framework.common.utils.file.FileUtil.text2List(buildEsStream);
+            columns = FileUtil.text2List(buildEsStream);
         } catch (IOException e) {
             logger.error("=== IoError:msg:{} ===",e.getMessage());
         }

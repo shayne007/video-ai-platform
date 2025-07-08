@@ -18,16 +18,9 @@ import com.keensense.alarm.mapper.DispositionNotificationMapper;
 import com.keensense.alarm.service.IDispositionNotificationService;
 import com.keensense.common.config.NacosConfigCenter;
 import com.keensense.common.constant.AlarmConstant;
-import com.keensense.common.util.DateUtil;
-import com.keensense.common.util.DispositionUtil;
-import com.keensense.common.util.IDUtil;
-import com.keensense.common.util.Messenger;
-import com.keensense.common.util.ParamProcessUtil;
+import com.keensense.common.util.*;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.constants.FaceConstant;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,12 +29,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -173,9 +161,9 @@ public class DispositionNotificationServiceImpl extends ServiceImpl<DispositionN
             String dispFeature = disp.getTargetImageFeature();
             if (!configCenter.getFirm().equals(disp.getFirm()) || StringUtils
                     .isEmpty(dispFeature)) {
-                dispFeature = Optional
+                dispFeature = (String) Optional
                         .ofNullable(faceSdkInvoke.getPicAnalyzeOne(disp.getTargetImageUri()))
-                        .map(var -> var.getString(FEATURE_KEY)).orElse("");
+                        .map(var -> var.get(FEATURE_KEY)).orElse("");
                 if (StringUtils.isNotEmpty(dispFeature)) {
                     disp.setFirm(configCenter.getFirm());
                     disp.setTargetImageFeature(dispFeature);
@@ -215,13 +203,13 @@ public class DispositionNotificationServiceImpl extends ServiceImpl<DispositionN
                                                             DispositionEntity disp) {
         List<DispositionNotificationEntity> alarms = Lists.newArrayList();
         List<String> hitNotiIds = Lists.newArrayList();
-        Var params = Var.newObject();
-        params.set("type", 3);
-        params.set("firm", configCenter.getFirm());
-        params.set("threshold", disp.getScoreThreshold() / 100.0f);
+        Map<String,Object> params = new HashMap<>();
+        params.put("type", 3);
+        params.put("firm", configCenter.getFirm());
+        params.put("threshold", disp.getScoreThreshold() / 100.0f);
 
         Map<String, JSONObject> notiMap = Maps.newHashMap();
-        params.set("repo", disp.getRegIds().split(","));
+        params.put("repo", disp.getRegIds().split(","));
         List<JSONObject> featureFaces = faces.stream()
                 .filter(face -> StringUtils.isNotEmpty(face.getString("FeatureObject")))
                 .collect(Collectors.toList());
@@ -231,18 +219,13 @@ public class DispositionNotificationServiceImpl extends ServiceImpl<DispositionN
         for (int i = 0; i < featureFaces.size(); i++) {
             JSONObject face = featureFaces.get(i);
             notiMap.put(face.getString("Id"), face);
-            params.set("candidates[" + i + "].uuid", face.getString("Id"));
-            params.set("candidates[" + i + "].feat", face.getString("FeatureObject"));
+            params.put("candidates[" + i + "].uuid", face.getString("Id"));
+            params.put("candidates[" + i + "].feat", face.getString("FeatureObject"));
         }
         String resp = "";
         String url = "http://" + configCenter.getFeatureExtractUrl().split(":")[0] + ":39082/match";
-        try {
-            resp = PostUtil
-                    .requestContent(url, "application/json;charset=utf-8", params.toString());
-        } catch (HttpConnectionException e) {
-            log.error("search fail url:{}   params:{}", url, params.toString());
-            log.error(e.getMessage(), e);
-        }
+        resp = HttpClientUtil
+                .requestPost(url, "application/json;charset=utf-8", params.toString());
         JSONObject jsonObject = JSON.parseObject(resp);
         JSONArray results = jsonObject.getJSONArray("results");
         for (int i = 0; i < results.size(); i++) {

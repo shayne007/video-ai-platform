@@ -1,5 +1,6 @@
 package com.keensense.extension.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.keensense.common.config.SpringContext;
 import com.keensense.extension.config.NacosConfig;
@@ -12,9 +13,6 @@ import com.keensense.extension.service.impl.ArchivesTaskLibServiceImpl;
 import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.algorithm.impl.GlstFaceSdkInvokeImpl;
 import com.keensense.sdk.constants.FaceConstant;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -72,13 +70,13 @@ public class FaceLibraryUtil {
 
     private static  void createLib(int faceType,LibraryMapper libraryMapper){
         String regId = createFaceLibrary();
-        if(StringUtil.isNotNull(regId)){
+        if(StringUtils.isNotEmpty(regId)){
             Date date = new Date();
-            LibraryInfo libraryInfo = new LibraryInfo(regId,faceType
-                ,DateUtil.getFirstSecondInDay(date),LibraryConstant.getInfintyDate(),date);
-            if(libraryMapper.insert(libraryInfo)<=0){
-                log.error(" add face library to mysql error !faceType="+faceType);
-            }
+//            LibraryInfo libraryInfo = new LibraryInfo(regId,faceType
+//                ,DateUtil.getFirstSecondInDay(date),LibraryConstant.getInfintyDate(),date);
+//            if(libraryMapper.insert(libraryInfo)<=0){
+//                log.error(" add face library to mysql error !faceType="+faceType);
+//            }
         }else{
             log.error(" create face library error !faceType="+faceType);
         }
@@ -164,9 +162,9 @@ public class FaceLibraryUtil {
      * @param repoId 底库ID
      * */
     public static boolean deleteFaceLibrary(String repoId){
-    	Var resultVar = Var.fromJson(FaceConstant.getFaceSdkInvoke().deleteRegistLib(repoId));
-        if(resultVar.getInt("code") == CODE_FAIL){
-            log.error("delete face library failed, id = " + repoId + " , sdkResult code = " + resultVar.getInt("code"));
+        JSONObject resultVar = JSONObject.parseObject(FaceConstant.getFaceSdkInvoke().deleteRegistLib(repoId));
+        if(resultVar.getInteger("code") == CODE_FAIL){
+            log.error("delete face library failed, id = " + repoId + " , sdkResult code = " + resultVar.getInteger("code"));
             return false;
         }
         return true;

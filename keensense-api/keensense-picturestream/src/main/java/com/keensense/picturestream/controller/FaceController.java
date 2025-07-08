@@ -1,19 +1,9 @@
 package com.keensense.picturestream.controller;
 
-import cn.jiuling.plugin.extend.FaceConstant;
-import cn.jiuling.plugin.extend.picrecog.FaceAppMain;
-import cn.jiuling.plugin.extend.picrecog.entity.RecogFaceResult;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.util.ResultUtils;
 import com.keensense.picturestream.config.NacosConfig;
-import com.keensense.picturestream.util.FaceUtil;
-import com.keensense.picturestream.util.ValidUtil;
-import com.keensense.picturestream.util.VideoExceptionUtil;
-import com.keensense.picturestream.util.picture.SdkUtils;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,29 +31,29 @@ public class FaceController extends BaseController {
     @PostMapping(value = "/struct")
     public String struct(@RequestBody String body) {
         JSONObject paramJson = getJsonByBody(body);
-        FaceAppMain faceApp = FaceUtil.getFaceAppMain();
-        String picture = ValidUtil.validString(paramJson, "picture", true);
-        Integer detectMode = ValidUtil.getInteger(paramJson, "detectMode",
-                FaceConstant.TYPE_DETECT_MODE_BIG, FaceConstant.TYPE_DETECT_MODE_SMALL, false);
-        JSONArray faces;
-        if(nacosConfig.getFaceClassPath().contains(".QstFaceSdkInvokeImpl")){
-            String structResult = SdkUtils.objectDetectionOnImage(Base64.decode(picture.getBytes()));
-            if (StringUtil.isNull(structResult)) {
-                throw VideoExceptionUtil.getValidException("提取人脸特征失败!");
-            }
-            JSONObject resultObj = JSON.parseObject(structResult);
-            faces = getFaces(resultObj);
-        } else {
-            RecogFaceResult[] recogFaceResults;
-            if(detectMode != null && detectMode == FaceConstant.TYPE_DETECT_MODE_SMALL){
-                recogFaceResults = faceApp.recog(FaceConstant.TYPE_DETECT_MODE_SMALL, picture);
-            } else {
-                recogFaceResults = faceApp.recog(FaceConstant.TYPE_DETECT_MODE_BIG, picture);
-            }
-            faces = getFaceJson(recogFaceResults);
-        }
+//        FaceAppMain faceApp = FaceUtil.getFaceAppMain();
+//        String picture = ValidUtil.validString(paramJson, "picture", true);
+//        Integer detectMode = ValidUtil.getInteger(paramJson, "detectMode",
+//                FaceConstant.TYPE_DETECT_MODE_BIG, FaceConstant.TYPE_DETECT_MODE_SMALL, false);
+//        JSONArray faces;
+//        if(nacosConfig.getFaceClassPath().contains(".QstFaceSdkInvokeImpl")){
+//            String structResult = SdkUtils.objectDetectionOnImage(Base64.decode(picture.getBytes()));
+//            if (StringUtil.isNull(structResult)) {
+//                throw VideoExceptionUtil.getValidException("提取人脸特征失败!");
+//            }
+//            JSONObject resultObj = JSON.parseObject(structResult);
+//            faces = getFaces(resultObj);
+//        } else {
+//            RecogFaceResult[] recogFaceResults;
+//            if(detectMode != null && detectMode == FaceConstant.TYPE_DETECT_MODE_SMALL){
+//                recogFaceResults = faceApp.recog(FaceConstant.TYPE_DETECT_MODE_SMALL, picture);
+//            } else {
+//                recogFaceResults = faceApp.recog(FaceConstant.TYPE_DETECT_MODE_BIG, picture);
+//            }
+//            faces = getFaceJson(recogFaceResults);
+//        }
         JSONObject result = new JSONObject(1);
-        result.put("faces", faces);
+//        result.put("faces", faces);
         return ResultUtils.returnSuccess(result);
     }
 
@@ -106,21 +96,21 @@ public class FaceController extends BaseController {
         return result;
     }
 
-    private JSONArray getFaceJson(RecogFaceResult[] recogFaceResults){
-        JSONArray faceJson = new JSONArray(recogFaceResults.length);
-        for (RecogFaceResult recogFaceResult : recogFaceResults){
-            JSONObject face = new JSONObject(2);
-            face.put("features", recogFaceResult.getFeature());
-            JSONObject snapshot = new JSONObject(1);
-            JSONObject boundingBox = new JSONObject(4);
-            boundingBox.put("x", recogFaceResult.getPointx());
-            boundingBox.put("y", recogFaceResult.getPointy());
-            boundingBox.put("h", recogFaceResult.getHeight());
-            boundingBox.put("w", recogFaceResult.getWidth());
-            snapshot.put("boundingBox", boundingBox);
-            face.put("snapshot", snapshot);
-            faceJson.add(face);
-        }
-        return faceJson;
-    }
+//    private JSONArray getFaceJson(RecogFaceResult[] recogFaceResults){
+//        JSONArray faceJson = new JSONArray(recogFaceResults.length);
+//        for (RecogFaceResult recogFaceResult : recogFaceResults){
+//            JSONObject face = new JSONObject(2);
+//            face.put("features", recogFaceResult.getFeature());
+//            JSONObject snapshot = new JSONObject(1);
+//            JSONObject boundingBox = new JSONObject(4);
+//            boundingBox.put("x", recogFaceResult.getPointx());
+//            boundingBox.put("y", recogFaceResult.getPointy());
+//            boundingBox.put("h", recogFaceResult.getHeight());
+//            boundingBox.put("w", recogFaceResult.getWidth());
+//            snapshot.put("boundingBox", boundingBox);
+//            face.put("snapshot", snapshot);
+//            faceJson.add(face);
+//        }
+//        return faceJson;
+//    }
 }

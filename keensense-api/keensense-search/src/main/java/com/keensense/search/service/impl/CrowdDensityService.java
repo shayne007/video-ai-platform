@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
+import com.keensense.common.util.ResponseUtil;
 import com.keensense.search.domain.CrowdDensityResult;
 import com.keensense.search.domain.ImageResult;
 import com.keensense.search.tool_interface.ParameterCheck;
@@ -14,7 +15,7 @@ import com.keensense.search.repository.StructuringDataRepository;
 import com.keensense.search.utils.DateUtil;
 import com.keensense.search.utils.EsQueryUtil;
 import com.keensense.search.utils.JsonConvertUtil;
-import com.keensense.search.utils.ResponseUtil;
+
 import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;

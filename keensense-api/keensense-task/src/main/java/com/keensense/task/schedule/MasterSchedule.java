@@ -2,7 +2,7 @@ package com.keensense.task.schedule;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.keensense.dataconvert.framework.common.utils.file.FileUtil;
+import com.keensense.common.util.FileUtil;
 import com.keensense.task.util.IpUtils;
 import com.keensense.task.util.ValidUtil;
 import lombok.extern.slf4j.Slf4j;

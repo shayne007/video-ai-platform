@@ -1,7 +1,7 @@
 package com.keensense.picturestream.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.loocme.sys.util.PatternUtil;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -83,6 +83,6 @@ public class ValidUtil {
      * @return 合法返回 true ; 不合法返回false
      */
     private static boolean isInteger(String a){
-        return PatternUtil.isMatch(a, "^-?\\d+$");
+        return PatternMatchUtils.simpleMatch(a, "^-?\\d+$");
     }
 }

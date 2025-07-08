@@ -1,8 +1,7 @@
-package com.keensense.task.util.picture;
+package com.keensense.common.image;
 
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.util.HttpClientUtil;
-import com.keensense.task.constants.PictureConstants;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

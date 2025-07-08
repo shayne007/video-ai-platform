@@ -2,11 +2,8 @@ package com.keensense.picturestream.algorithm.impl;
 
 import com.keensense.picturestream.algorithm.IObjextStruct;
 import com.keensense.picturestream.entity.PictureInfo;
-import com.loocme.sys.datastruct.IVarForeachHandler;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -34,11 +31,11 @@ public class ObjextStructImpl implements IObjextStruct {
 
 
     @Override
-    public void init(Var params) {
-        String url = params.getString("objext_picture_recog.objextUrl");
-        Integer subClass = params.getInt("objext_picture_recog.output.SubClass");
-        Integer face = params.getInt("objext_picture_recog.output.Face");
-        if(StringUtil.isNotNull(url)){
+    public void init(Map<String,Object> params) {
+        String url = (String) params.get("objext_picture_recog.objextUrl");
+        Integer subClass = (Integer) params.get("objext_picture_recog.output.SubClass");
+        Integer face = (Integer) params.get("objext_picture_recog.output.Face");
+        if(StringUtils.isNotEmpty(url)){
             setObjextUrl(url+"/images/recog");
         }
         setObjextSubClass(subClass);
@@ -47,23 +44,23 @@ public class ObjextStructImpl implements IObjextStruct {
 
     @Override
     public void recog(PictureInfo pictureInfo) {
-        if(StringUtil.isNull(pictureInfo.getPicBase64())){
-            return ;
-        }
-        Var respVar = getStructInfo(pictureInfo.getPicBase64());
-        if(respVar!=null && !respVar.isNull()){
-            respVar.foreach(new IVarForeachHandler() {
-
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void execute(String index, Var resultVar)
-                {
-                    resultVar.set("AlgoSource",PictureInfo.RECOG_TYPE_OBJEXT);
-                    pictureInfo.addResult(resultVar);
-                }
-            });
-        }
+//        if(StringUtil.isNull(pictureInfo.getPicBase64())){
+//            return ;
+//        }
+//        Map<String,Object> respVar = getStructInfo(pictureInfo.getPicBase64());
+//        if(respVar!=null && !respVar.isNull()){
+//            respVar.foreach(new IVarForeachHandler() {
+//
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public void execute(String index, Var resultVar)
+//                {
+//                    resultVar.set("AlgoSource",PictureInfo.RECOG_TYPE_OBJEXT);
+//                    pictureInfo.addResult(resultVar);
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -77,22 +74,22 @@ public class ObjextStructImpl implements IObjextStruct {
             picBaseArray[i] = pictureInfo.getPicBase64();
             i++;
         }
-        Var respVar = getStructInfo(picBaseArray);
-        if(respVar!=null && !respVar.isNull()){
-
-            respVar.foreach(new IVarForeachHandler() {
-
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void execute(String index, Var resultVar)
-                {
-                    int imageId = resultVar.getInt("ImageID");
-                    resultVar.set("AlgoSource",PictureInfo.RECOG_TYPE_OBJEXT);
-                    pictureList.get(imageId-1).addResult(resultVar);
-                }
-            });
-        }
+//        Var respVar = getStructInfo(picBaseArray);
+//        if(respVar!=null && !respVar.isNull()){
+//
+//            respVar.foreach(new IVarForeachHandler() {
+//
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public void execute(String index, Var resultVar)
+//                {
+//                    int imageId = resultVar.getInt("ImageID");
+//                    resultVar.set("AlgoSource",PictureInfo.RECOG_TYPE_OBJEXT);
+//                    pictureList.get(imageId-1).addResult(resultVar);
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -100,45 +97,45 @@ public class ObjextStructImpl implements IObjextStruct {
         return 8;
     }
 
-    public static Var getStructInfo(String... picBase64){
-        try{
-            String rslt = PostUtil.requestContent(objextUrl,"application/json",
-                getStructParams(picBase64));
-            log.info("picture jiegouhua:" + rslt);
-            if(StringUtil.isNull(rslt)){
-                return null;
-            }
-            Var objextsVar = Var.fromJson(rslt.replaceAll("\n","").replaceAll("\t",""));
-            if(OBJEXT_REQUEST_SUCCESS.equals((objextsVar.getString("ret")))){
-                return objextsVar.get("ObjectList");
-            }
-        }catch (Exception e){
-            log.error("objext getStructInfo error",e);
-        }
-        return null;
-    }
-
-    /**
-     * 获取图片特征参数
-     * @param arrs 图片base64编码字符串，支持多个
-     * */
-    public static String getStructParams(String ... arrs){
-        Var paramVar = Var.newObject();
-        paramVar.set("Output.SubClass",objextSubClass);
-        paramVar.set("Output.Face",objextFace);
-        //固定List长度
-        List<Map<String,String>> imageList = new ArrayList<>(arrs.length);
-        for (int i = 0 ; i < arrs.length ; i++){
-            //固定Map长度
-            Map<String,String> map = new HashMap<>(2);
-            map.put("ImageID",""+(i+1));
-            map.put("Data",arrs[i]);
-            imageList.add(map);
-        }
-        paramVar.set("ImageList",imageList);
-        paramVar.set("apiout","1");
-        return paramVar.toString();
-    }
+//    public static Map<String,Object> getStructInfo(String... picBase64){
+//        try{
+//            String rslt = PostUtil.requestContent(objextUrl,"application/json",
+//                getStructParams(picBase64));
+//            log.info("picture jiegouhua:" + rslt);
+//            if(StringUtil.isNull(rslt)){
+//                return null;
+//            }
+//            Var objextsVar = Var.fromJson(rslt.replaceAll("\n","").replaceAll("\t",""));
+//            if(OBJEXT_REQUEST_SUCCESS.equals((objextsVar.getString("ret")))){
+//                return objextsVar.get("ObjectList");
+//            }
+//        }catch (Exception e){
+//            log.error("objext getStructInfo error",e);
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * 获取图片特征参数
+//     * @param arrs 图片base64编码字符串，支持多个
+//     * */
+//    public static String getStructParams(String ... arrs){
+//        Var paramVar = Var.newObject();
+//        paramVar.set("Output.SubClass",objextSubClass);
+//        paramVar.set("Output.Face",objextFace);
+//        //固定List长度
+//        List<Map<String,String>> imageList = new ArrayList<>(arrs.length);
+//        for (int i = 0 ; i < arrs.length ; i++){
+//            //固定Map长度
+//            Map<String,String> map = new HashMap<>(2);
+//            map.put("ImageID",""+(i+1));
+//            map.put("Data",arrs[i]);
+//            imageList.add(map);
+//        }
+//        paramVar.set("ImageList",imageList);
+//        paramVar.set("apiout","1");
+//        return paramVar.toString();
+//    }
 
     public static void setObjextUrl(String objextUrl) {
         ObjextStructImpl.objextUrl = objextUrl;

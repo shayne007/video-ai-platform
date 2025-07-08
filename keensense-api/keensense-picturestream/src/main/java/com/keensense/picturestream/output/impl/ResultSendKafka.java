@@ -11,12 +11,8 @@ import com.keensense.picturestream.util.ClassType;
 import com.keensense.picturestream.util.IDUtil;
 import com.keensense.picturestream.util.ImageBaseUtil;
 import com.keensense.picturestream.util.kafka.KafkaUtil;
-import com.loocme.sys.datastruct.Var;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -58,13 +54,13 @@ public class ResultSendKafka {
     
     private void handleReceiveData(PictureInfo pictureInfo, List<JSONObject> resultList) {
         List<Integer> recogTypeList = pictureInfo.getRecogTypeList();
-        List<Var> varList = pictureInfo.getResults();
+        List<Map<String,Object>> varList = pictureInfo.getResults();
         
         if (CollectionUtils.isEmpty(varList)) {
             ResultSendThreads.sendError(pictureInfo);
         }
         
-        for (Var var : varList) {
+        for (Map<String,Object> var : varList) {
             log.info("Var data______:" + var.toString());
             JSONObject jsonObject = JSONObject.parseObject(var.toString());
             int algoSource = jsonObject.getIntValue("AlgoSource");

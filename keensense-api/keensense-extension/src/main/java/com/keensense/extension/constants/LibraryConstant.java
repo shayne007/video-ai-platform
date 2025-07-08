@@ -2,12 +2,13 @@ package com.keensense.extension.constants;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keensense.common.config.SpringContext;
+import com.keensense.common.util.DateUtil;
 import com.keensense.extension.entity.LibraryInfo;
 import com.keensense.extension.mapper.LibraryMapper;
-import com.loocme.sys.util.DateUtil;
 
 import java.util.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 /**
  * @Description: 底库常量类 主要提供底库枚举值、数据库操作、缓存底库对象操作
@@ -124,7 +125,7 @@ public class LibraryConstant {
      * @return 缓存key值
      * */
     public static String getBodyLibraryCacheKey(int type,Date date){
-        return type+"_"+DateUtil.getFormat(date, "yyyyMMdd");
+        return type+"_"+ DateUtil.formatDate(date, "yyyyMMdd");
     }
 
     /**

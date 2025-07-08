@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
+
 /**
  * @Author: zengyc
  * @Description: 描述该类概要功能介绍

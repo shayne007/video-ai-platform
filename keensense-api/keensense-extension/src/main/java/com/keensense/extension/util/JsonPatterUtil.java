@@ -2,11 +2,11 @@ package com.keensense.extension.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.util.PatternUtil;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.PatternMatchUtils;
 
 /**
  * @Description:
@@ -82,7 +82,7 @@ public class JsonPatterUtil {
         if(inputValue == null){
             throw new VideoException(-1,upperKey+" donnot allowed to be empty");
         }
-        if(!defVal.equals(NONE_PATTER_OR_DEFAULT_VALUE)&& !PatternUtil.isMatch(inputValue.toString(),defVal)){
+        if(!defVal.equals(NONE_PATTER_OR_DEFAULT_VALUE)&& !PatternMatchUtils.simpleMatch(inputValue.toString(),defVal)){
             throw new VideoException(-1,upperKey+" is non-compliant");
         }
     }

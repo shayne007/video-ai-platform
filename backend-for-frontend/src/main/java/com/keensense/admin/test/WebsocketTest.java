@@ -5,8 +5,6 @@ import com.keensense.admin.util.VideoXmlUtil;
 import com.keensense.common.util.DateUtil;
 import com.keensense.common.util.ImageUtils;
 import com.keensense.common.ws.WebsocketClient;
-import com.loocme.sys.util.PatternUtil;
-import net.sf.json.JSONObject;
 import org.java_websocket.drafts.Draft_6455;
 import org.junit.Test;
 

@@ -3,7 +3,6 @@ package com.keensense.picturestream.controller;
 import com.keensense.common.util.ResultUtils;
 import com.keensense.picturestream.config.NacosConfig;
 import com.keensense.picturestream.util.kafka.KafkaUtil;
-import com.loocme.sys.util.OpencvUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +33,9 @@ public class PicturestreamController {
     @PostMapping(value = "/opencv")
     public String opencv() {
         //172.16.1.29:8890/rest/picturestream/opencv
-        OpencvUtil util = OpencvUtil.getInstance();
-        log.info("opencv succuse");
-        return util.toString();
+//        OpencvUtil util = OpencvUtil.getInstance();
+//        log.info("opencv succuse");
+//        return util.toString();
+        return "";
     }
 }

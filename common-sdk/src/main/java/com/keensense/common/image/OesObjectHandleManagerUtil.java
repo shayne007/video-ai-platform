@@ -1,7 +1,7 @@
-package com.keensense.task.util.picture;
+package com.keensense.common.image;
 
 import com.alibaba.fastjson.JSONObject;
-import com.keensense.dataconvert.framework.common.utils.file.FileUtil;
+import com.keensense.common.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 

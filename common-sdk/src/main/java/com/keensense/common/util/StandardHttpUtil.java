@@ -244,8 +244,8 @@ public class StandardHttpUtil {
             String ret = stringBuffer.toString();
             log.info(uuid + " 返回，ret = " + ret);
             log.info(uuid + " cost:" + (System.currentTimeMillis() - start));
-            boolean isvalid = JSONObject.isValid(ret);
-            if (!isvalid) {
+            JSONObject r = JSONObject.parseObject(ret);
+            if (!r.isEmpty()) {
                 log.error(uuid + " " + "非json格式错误");
                 throw new VideoException("视图库错误:" + ret);
             }

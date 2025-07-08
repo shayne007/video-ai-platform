@@ -1,8 +1,5 @@
 package com.keensense.picturestream.common;
 
-import cn.jiuling.plugin.extend.FaceConstant;
-import cn.jiuling.plugin.extend.picrecog.FaceAppMain;
-import cn.jiuling.plugin.extend.picrecog.entity.RecogFaceResult;
 import com.keensense.common.config.SpringContext;
 import com.keensense.picturestream.algorithm.IFaceStruct;
 import com.keensense.picturestream.algorithm.IObjextStruct;
@@ -10,16 +7,12 @@ import com.keensense.picturestream.algorithm.IVlprStruct;
 import com.keensense.picturestream.config.NacosConfig;
 import com.keensense.picturestream.entity.PictureInfo;
 import com.keensense.picturestream.util.FaceUtil;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 @Slf4j
@@ -49,17 +42,17 @@ public class PictureStructMain {
     }
 
     private static void initAlgorithm() {
-        Var initVat = Var.newObject();
-        initVat.set("objext_picture_recog.objext_url", nacosConfig.getObjextPictureRecogObjextUrl());
-        initVat.set("objext_picture_recog.output.Face", 1);
-        initVat.set("objext_picture_recog.output.SubClass", 1);
+        Map<String,Object> initVat = new HashMap<>();
+        initVat.put("objext_picture_recog.objext_url", nacosConfig.getObjextPictureRecogObjextUrl());
+        initVat.put("objext_picture_recog.output.Face", 1);
+        initVat.put("objext_picture_recog.output.SubClass", 1);
         objextStructImpl.init(initVat);
         initVat.clear();
-        initVat.set("vlpr_further_recog.vlpr_url", nacosConfig.getVlprFurtherRecogVlprUrl());
-        initVat.set("vlpr_further_recog.replace_feature", 2);
+        initVat.put("vlpr_further_recog.vlpr_url", nacosConfig.getVlprFurtherRecogVlprUrl());
+        initVat.put("vlpr_further_recog.replace_feature", 2);
         vlprStructImpl.init(initVat);
         initVat.clear();
-        initVat.set("face_qst_recog.face_url", nacosConfig.getFaceQstRecogFaceUrl());
+        initVat.put("face_qst_recog.face_url", nacosConfig.getFaceQstRecogFaceUrl());
         faceStructImpl.init(initVat);
     }
 
@@ -91,17 +84,17 @@ public class PictureStructMain {
                     if (CollectionUtils.isEmpty(pic.getResults())) {
                         continue;
                     }
-                    List<Var> results = pic.getResults();
-                    for (Var var : results) {
-                        int metadataType = var.getInt("Metadata.Type");
-                        boolean faceFlag = metadataType - PictureInfo.OBJEXT_FACE == 0 ||
-                                (metadataType - PictureInfo.OBJEXT_PERSON == 0 && null != var.get("Metadata.FaceBoundingBox"));
-                        if (metadataType - PictureInfo.OBJEXT_VLPR == 0) {
-                            vlpr = true;
-                        } else if (faceFlag) {
-                            face = true;
-                        }
-                    }
+//                    List<Var> results = pic.getResults();
+//                    for (Var var : results) {
+//                        int metadataType = var.getInt("Metadata.Type");
+//                        boolean faceFlag = metadataType - PictureInfo.OBJEXT_FACE == 0 ||
+//                                (metadataType - PictureInfo.OBJEXT_PERSON == 0 && null != var.get("Metadata.FaceBoundingBox"));
+//                        if (metadataType - PictureInfo.OBJEXT_VLPR == 0) {
+//                            vlpr = true;
+//                        } else if (faceFlag) {
+//                            face = true;
+//                        }
+//                    }
                     if (vlpr && pic.getRecogTypeList().contains(PictureInfo.RECOG_TYPE_THIRD_VLPR)) {
                         vlprStructImpl.recog(pic);
                     }
@@ -175,45 +168,45 @@ public class PictureStructMain {
     }
 
     private static boolean checkPicture(PictureInfo pictureInfo) {
-        return pictureInfo != null && StringUtil.isNotNull(pictureInfo.getPicBase64());
+        return pictureInfo != null && StringUtils.isNotEmpty(pictureInfo.getPicBase64());
     }
 
     private static void getFaceVar(List<PictureInfo> pictureInfos) {
-        FaceAppMain faceApp = FaceUtil.getFaceAppMain();
-        pictureInfos.parallelStream().forEach(pictureInfo -> {
-            if (pictureInfo.getPictureType() - PictureInfo.IMAGE_SEGMENTATION == 0) {
-
-                RecogFaceResult recogFaceResult = faceApp.recogOne(FaceConstant.TYPE_DETECT_MODE_SMALL, pictureInfo.getPicBase64());
-                if (recogFaceResult != null) {
-                    pictureInfo.addResult(getFaceResult(recogFaceResult));
-                }
-            } else {
-                RecogFaceResult[] recogFaceResults = faceApp.recog(FaceConstant.TYPE_DETECT_MODE_BIG, pictureInfo.getPicBase64());
-                for (RecogFaceResult recogFaceResult : recogFaceResults) {
-                    if (recogFaceResult != null) {
-                        pictureInfo.addResult(getFaceResult(recogFaceResult));
-                    }
-                }
-            }
-        });
+//        FaceAppMain faceApp = FaceUtil.getFaceAppMain();
+//        pictureInfos.parallelStream().forEach(pictureInfo -> {
+//            if (pictureInfo.getPictureType() - PictureInfo.IMAGE_SEGMENTATION == 0) {
+//
+//                RecogFaceResult recogFaceResult = faceApp.recogOne(FaceConstant.TYPE_DETECT_MODE_SMALL, pictureInfo.getPicBase64());
+//                if (recogFaceResult != null) {
+//                    pictureInfo.addResult(getFaceResult(recogFaceResult));
+//                }
+//            } else {
+//                RecogFaceResult[] recogFaceResults = faceApp.recog(FaceConstant.TYPE_DETECT_MODE_BIG, pictureInfo.getPicBase64());
+//                for (RecogFaceResult recogFaceResult : recogFaceResults) {
+//                    if (recogFaceResult != null) {
+//                        pictureInfo.addResult(getFaceResult(recogFaceResult));
+//                    }
+//                }
+//            }
+//        });
 
     }
 
-    private static Var getFaceResult(RecogFaceResult recogFaceResult) {
-        Var var = Var.newObject();
-        var.set("AlgoSource", PictureInfo.RECOG_TYPE_FACE);
-        var.set("blurry", recogFaceResult.getBlurry());
-        var.set("roll", recogFaceResult.getRoll());
-        var.set("yaw", recogFaceResult.getYaw());
-        var.set("pitch", recogFaceResult.getPitch());
-        var.set("quality", recogFaceResult.getQuality());
-        var.set("feature", recogFaceResult.getFeature());
-        var.set("rect", recogFaceResult.getRect());
-        var.set("glass", recogFaceResult.getGlass());
-        var.set("box.x", recogFaceResult.getPointx());
-        var.set("box.y", recogFaceResult.getPointy());
-        var.set("box.w", recogFaceResult.getWidth());
-        var.set("box.h", recogFaceResult.getHeight());
-        return var;
-    }
+//    private static Var getFaceResult(RecogFaceResult recogFaceResult) {
+//        Var var = Var.newObject();
+//        var.set("AlgoSource", PictureInfo.RECOG_TYPE_FACE);
+//        var.set("blurry", recogFaceResult.getBlurry());
+//        var.set("roll", recogFaceResult.getRoll());
+//        var.set("yaw", recogFaceResult.getYaw());
+//        var.set("pitch", recogFaceResult.getPitch());
+//        var.set("quality", recogFaceResult.getQuality());
+//        var.set("feature", recogFaceResult.getFeature());
+//        var.set("rect", recogFaceResult.getRect());
+//        var.set("glass", recogFaceResult.getGlass());
+//        var.set("box.x", recogFaceResult.getPointx());
+//        var.set("box.y", recogFaceResult.getPointy());
+//        var.set("box.w", recogFaceResult.getWidth());
+//        var.set("box.h", recogFaceResult.getHeight());
+//        return var;
+//    }
 }

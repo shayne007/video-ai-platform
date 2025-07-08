@@ -3,8 +3,8 @@ package com.keensense.job.handler;
 import com.keensense.job.config.VasUrlConfig;
 import com.keensense.job.entity.Camera;
 import com.keensense.job.util.ChinaMapUtils;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -79,7 +79,7 @@ public class CameraSaxParserHandler extends DefaultHandler {
 
             tagValue =  new String(ch, start, length);
 
-            if(StringUtil.isNotNull(tagName) && StringUtil.isNotNull(tagValue) ){
+            if(StringUtils.isNotEmpty(tagName) && StringUtils.isNotEmpty(tagValue) ){
                 this.packageCameraData(tagName,tagValue);
             }
         }

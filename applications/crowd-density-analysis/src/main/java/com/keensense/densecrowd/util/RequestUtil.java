@@ -1,10 +1,5 @@
 package com.keensense.densecrowd.util;
 
-import com.loocme.plugin.webmvc.exception.RequestException;
-import com.loocme.plugin.webmvc.threadlocal.Request;
-import com.loocme.sys.util.ListUtil;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;

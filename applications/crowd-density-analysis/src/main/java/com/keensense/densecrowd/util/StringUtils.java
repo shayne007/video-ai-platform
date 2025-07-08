@@ -1,8 +1,5 @@
 package com.keensense.densecrowd.util;
 
-import com.loocme.sys.constance.DateFormatConst;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.*;
@@ -48,14 +45,14 @@ public class StringUtils {
 		return rst;
 	}
 	
-	public static String getYMD000_() {
-		return DateUtil.getFormat(DateUtil.getDate(null), DateFormatConst.YMD_) + " 00:00:00";
-	}
-
-	public static String getYMDHMS_() {
-		return DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_);
-	}
-	
+//	public static String getYMD000_() {
+//		return DateUtil.getFormat(DateUtil.getDate(null), DateFormatConst.YMD_) + " 00:00:00";
+//	}
+//
+//	public static String getYMDHMS_() {
+//		return DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_);
+//	}
+//
 	
 	/**
 	 * 替换字符串中的逗号
@@ -374,8 +371,8 @@ public class StringUtils {
     }
     /**
      * 
-     * @param selfLongNumber
-     * @param splitChar
+//     * @param selfLongNumber
+//     * @param splitChar
      * @return
      */
     public static String replaceStrWithLevel(String str,String splitStr,Integer level,String replaceStr){
@@ -491,7 +488,7 @@ public class StringUtils {
 	
 	public static String getValueFromStringKeyMap(Map<String,Object> map, String key){
 		String value = "其他";
-		if(StringUtil.isNotNull(key)){
+		if(org.apache.commons.lang3.StringUtils.isNotEmpty(key)){
 			if(map.get(key)!=null){
 				value = (String) map.get(key);
 			}
@@ -499,15 +496,15 @@ public class StringUtils {
 		return value;
 	}
 	
-	public static Integer getKeyFromStringValueMap(Map<String,Object> map, String key){
-		Integer value = -1;
-		if(StringUtil.isNotNull(key)){
-			if(map.get(key)!=null){
-				value = StringUtil.getInteger(map.get(key).toString()) ;
-			}
-		}
-		return value;
-	}
+//	public static Integer getKeyFromStringValueMap(Map<String,Object> map, String key){
+//		Integer value = -1;
+//		if(StringUtil.isNotNull(key)){
+//			if(map.get(key)!=null){
+//				value = StringUtil.getInteger(map.get(key).toString()) ;
+//			}
+//		}
+//		return value;
+//	}
 	
 	public static Object getFormatObject(Object obj){
 		if(obj == null){
@@ -536,7 +533,6 @@ public class StringUtils {
     /**
 	 * 获取图片格式函数
 	 * 
-	 * @param file
 	 * @return
 	 */
 	public static String getExtension(byte[] input) {

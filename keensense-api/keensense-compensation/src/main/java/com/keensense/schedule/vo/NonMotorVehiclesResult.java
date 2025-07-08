@@ -1,10 +1,11 @@
 package com.keensense.schedule.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Table;
 import lombok.Data;
 import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
 
 /**
  * 1400标准非机动车类

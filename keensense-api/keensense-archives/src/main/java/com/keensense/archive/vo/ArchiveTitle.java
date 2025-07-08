@@ -1,11 +1,12 @@
 package com.keensense.archive.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.loocme.sys.annotation.database.Column;
-import com.loocme.sys.annotation.database.Table;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
 
 /**
  * Created by memory_fu on 2019/12/26.

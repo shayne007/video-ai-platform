@@ -23,14 +23,12 @@ import com.keensense.commonlib.service.ICommonFeatureService;
 import com.keensense.commonlib.util.IDUtil;
 import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.FaceConstant;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.PatternMatchUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -59,7 +57,7 @@ public class CommonFeatureServiceImpl extends ServiceImpl<CommonFeatureMapper,Co
 
         String libId = commonLibFeatureDTO.getId();
         String featureId = StringUtils.EMPTY;
-        Var rsltVar;
+        Map<String,Object> rsltVar;
         switch (type){
             case CommonLibConstant.LIBRARY_TYPE_HUMAN:
             case CommonLibConstant.LIBRARY_TYPE_VEHICLE:
@@ -68,15 +66,15 @@ public class CommonFeatureServiceImpl extends ServiceImpl<CommonFeatureMapper,Co
                 if(rsltVar==null) {
                     throw new VideoException(-1,"getPicAnalyzeOne is null,type is"+type);
                 }
-                featureId = BodyConstant.getBodySdkInvoke().addBodyToLib(libId, IDUtil.uuid(), type,
-                    rsltVar.getString("featureVector"));
+                featureId = BodyConstant.getBodySdkInvoke().addBodyToLib(libId, IDUtil.uuid(), (Integer) type,
+                        (String) rsltVar.get("featureVector"));
                 break;
             case CommonLibConstant.LIBRARY_TYPE_FACE:
                 rsltVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(commonLibFeatureDTO.getBaseData());
                 if(rsltVar==null) {
                     throw new VideoException(-1,"getPicAnalyzeOne is null,type is"+type);
                 }
-                String faceFeature = rsltVar.getString("featureVector");
+                String faceFeature = (String) rsltVar.get("featureVector");
                 featureId = FaceConstant.getFaceSdkInvoke().addFaceToLib(libId, faceFeature, null);
                 break;
             default: break;
@@ -91,7 +89,7 @@ public class CommonFeatureServiceImpl extends ServiceImpl<CommonFeatureMapper,Co
     }
 
     private String getImgUrl(String data) {
-        if(PatternUtil.isMatch(data, "^(http|ftp).*$", Pattern.CASE_INSENSITIVE)) {
+        if(PatternMatchUtils.simpleMatch(data, "^(http|ftp).*$")) {
             return data;
         }
         JSONObject imgObj = JSON.parseObject(feignService.getImg(IDUtil.uuid(),data));
@@ -145,22 +143,22 @@ public class CommonFeatureServiceImpl extends ServiceImpl<CommonFeatureMapper,Co
     @Override
     public IPage<CommonFeatureRecord> listCommonFeature(CommonFeatureQueryDto dto, PageDto page) {
         LambdaQueryWrapper<CommonFeatureRecord> wrapper = Wrappers.lambdaQuery();
-        if (StringUtil.isNotNull(dto.getId())) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getId())) {
             wrapper = wrapper.eq(CommonFeatureRecord::getId, dto.getId());
         }
-        if (StringUtil.isNotNull(dto.getImgUrl())) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getImgUrl())) {
             wrapper = wrapper.eq(CommonFeatureRecord::getImgUrl, dto.getImgUrl());
         }
-        if (StringUtil.isNotNull(dto.getLibraryId())) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getLibraryId())) {
             wrapper = wrapper.eq(CommonFeatureRecord::getLibraryId, dto.getLibraryId());
         }
         if (dto.getFeatureType() !=null) {
             wrapper = wrapper.eq(CommonFeatureRecord::getFeatureType, dto.getFeatureType());
         }
-        if (StringUtil.isNotNull(dto.getStartTime())) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getStartTime())) {
             wrapper = wrapper.ge(CommonFeatureRecord::getUpdateTime, dto.getStartTime());
         }
-        if (StringUtil.isNotNull(dto.getEndTime())) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getEndTime())) {
             wrapper = wrapper.le(CommonFeatureRecord::getUpdateTime, dto.getEndTime());
         }
         return recordMapper.selectPage(new Page<>((page.getPageNo()-1)*page.getPageSize(),page.getPageSize()), wrapper);

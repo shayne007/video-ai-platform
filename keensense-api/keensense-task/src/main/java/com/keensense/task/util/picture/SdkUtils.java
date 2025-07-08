@@ -2,8 +2,9 @@ package com.keensense.task.util.picture;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.keensense.common.image.GstlRecogHttp;
+import com.keensense.common.image.OesObjectHandleManagerUtil;
 import com.keensense.task.constants.CarConst;
-import com.keensense.task.constants.ColorConst;
 import com.keensense.task.constants.PictureConstants;
 import lombok.extern.slf4j.Slf4j;
 

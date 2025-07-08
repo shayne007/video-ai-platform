@@ -1,7 +1,10 @@
 package com.keensense.extension.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keensense.common.config.SpringContext;
+import com.keensense.common.util.DateUtil;
 import com.keensense.extension.constants.LibraryConstant;
 import com.keensense.extension.entity.ArchivesBodyInfo;
 import com.keensense.extension.entity.LibraryInfo;
@@ -14,11 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Description: 人形底库工具类
@@ -40,7 +41,7 @@ public class BodyLibraryUtil {
      * */
     public static void isExistBodyLibrary(){
         isExistBodyLibrarybyDate(new Date());
-        isExistBodyLibrarybyDate(DateUtil.getNextDay());
+//        isExistBodyLibrarybyDate(DateUtil.getNextDay());
     }
 
     /**
@@ -56,13 +57,13 @@ public class BodyLibraryUtil {
      * */
     public static void deleteInvalidBodyLibrary(){
         //获取今天00:00:00的时间点
-        Date date = DateUtil.getFirstSecondInDay(new Date());
-        List<LibraryInfo> libraryInfoList = LibraryConstant.getInvalidBodyLibraryByType(date);
-        if(CollectionUtils.isNotEmpty(libraryInfoList)){
-            for(LibraryInfo libraryInfo : libraryInfoList){
-                deleteBodyLibraryDateType(libraryInfo.getId(),date,libraryInfo.getLibraryType());
-            }
-        }
+//        Date date = DateUtil.getFirstSecondInDay(new Date());
+//        List<LibraryInfo> libraryInfoList = LibraryConstant.getInvalidBodyLibraryByType(date);
+//        if(CollectionUtils.isNotEmpty(libraryInfoList)){
+//            for(LibraryInfo libraryInfo : libraryInfoList){
+//                deleteBodyLibraryDateType(libraryInfo.getId(),date,libraryInfo.getLibraryType());
+//            }
+//        }
     }
 
     /**
@@ -70,14 +71,14 @@ public class BodyLibraryUtil {
      * @param date 时间
      * */
     private static void isExistBodyLibrarybyDate(Date date){
-        Date startDate = DateUtil.getFirstSecondInDay(date);
-        Date endDate = DateUtil.getLastSecondInDay(date);
+//        Date startDate = DateUtil.getFirstSecondInDay(date);
+//        Date endDate = DateUtil.getLastSecondInDay(date);
         List<LibraryInfo> list;
         for(Integer type : LibraryConstant.getLibraryTypeBody()){
-            list = LibraryConstant.getBodyLibraryByDate(type, startDate, endDate);
-            if(CollectionUtils.isEmpty(list)){
-                createBodyLibrary(type,startDate,endDate,date);
-            }
+//            list = LibraryConstant.getBodyLibraryByDate(type, startDate, endDate);
+//            if(CollectionUtils.isEmpty(list)){
+//                createBodyLibrary(type,startDate,endDate,date);
+//            }
         }
     }
 
@@ -87,21 +88,21 @@ public class BodyLibraryUtil {
      * @return 人形库缓存
      * */
     private static Map<String,LibraryInfo> getBodyLibraryForTomorrow(Map<String,LibraryInfo> bodyLibraryCache){
-        Date date = DateUtil.getNextDay();
-        Date beginTime = DateUtil.getFirstSecondInDay(date);
-        Date endTime = DateUtil.getLastSecondInDay(date);
+//        Date date = DateUtil.getNextDay();
+//        Date beginTime = DateUtil.getFirstSecondInDay(date);
+//        Date endTime = DateUtil.getLastSecondInDay(date);
         List<LibraryInfo> bodyLibrarylist;
         for(Integer type : LibraryConstant.getLibraryTypeBody()){
-            bodyLibrarylist = LibraryConstant.getBodyLibraryByDate(type, beginTime, endTime);
-            String key = LibraryConstant.getBodyLibraryCacheKey(type, date);
+//            bodyLibrarylist = LibraryConstant.getBodyLibraryByDate(type, beginTime, endTime);
+//            String key = LibraryConstant.getBodyLibraryCacheKey(type, date);
             /*获取到数据随机获取一个底库作为缓存，其余删除*/
-            if(bodyLibrarylist.size() > 0){
-                bodyLibraryCache.put(key, clearBodyLibrary(bodyLibrarylist));
-            }else{
-                log.error("can not get body library from mysql with type = " + type
-                        + " and presetStartTime = "+ DateUtil.getFormat(beginTime, DATA_FORMAT)
-                        + " and presetEndTime = " + DateUtil.getFormat(endTime, DATA_FORMAT));
-            }
+//            if(bodyLibrarylist.size() > 0){
+//                bodyLibraryCache.put(key, clearBodyLibrary(bodyLibrarylist));
+//            }else{
+//                log.error("can not get body library from mysql with type = " + type
+//                        + " and presetStartTime = "+ DateUtil.getFormat(beginTime, DATA_FORMAT)
+//                        + " and presetEndTime = " + DateUtil.getFormat(endTime, DATA_FORMAT));
+//            }
         }
         return bodyLibraryCache;
     }
@@ -113,11 +114,11 @@ public class BodyLibraryUtil {
     private static Map<String,LibraryInfo> getBodyLibraryForTodayTomorrow(){
         Map<String,LibraryInfo> bodyLibraryToday = new HashMap<>();
         Date date = new Date();
-        Date beginTime = DateUtil.getFirstSecondInDay(date);
-        Date endTime = DateUtil.getLastSecondInDay(date);
-        List<LibraryInfo> bodyLibrarylist;
+//        Date beginTime = DateUtil.getFirstSecondInDay(date);
+//        Date endTime = DateUtil.getLastSecondInDay(date);
+        List<LibraryInfo> bodyLibrarylist = null;
         for(Integer type : LibraryConstant.getLibraryTypeBody()){
-            bodyLibrarylist = LibraryConstant.getBodyLibraryByDate(type, beginTime, endTime);
+//            bodyLibrarylist = LibraryConstant.getBodyLibraryByDate(type, beginTime, endTime);
             String key = LibraryConstant.getBodyLibraryCacheKey(type, date);
             if(bodyLibrarylist.size() == 1){        //只有一个人形库时
                 LibraryInfo libraryInfo = bodyLibrarylist.get(0);
@@ -131,9 +132,9 @@ public class BodyLibraryUtil {
                     bodyLibraryToday.put(key, clearBodyLibrary(bodyLibrarylist));
                 }
             }else{
-                log.error("can not get body library from mysql with type = " + type
-                        + " and presetStartTime = "+ DateUtil.getFormat(beginTime, DATA_FORMAT)
-                        + " and presetEndTime = " + DateUtil.getFormat(endTime, DATA_FORMAT));
+//                log.error("can not get body library from mysql with type = " + type
+//                        + " and presetStartTime = "+ DateUtil.getFormat(beginTime, DATA_FORMAT)
+//                        + " and presetEndTime = " + DateUtil.getFormat(endTime, DATA_FORMAT));
             }
         }
         getBodyLibraryForTomorrow(bodyLibraryToday);
@@ -198,9 +199,9 @@ public class BodyLibraryUtil {
      * @param repoId 底库ID
      * */
     private static void deleteBodyLibraryById(String repoId){
-    	Var resultVar = Var.fromJson(BodyConstant.getBodySdkInvoke().deleteRegistLib(repoId));
+        JSONObject resultVar = JSONObject.parseObject(BodyConstant.getBodySdkInvoke().deleteRegistLib(repoId));
     	
-    	if(resultVar != null && resultVar.getInt("code") == CODE_FAIL){
+    	if(resultVar != null && resultVar.getInteger("code") == CODE_FAIL){
     		log.error("library SDK error! delete body library failed, id = " + repoId);
     	}else{
     		LibraryUtil.deleteLibraryById(repoId);
@@ -212,7 +213,7 @@ public class BodyLibraryUtil {
      * */
     private static void createBodyLibrary(int type, Date startDate, Date endDate, Date date){
         String regId = createBodyLibrary();
-        if(StringUtil.isNotNull(regId)){
+        if(StringUtils.isNotEmpty(regId)){
             LibraryInfo libraryInfo = new LibraryInfo(regId,type,startDate,endDate,date);
             if(libraryMapper.insert(libraryInfo)<=0){
                 log.error(" add body library to mysql error !");
@@ -243,9 +244,9 @@ public class BodyLibraryUtil {
      * @param repId 底库ID
      * */
     public static boolean deleteLibrary(String repId){
-    	Var resultVar = Var.fromJson(BodyConstant.getBodySdkInvoke().deleteRegistLib(repId));
-        if(resultVar!= null &&resultVar.getInt("code") == CODE_FAIL){
-            log.error("delete library failed, id = " + repId + " , sdkResult code = " + resultVar.getInt("code"));
+        JSONObject resultVar = JSONObject.parseObject(BodyConstant.getBodySdkInvoke().deleteRegistLib(repId));
+        if(resultVar!= null &&resultVar.getInteger("code") == CODE_FAIL){
+            log.error("delete library failed, id = " + repId + " , sdkResult code = " + resultVar.getInteger("code"));
             return false;
         }
         return true;

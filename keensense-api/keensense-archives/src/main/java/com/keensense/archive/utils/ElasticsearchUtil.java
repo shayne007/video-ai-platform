@@ -1,15 +1,14 @@
 package com.keensense.archive.utils;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.keensense.archive.vo.ArchiveTitle;
-import com.loocme.plugin.spring.comp.SqlExecutor;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +58,7 @@ public class ElasticsearchUtil {
         StringBuilder stringBuilder = new StringBuilder();
         for (ArchiveTitle archiveTitle : datas) {
             JSONObject jsonObject = new JSONObject();
-            JSONObject fromObject = JSONObject.fromObject(archiveTitle);
+            JSONObject fromObject = JSONObject.parseObject(String.valueOf(archiveTitle));
             fromObject.remove("combineCluster");
             indexJsonObject.put("_id", archiveTitle.getClusterIndex());
             jsonObject.put("index", indexJsonObject);
@@ -74,7 +73,7 @@ public class ElasticsearchUtil {
         
         String response = HttpClientUtil.doPost(url, stringBuilder.toString(), auth);
         
-        JSONObject responeObject = JSONObject.fromObject(response);
+        JSONObject responeObject = JSONObject.parseObject(response);
         JSONArray items = responeObject.getJSONArray("items");
         
         return items == null ? 0 : items.size();
@@ -100,9 +99,9 @@ public class ElasticsearchUtil {
             "http://" + esHost + ":" + esPort + "/"+index+"/_update_by_query?pretty";
     
         String response = HttpClientUtil.doPost(url, jsonObject.toString(), auth);
-        JSONObject responseObject = JSONObject.fromObject(response);
+        JSONObject responseObject = JSONObject.parseObject(response);
 
-        return responseObject.getInt("updated");
+        return responseObject.getInteger("updated");
     }
     
     /**
@@ -116,8 +115,8 @@ public class ElasticsearchUtil {
         
         String response = HttpClientUtil.doPost(url, queryObject.toString(), auth);
         
-        JSONObject jsonObject = JSONObject.fromObject(response);
-        int deletedCount = jsonObject.getInt("deleted");
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int deletedCount = jsonObject.getInteger("deleted");
         
         return deletedCount;
     }

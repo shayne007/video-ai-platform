@@ -15,11 +15,11 @@ public class U2sRecogNative
 
     static
     {
-        if (SystemUtil.isLinux)
-        {
-            System.loadLibrary("VideoAnalysisSDK");
-            System.loadLibrary("ImageRecog_jni");
-        }
+//        if (SystemUtil.isLinux)
+//        {
+//            System.loadLibrary("VideoAnalysisSDK");
+//            System.loadLibrary("ImageRecog_jni");
+//        }
     }
     
     public native int Init(String sdkParam);

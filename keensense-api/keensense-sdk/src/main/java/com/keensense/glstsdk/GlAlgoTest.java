@@ -3,11 +3,7 @@ package com.keensense.glstsdk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -16,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.loocme.sys.datastruct.Var;
 
 import sun.misc.BASE64Encoder;
 
@@ -68,11 +63,11 @@ public class GlAlgoTest {
         long currentTime = TrackFunctionUtil.getCurrentTime();
         String reqUrl = host + ":" + port + "/vse/face/rec/image";
 
-        Var params = Var.newObject();
-        params.set("Context.Functions[0]", 200);
-        params.set("Context.Type", 2);
-        params.set("Context.Params.detect_mode", 1);
-        params.set("Image.Data.BinDataType", 1);
+        Map<String,Object> params = new HashMap<>();
+        params.put("Context.Functions[0]", 200);
+        params.put("Context.Type", 2);
+        params.put("Context.Params.detect_mode", 1);
+        params.put("Image.Data.BinDataType", 1);
 
         ExecutorService threadPool = Executors.newFixedThreadPool(threadCount);
         List<Future<String>> futureList = Lists.newArrayList();
@@ -83,7 +78,7 @@ public class GlAlgoTest {
                 for (int i = 0; i < requestPerSec; i++) {
 
                     int anInt = RandomUtil.getInt(lists.size());
-                    params.set("Image.Data.BinData", lists.get(anInt));
+                    params.put("Image.Data.BinData", lists.get(anInt));
 
                     GlAlgoRequest glAlgoRequest = new GlAlgoRequest(reqUrl, params.toString());
 

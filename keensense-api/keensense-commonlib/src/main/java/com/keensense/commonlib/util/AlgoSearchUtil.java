@@ -4,19 +4,16 @@ import com.keensense.common.exception.VideoException;
 import com.keensense.commonlib.entity.dto.CommonSearchResultDTO;
 import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.FaceConstant;
-import java.util.ArrayList;
-import java.util.Collections;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Description:
@@ -42,7 +39,7 @@ public class AlgoSearchUtil {
     public static List<CommonSearchResultDTO> getQstSearchByParams(String regIds, String feature,
         Float threshold,int objType,int maxResult) throws VideoException{
 
-        Var var = BodyConstant
+        Map<String,Object> var = BodyConstant
             .getBodySdkInvoke().getSimilars(objType, regIds, feature, threshold*100, maxResult, false);
         if(var ==null) {
 
@@ -62,7 +59,7 @@ public class AlgoSearchUtil {
      * @return 第一张人脸对象
      * */
     public static List<CommonSearchResultDTO> getNonQstFacesByFeature(String regId, String feature, Float threshold,int maxResult){
-        Var var = FaceConstant.getFaceSdkInvoke().getSimilars(regId, feature, threshold*100, maxResult);
+        Map<String,Object> var = FaceConstant.getFaceSdkInvoke().getSimilars(regId, feature, threshold*100, maxResult);
         if(var == null) {
         	return Collections.emptyList();
         }
@@ -70,7 +67,7 @@ public class AlgoSearchUtil {
         return resultList;
     }
 
-    private static List<CommonSearchResultDTO> getNonQstSearchResultList(Var var){
+    private static List<CommonSearchResultDTO> getNonQstSearchResultList(Map<String,Object> var){
 
         JSONArray array = JSON.parseArray(var.toString());
         List<CommonSearchResultDTO> resultList = new ArrayList<>(array.size());
@@ -84,7 +81,7 @@ public class AlgoSearchUtil {
             id = object1.getString("id");
             score = object.getString("score");
             groupId = object1.getString("faceGroupId");
-            if(StringUtil.isNotNull(id) && StringUtil.isNotNull(score)){
+            if(StringUtils.isNotEmpty(id) && StringUtils.isNotEmpty(score)){
                 Float scoreF = Float.valueOf(score);
                 resultList.add(new CommonSearchResultDTO(id,scoreF,groupId));
             }
@@ -97,7 +94,7 @@ public class AlgoSearchUtil {
     /**
      * 解析qst搜图结果
      * */
-    private static List<CommonSearchResultDTO> getQstSearchResultList(Var var,Float threshold){
+    private static List<CommonSearchResultDTO> getQstSearchResultList(Map<String,Object> var,Float threshold){
 
         JSONArray array = JSON.parseArray(var.toString());
         List<CommonSearchResultDTO> resultList = new ArrayList<>(array.size());
@@ -110,7 +107,7 @@ public class AlgoSearchUtil {
             id = object.getString("uuid");
             score = object.getString("score");
             groupId = object.getString("task");
-            if(StringUtil.isNotNull(id) && StringUtil.isNotNull(score) &&
+            if(StringUtils.isNotEmpty(id) && StringUtils.isNotEmpty(score) &&
                 Float.valueOf(score)-threshold>=0){
                 Float scoreF = Float.valueOf(score);
                 resultList.add(new CommonSearchResultDTO(id,scoreF,groupId));

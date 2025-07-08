@@ -1,8 +1,8 @@
 package com.keensense.job.handler;
 
 import com.keensense.job.entity.CtrlUnit;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -70,7 +70,7 @@ public class UnitCtrlSaxParserHandler extends DefaultHandler {
 
             tagValue =  new String(ch, start, length);
 
-            if(StringUtil.isNotNull(tagName) && StringUtil.isNotNull(tagValue) ){
+            if(StringUtils.isNotEmpty(tagName) && StringUtils.isNotEmpty(tagValue) ){
                 this.packageCameraData(tagName,tagValue);
             }
         }

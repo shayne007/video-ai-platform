@@ -1,6 +1,5 @@
 package com.keensense.dataconvert.api.request;
 
-import cn.hutool.core.date.SystemClock;
 import com.alibaba.fastjson.JSON;
 import com.keensense.dataconvert.api.util.HttpClientResult;
 import com.keensense.dataconvert.api.util.HttpClientUtils;
@@ -9,9 +8,6 @@ import com.keensense.dataconvert.biz.common.consts.CommonConst;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

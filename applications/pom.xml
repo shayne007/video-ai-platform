@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>traffic-vehicle-monitor</module>
-        <module>crowd-density-analysis</module>
+<!--        <module>crowd-density-analysis</module>-->
         <module>person-trajectory-track</module>
     </modules>
 

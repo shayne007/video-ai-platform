@@ -7,6 +7,7 @@ import com.keensense.sdk.constants.BodyConstant;
 import com.keensense.sdk.constants.CommonConst;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -66,39 +67,40 @@ public class QstFaceSdkInvokeImpl implements IFaceSdkInvoke {
 	}
 
 	@Override
-	public Var getSimilars(String regIds, String feature, float threshold, int maxResult) throws VideoException{
-		Var result =  BodyConstant.getBodySdkInvoke().getSimilars(CommonConst.OBJ_TYPE_FACE, regIds, feature, threshold, maxResult, false);
-		JSONArray resultJson = new JSONArray();
-		if(result != null){
-			result.foreach(new IVarForeachHandler() {
-				private static final long serialVersionUID = 1L;
-				@Override
-				public void execute(String paramString, Var tempVar) {
-					JSONObject tempJson = new JSONObject();
-					Float score = tempVar.getFloat("score") *100;
-					if(score >= threshold){
-						tempJson.put("score", score);
-						JSONObject faceJson = new JSONObject();
-						faceJson.put("id", tempVar.getString("uuid"));
-						faceJson.put("faceGroupId", tempVar.getString("task"));
-						tempJson.put("face", faceJson);
-						resultJson.add(tempJson);
-					}
-				}
-			});
-		}
-		Var resultVar = Var.fromJson(resultJson.toString());
-		return resultVar;
+	public Map<String,Object> getSimilars(String regIds, String feature, float threshold, int maxResult) throws VideoException{
+//		Var result =  BodyConstant.getBodySdkInvoke().getSimilars(CommonConst.OBJ_TYPE_FACE, regIds, feature, threshold, maxResult, false);
+//		JSONArray resultJson = new JSONArray();
+//		if(result != null){
+//			result.foreach(new IVarForeachHandler() {
+//				private static final long serialVersionUID = 1L;
+//				@Override
+//				public void execute(String paramString, Var tempVar) {
+//					JSONObject tempJson = new JSONObject();
+//					Float score = tempVar.getFloat("score") *100;
+//					if(score >= threshold){
+//						tempJson.put("score", score);
+//						JSONObject faceJson = new JSONObject();
+//						faceJson.put("id", tempVar.getString("uuid"));
+//						faceJson.put("faceGroupId", tempVar.getString("task"));
+//						tempJson.put("face", faceJson);
+//						resultJson.add(tempJson);
+//					}
+//				}
+//			});
+//		}
+//		Var resultVar = Var.fromJson(resultJson.toString());
+		return new HashMap<>();
 	}
 
 	@Override
-	public Var getSimilars(String regIds, String feature, float threshold, int maxResult, String startTime, String endTime) throws VideoException {
+	public Map<String,Object> getSimilars(String regIds, String feature, float threshold, int maxResult, String startTime, String endTime) throws VideoException {
 		return null;
 	}
 
 	@Override
 	public float compareFeature(String feature1, String feature2) throws VideoException{
-		return (float) this.faceApp.compare(feature1, feature2) * 100;
+//		return (float) this.faceApp.compare(feature1, feature2) * 100;
+		return 0;
 	}
 
 }

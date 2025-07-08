@@ -1,6 +1,5 @@
 package com.keensense.job.task.impl;
 
-import cn.jiuling.plugin.config.vasclient.ClientSocket;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.keensense.job.config.CleanVasUrlConfig;
 import com.keensense.job.config.SocketConfig;
@@ -11,10 +10,6 @@ import com.keensense.job.entity.TbVasTaskLog;
 import com.keensense.job.service.*;
 import com.keensense.job.task.ISyncVasDataTask;
 import com.keensense.job.util.XmlUtil;
-import com.loocme.sys.constance.DateFormatConst;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -100,54 +95,54 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
     public void syncVasData() {
 
         log.info("---sync Vas Data......");
-        ClientSocket client = null;
-        TbVasTaskLog tbVasTaskLog = new TbVasTaskLog();
-        try{
-            //1、建立长连接 获取点位数据
-            log.info("-------socket连接信息：" +socketConfig.getIp()+":"+socketConfig.getPort());
-            client= ClientSocket.getInstance(socketConfig.getIp(), socketConfig.getPort(),
-                    socketConfig.getUsername(), socketConfig.getPassword());
-
-            if(client != null){
-                log.info("---------同步vas信息 start ");
-                String resultVasDataXml = client.getAllDeviceString(TIME_OUT,ENCODE_TYPE);
-                log.info("xml返回结果==========" + resultVasDataXml);
-
-                if(StringUtil.isNotNull(resultVasDataXml) ){
-                    syncVasInfo(resultVasDataXml);
-                }
-                //调用u2s清理vas监控点缓存
-                try {
-                    String extUrl = cleanVasUrlConfig.getUrl();
-                    PostUtil.requestContent(extUrl, "application/json","");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    log.info("----快检项目未同步最新代码");
-                }
-                log.info("---------同步vas信息 end");
-
-                log.info("---------同步区域信息 start");
-                String resultOrgDataXml = client.getAllOrgString(TIME_OUT,ENCODE_TYPE);
-                if(StringUtil.isNotNull(resultOrgDataXml) ){
-                    syncOrgInfo(resultOrgDataXml);
-                }
-                log.info("---------同步区域信息 end");
-            }
-            generateLog(tbVasTaskLog);
-        }catch (Exception e){
-            e.printStackTrace();
-            log.error("======Exception:"+e.getMessage());
-            tbVasTaskLog.setStatus(-10);
-            tbVasTaskLog.setMsg(e.getMessage());
-
-        }finally {
-            if(client != null){
-                ClientSocket.destroyInstance();
-            }
-            //插入执行日志
-            tbVasTaskLog.setCreateTime(new Date());
-            tbVasTaskLogService.insert(tbVasTaskLog);
-        }
+//        ClientSocket client = null;
+//        TbVasTaskLog tbVasTaskLog = new TbVasTaskLog();
+//        try{
+//            //1、建立长连接 获取点位数据
+//            log.info("-------socket连接信息：" +socketConfig.getIp()+":"+socketConfig.getPort());
+//            client= ClientSocket.getInstance(socketConfig.getIp(), socketConfig.getPort(),
+//                    socketConfig.getUsername(), socketConfig.getPassword());
+//
+//            if(client != null){
+//                log.info("---------同步vas信息 start ");
+//                String resultVasDataXml = client.getAllDeviceString(TIME_OUT,ENCODE_TYPE);
+//                log.info("xml返回结果==========" + resultVasDataXml);
+//
+//                if(StringUtil.isNotNull(resultVasDataXml) ){
+//                    syncVasInfo(resultVasDataXml);
+//                }
+//                //调用u2s清理vas监控点缓存
+//                try {
+//                    String extUrl = cleanVasUrlConfig.getUrl();
+//                    PostUtil.requestContent(extUrl, "application/json","");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    log.info("----快检项目未同步最新代码");
+//                }
+//                log.info("---------同步vas信息 end");
+//
+//                log.info("---------同步区域信息 start");
+//                String resultOrgDataXml = client.getAllOrgString(TIME_OUT,ENCODE_TYPE);
+//                if(StringUtil.isNotNull(resultOrgDataXml) ){
+//                    syncOrgInfo(resultOrgDataXml);
+//                }
+//                log.info("---------同步区域信息 end");
+//            }
+//            generateLog(tbVasTaskLog);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            log.error("======Exception:"+e.getMessage());
+//            tbVasTaskLog.setStatus(-10);
+//            tbVasTaskLog.setMsg(e.getMessage());
+//
+//        }finally {
+//            if(client != null){
+//                ClientSocket.destroyInstance();
+//            }
+//            //插入执行日志
+//            tbVasTaskLog.setCreateTime(new Date());
+//            tbVasTaskLogService.insert(tbVasTaskLog);
+//        }
     }
 
     /**
@@ -174,7 +169,7 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
      */
     private void syncOrgInfo(String  resultOrgDataXml) throws Exception{
 
-        if(StringUtil.isNotNull(resultOrgDataXml) ){
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(resultOrgDataXml) ){
             //2、解析xml数据
             List<CtrlUnit> ctrlUnitVasList = XmlUtil.getCtrlUnits(resultOrgDataXml,vasUrlConfig);
             orgCnt = new Integer(ctrlUnitVasList.size());
@@ -215,20 +210,20 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
     private void snycOrgs(List<CtrlUnit> ctrlUnitVasList, List<CtrlUnit> ctrlUnitList) {
         Map<String,CtrlUnit> unitVasMap = new HashMap<>();
         Map<String,CtrlUnit> unitMap = new HashMap<>();
-        String newTime =  DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_);
+//        String newTime =  DateUtil(new Date(), DateFormatConst.YMDHMS_);
         //将Vas区域信息放入hash中，方便后续比较
         for(CtrlUnit ctrlUnit : ctrlUnitVasList ){
             unitVasMap.put(ctrlUnit.getUnitIdentity(),ctrlUnit);
         }
         //将ctrl_unit表数据放入hash,跟Vas区域信息作比较
-        log.info("=============" + newTime + "历史区域信息 start");
+//        log.info("=============" + newTime + "历史区域信息 start");
         for(CtrlUnit ctrlUnit : ctrlUnitList){
             log.info("============="+"id:"+ctrlUnit.getId()+",unit_state:"+ctrlUnit.getUnitState()+",unit_identity:"+ctrlUnit.getUnitIdentity()+",unit_level:"+ctrlUnit.getUnitLevel()+
                     ",display_name:" +ctrlUnit.getDisplayName()+",is_leaf:"+ctrlUnit.getIsLeaf()+",unit_name:"+ctrlUnit.getUnitName()+",unit_number:"+
                     ctrlUnit.getUnitNumber()+",unit_parent_id:"+ctrlUnit.getUnitParentId());
             unitMap.put(ctrlUnit.getUnitIdentity(),ctrlUnit);
         }
-        log.info("=============" + newTime + "历史区域信息 end");
+//        log.info("=============" + newTime + "历史区域信息 end");
         //1、以ctrl_unit表中数据为基表比较
         for(CtrlUnit ctrlUnit : ctrlUnitList){
             if(unitVasMap.get(ctrlUnit.getUnitIdentity()) != null){  //vas中存在相同unit_identity的区域
@@ -263,7 +258,7 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
      */
     public void syncVasInfo( String resultVasDataXml) throws Exception{
 
-        if(StringUtil.isNotNull(resultVasDataXml) ){
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(resultVasDataXml) ){
             //2、解析xml数据
             List<Camera> cameraVasList = XmlUtil.getCameras(resultVasDataXml,vasUrlConfig);
             vasCnt = new Integer(cameraVasList.size());
@@ -290,12 +285,12 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
     private void snycCameras(List<Camera> cameraVasList, List<Camera> cameraList) {
         Map<String,Camera> cameraVasMap = new HashMap<>();
         Map<String,Camera> cameraMap = new HashMap<>();
-        String newTime =  DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_);
+//        String newTime =  DateUtil.getFormat(new Date(), DateFormatConst.YMDHMS_);
         //将Vas点位信息放入hash中，方便后续比较
         for(Camera camera : cameraVasList ){
             cameraVasMap.put(camera.getExtcameraid(),camera);
         }
-        log.info("=============" + newTime + "历史Vas点位 start");
+//        log.info("=============" + newTime + "历史Vas点位 start");
         //将camera表数据放入hash,跟Vas点位信息作比较
         for(Camera camera : cameraList){
             //日志打出历史Vas点位的信息
@@ -304,7 +299,7 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
                     ",status:"+camera.getStatus()+",brandid:"+camera.getBrandid()+",extcameraid"+camera.getExtcameraid()+",url:"+camera.getUrl());
             cameraMap.put(camera.getExtcameraid(),camera);
         }
-        log.info("=============" + newTime + "历史Vas点位 end");
+//        log.info("=============" + newTime + "历史Vas点位 end");
         //1、以camera表中数据为基表比较
         for(Camera camera : cameraList){
             if(cameraVasMap.get(camera.getExtcameraid()) != null){  //vas中存在相同extcameraid的点位
@@ -350,18 +345,18 @@ public class SyncVasDataTask implements ISyncVasDataTask,Runnable {
 
 
     public static void main(String[] args)throws Exception{
-        ClientSocket client = ClientSocket.getInstance("192.168.0.228",8350,
-                "admin", "admin");
-        if(client != null){
-            String result = client.getAllDeviceString(60,"UTF-8");
-            System.out.println("======="+result);
-            String utfResult = new String(result.getBytes("UTF-8"),"UTF-8");
-            System.out.println("=======size:"+result.length());
-            String result2 = client.getAllOrgString(60,"UTF-8");
-            System.out.println("======="+result2);
-
-            ClientSocket.destroyInstance();
-        }
+//        ClientSocket client = ClientSocket.getInstance("192.168.0.228",8350,
+//                "admin", "admin");
+//        if(client != null){
+//            String result = client.getAllDeviceString(60,"UTF-8");
+//            System.out.println("======="+result);
+//            String utfResult = new String(result.getBytes("UTF-8"),"UTF-8");
+//            System.out.println("=======size:"+result.length());
+//            String result2 = client.getAllOrgString(60,"UTF-8");
+//            System.out.println("======="+result2);
+//
+//            ClientSocket.destroyInstance();
+//        }
 
     }
 

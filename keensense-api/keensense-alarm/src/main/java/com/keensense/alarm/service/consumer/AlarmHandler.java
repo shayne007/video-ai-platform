@@ -18,10 +18,7 @@ import com.keensense.alarm.service.IDispositionNotificationService;
 import com.keensense.common.config.NacosConfigCenter;
 import com.keensense.common.constant.AlarmConstant;
 import com.keensense.common.util.DispositionUtil;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
-import com.loocme.sys.util.ThreadUtil;
-import com.loocme.sys.util.ThreadUtil.ExecutorService;
+import com.keensense.common.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -41,8 +40,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AlarmHandler {
 
-    private static final ExecutorService SERVICE = ThreadUtil.newSingleThreadExecutor();
-    private static final ExecutorService EXECUTOR = ThreadUtil
+    private static final ExecutorService SERVICE = Executors.newSingleThreadExecutor();
+    private static final ExecutorService EXECUTOR = Executors
             .newFixedThreadPool(AlarmConstant.THREAD_POOL_NUMBER);
 
     @Autowired
@@ -115,11 +114,7 @@ public class AlarmHandler {
     private void push2Subscriber(JSONArray jarr, String subscriberUrl) {
         if (StringUtils.isNotEmpty(subscriberUrl) && subscriberUrl.startsWith("http://")) {
             CompletableFuture.runAsync(() -> {
-                try {
-                    PostUtil.requestContent(subscriberUrl, "application/json", jarr.toJSONString());
-                } catch (HttpConnectionException e) {
-                    log.error(jarr.toJSONString(), e);
-                }
+                HttpClientUtil.requestPost(subscriberUrl, "application/json", jarr.toJSONString());
 
             });
         }

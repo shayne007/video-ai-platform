@@ -68,12 +68,12 @@ public class FaceConstant
 
     public static boolean setFaceSdkInvoke(String classpath)
     {
-        Object tHandler = ReflectUtil.newInstance(classpath);
-        if (tHandler instanceof IFaceSdkInvoke)
-        {
-            iFaceSdkInvoke = (IFaceSdkInvoke) tHandler;
-            return true;
-        }
+//        Object tHandler = ReflectUtil.newInstance(classpath);
+//        if (tHandler instanceof IFaceSdkInvoke)
+//        {
+//            iFaceSdkInvoke = (IFaceSdkInvoke) tHandler;
+//            return true;
+//        }
         return false;
     }
 
@@ -97,47 +97,47 @@ public class FaceConstant
     public static void reloadFeatureVersion(String url)
     {
         String resp = "";
-        try
-        {
-            resp = HttpGetUtil.request(url + "params", "");
-        }
-        catch (HttpConnectionException e)
-        {
-            log.error("reloadFeatureVersion error",e);
-        }
-        if (StringUtil.isNull(resp)) {
-            return;
-        }
-        Var respVar = Var.fromJson(resp);
-        Var paramArr = respVar.getArray("paramGroups[0].params");
-        StringBuffer staticFeatureVersion = new StringBuffer();
-        StringBuffer monitorFeatureVersion = new StringBuffer();
-        paramArr.foreach(new IVarForeachHandler() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void execute(String index, Var tmpVar)
-            {
-                if ("defaultStaticFeatureVersion"
-                        .equals(tmpVar.getString("key")))
-                {
-                    staticFeatureVersion.append(tmpVar.getString("value"));
-                }
-                if ("defaultMonitorFeatureVersion"
-                        .equals(tmpVar.getString("key")))
-                {
-                    monitorFeatureVersion.append(tmpVar.getString("value"));
-                }
-            }
-        });
-        if (0 < staticFeatureVersion.length())
-        {
-            FEATURE_VERSION_SEARCH = staticFeatureVersion.toString();
-        }
-        if (0 < monitorFeatureVersion.length())
-        {
-            FEATURE_VERSION = monitorFeatureVersion.toString();
-        }
+//        try
+//        {
+//            resp = HttpGetUtil.request(url + "params", "");
+//        }
+//        catch (HttpConnectionException e)
+//        {
+//            log.error("reloadFeatureVersion error",e);
+//        }
+//        if (StringUtil.isNull(resp)) {
+//            return;
+//        }
+//        Var respVar = Var.fromJson(resp);
+//        Var paramArr = respVar.getArray("paramGroups[0].params");
+//        StringBuffer staticFeatureVersion = new StringBuffer();
+//        StringBuffer monitorFeatureVersion = new StringBuffer();
+//        paramArr.foreach(new IVarForeachHandler() {
+//
+//            private static final long serialVersionUID = 1L;
+//
+//            @Override
+//            public void execute(String index, Var tmpVar)
+//            {
+//                if ("defaultStaticFeatureVersion"
+//                        .equals(tmpVar.getString("key")))
+//                {
+//                    staticFeatureVersion.append(tmpVar.getString("value"));
+//                }
+//                if ("defaultMonitorFeatureVersion"
+//                        .equals(tmpVar.getString("key")))
+//                {
+//                    monitorFeatureVersion.append(tmpVar.getString("value"));
+//                }
+//            }
+//        });
+//        if (0 < staticFeatureVersion.length())
+//        {
+//            FEATURE_VERSION_SEARCH = staticFeatureVersion.toString();
+//        }
+//        if (0 < monitorFeatureVersion.length())
+//        {
+//            FEATURE_VERSION = monitorFeatureVersion.toString();
+//        }
     }
 }

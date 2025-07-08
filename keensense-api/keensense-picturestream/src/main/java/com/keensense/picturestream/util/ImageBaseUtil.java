@@ -1,10 +1,8 @@
 package com.keensense.picturestream.util;
 
+import com.keensense.common.util.DateUtil;
 import com.keensense.picturestream.common.BitCommonConst;
 import com.keensense.picturestream.entity.PictureInfo;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.OpencvUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +10,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
 import javax.imageio.stream.FileImageOutputStream;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 
@@ -54,14 +55,14 @@ public class ImageBaseUtil {
         String uuid, int[] pois) throws IOException {
         log.info("getpicurl");
         String[] url = new String[2];
-        OpencvUtil util = OpencvUtil.getInstance();
-        byte[] bytes = Base64.decode(pictureInfo.getPicBase64().getBytes());
-        Mat img = util.loadImage(bytes);
-        byte[][] targetImages = util.cutTargetImages(img, pois, 20, 20);
-        if (null != targetImages) {
-            url[0] = savePicToUrl(targetImages[0], pictureInfo, PIC_THUMB_TYPE, objextType, uuid);
-            url[1] = savePicToUrl(targetImages[1], pictureInfo, PIC_BIG_TYPE, objextType, uuid);
-        }
+//        OpencvUtil util = OpencvUtil.getInstance();
+        byte[] bytes = Base64.decode(Arrays.toString(pictureInfo.getPicBase64().getBytes()));
+//        Mat img = util.loadImage(bytes);
+//        byte[][] targetImages = util.cutTargetImages(img, pois, 20, 20);
+//        if (null != targetImages) {
+//            url[0] = savePicToUrl(targetImages[0], pictureInfo, PIC_THUMB_TYPE, objextType, uuid);
+//            url[1] = savePicToUrl(targetImages[1], pictureInfo, PIC_BIG_TYPE, objextType, uuid);
+//        }
         return url;
     }
 
@@ -73,10 +74,11 @@ public class ImageBaseUtil {
      */
     public static byte[][] splitPic(PictureInfo pictureInfo, int[] pois) {
         log.info("getpicurl");
-        OpencvUtil util = OpencvUtil.getInstance();
-        byte[] bytes = Base64.decode(pictureInfo.getPicBase64().getBytes());
-        Mat img = util.loadImage(bytes);
-        return util.cutTargetImages(img, pois, 20, 20);
+//        OpencvUtil util = OpencvUtil.getInstance();
+//        byte[] bytes = Base64.decode(pictureInfo.getPicBase64().getBytes());
+//        Mat img = util.loadImage(bytes);
+//        return util.cutTargetImages(img, pois, 20, 20);
+        return new byte[][]{};
     }
 
     /**
@@ -110,7 +112,7 @@ public class ImageBaseUtil {
      */
     private static String getImageName(PictureInfo pictureInfo, String picType, String objextType,
         String uuid) {
-        String date = DateUtil.getFormat(new Date(pictureInfo.getCaptureTime()), "yyyyMMddHH");
+        String date = DateUtil.formatDate(new Date(pictureInfo.getCaptureTime()), "yyyyMMddHH");
         final String pathSeparator = "/";
         StringBuilder sb = new StringBuilder();
         sb.append(pathSeparator);

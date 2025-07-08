@@ -4,7 +4,6 @@ package com.keensense.admin.vo;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.keensense.admin.dto.ObjextResultDto;
 import com.keensense.admin.dto.VlprResultDto;
-import com.loocme.sys.annotation.database.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import lombok.Data;

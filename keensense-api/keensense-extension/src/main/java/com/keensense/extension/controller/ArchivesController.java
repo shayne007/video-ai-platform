@@ -1,9 +1,6 @@
 package com.keensense.extension.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,7 +38,6 @@ import com.keensense.sdk.algorithm.IFaceSdkInvoke;
 import com.keensense.sdk.constants.CommonConst;
 import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.sys.utils.DbPropUtil;
-import com.loocme.sys.datastruct.Var;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -103,12 +99,12 @@ public class ArchivesController {
         try {
             ArchivesDTO archivesDTO = ArchivesDTO.addArchivesIdInputPatter(inputJsonObject, ARCHIVES_INPUT_JSON);
             String archiveFaceLib = LibraryConstant.getFaceLibraryCache().getId();
-            Var var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(archivesDTO.getFaceImgUrlFront());
-            if (!var.isNull() && var.getFloat("pose.pitch") >= -ArchivesConstant.frontPitch[1]
-                    && var.getFloat("pose.pitch") <= ArchivesConstant.frontPitch[1]
-                    && var.getFloat("pose.yaw") >= -ArchivesConstant.frontYaw[1]
-                    && var.getFloat("pose.yaw") <= ArchivesConstant.frontYaw[1]) {
-                String feature = var.getString(FEATURE_VECTOR);
+            Map<String,Object> var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(archivesDTO.getFaceImgUrlFront());
+            if (!var.isEmpty() && (Float)var.get("pose.pitch") >= -ArchivesConstant.frontPitch[1]
+                    && (Float)var.get("pose.pitch") <= ArchivesConstant.frontPitch[1]
+                    && (Float)var.get("pose.yaw") >= -ArchivesConstant.frontYaw[1]
+                    && (Float)var.get("pose.yaw") <= ArchivesConstant.frontYaw[1]) {
+                String feature = (String) var.get(FEATURE_VECTOR);
                 String faceFeatureId = FaceConstant.getFaceSdkInvoke().addFaceToLib(archiveFaceLib, feature,
                         archivesDTO.getFaceImgUrlFront());
                 ArchivesInfo archivesInfo = new ArchivesInfo(IDUtil.uuid(), archivesDTO.getFaceImgUrlFront(),
@@ -133,18 +129,18 @@ public class ArchivesController {
             JSONObject inputJsonObject = JSON.parseObject(input);
             String faceImgUrl = inputJsonObject.getJSONObject("ArchivesObject").getString("FaceImgUrl");
             String archiveFaceLib = LibraryConstant.getFaceLibraryCache().getId();
-            Var var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(faceImgUrl);
+            Map<String,Object> var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(faceImgUrl);
 
-            if (var.isNull()) {
+            if (var.isEmpty()) {
                 return getResponseStatusList(responseStatus, ReponseCode.CODE_4.getCode(), ReponseCode.CODE_4.getMsg(),
                         StringUtils.EMPTY);
             }
-            String feature = var.getString(FEATURE_VECTOR);
+            String feature = (String) var.get(FEATURE_VECTOR);
 
             String faceFeatureId = FaceConstant.getFaceSdkInvoke().addFaceToLib(archiveFaceLib, feature, faceImgUrl);
 
-            float pitch = var.getFloat("pose.pitch");
-            float yaw = var.getFloat("pose.yaw");
+            float pitch = (float) var.get("pose.pitch");
+            float yaw = (float) var.get("pose.yaw");
 
             ArchivesInfo archivesInfo = new ArchivesInfo();
             // 正面
@@ -209,8 +205,8 @@ public class ArchivesController {
                 }
 
                 String archiveFaceLib = LibraryConstant.getFaceLibraryCache().getId();
-                Var var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(frontFaceImg);
-                float frontQuality = var.getFloat("quality");// 获取质量阈值
+                Map<String,Object> var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(frontFaceImg);
+                float frontQuality = (float) var.get("quality");// 获取质量阈值
 
                 if (frontQuality < threshold) {
                     log.info("==== frontFaceImg quality is low. front picUrl:" + frontFaceImg);
@@ -459,10 +455,10 @@ public class ArchivesController {
         result.put("ret", 0);
         result.put("desc", "Success");
 
-        Var var = Optional.ofNullable(jsonObject).map(jo -> jo.getString("Picture"))
+        Map<String,Object> var = Optional.ofNullable(jsonObject).map(jo -> jo.getString("Picture"))
                 .map(img -> FaceConstant.getFaceSdkInvoke().getPicAnalyze(img)).orElse(null);
         if (var != null) {
-            result.put("objexts", var.getObjectList());
+            result.put("objexts", var.get("objexts"));
         } else {
             result.put("ret", -1);
             result.put("desc", "特征检测失败");
@@ -489,9 +485,9 @@ public class ArchivesController {
         String targetPicture = jsonObject.getString("targetPicture");
         if (StringUtils.isNotEmpty(queryPicture) && StringUtils.isNotEmpty(targetPicture)) {
             Optional<String> query =
-                    Optional.ofNullable(faceSdk.getPicAnalyzeOne(queryPicture)).map(var -> var.getString(FEATURE_VECTOR));
+                    Optional.ofNullable(faceSdk.getPicAnalyzeOne(queryPicture)).map(var -> var.get(FEATURE_VECTOR).toString());
             Optional<String> target =
-                    Optional.ofNullable(faceSdk.getPicAnalyzeOne(targetPicture)).map(var -> var.getString(FEATURE_VECTOR));
+                    Optional.ofNullable(faceSdk.getPicAnalyzeOne(targetPicture)).map(var -> var.get(FEATURE_VECTOR).toString());
 
             if (query.isPresent() && target.isPresent()) {
                 float score = faceSdk.compareFeature(query.get(), target.get());
@@ -536,7 +532,7 @@ public class ArchivesController {
         return archivesService.mergeArchives(request, jsonStr);
     }
 
-    private boolean addFeatureAndCreateVo(Var var, String aid, String pId, String frontFaceImg, Integer objectType,
+    private boolean addFeatureAndCreateVo(Map<String,Object> var, String aid, String pId, String frontFaceImg, Integer objectType,
                                           String archiveFaceLib, List<ArchivesInfo> list) {
 
         float threshold = DbPropUtil.getFloat("face.archives.compare.threshold", 0.75f);
@@ -544,13 +540,13 @@ public class ArchivesController {
         if (var == null) {
             var = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(frontFaceImg);
         }
-        float quality = var.getFloat("quality");// 获取质量
+        float quality = (float) var.get("quality");// 获取质量
 
         log.info("==== addFeatureAndCreateVo picUrl:" + frontFaceImg);
         log.info("==== addFeatureAndCreateVo : quality" + quality + " threshold: " + threshold);
 
         if (quality > threshold) {
-            String feature = var.getString(FEATURE_VECTOR);
+            String feature = (String) var.get(FEATURE_VECTOR);
             String faceFeatureId = FaceConstant.getFaceSdkInvoke().addFaceToLib(archiveFaceLib, feature, frontFaceImg);
             ArchivesInfo archivesInfo = new ArchivesInfo(aid, frontFaceImg, faceFeatureId, 0, null, objectType, pId);
             list.add(archivesInfo);

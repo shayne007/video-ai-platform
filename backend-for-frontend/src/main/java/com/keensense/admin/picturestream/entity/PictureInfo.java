@@ -1,6 +1,5 @@
 package com.keensense.admin.picturestream.entity;
 
-import com.loocme.sys.datastruct.Var;
 import lombok.Data;
 
 import java.util.ArrayList;

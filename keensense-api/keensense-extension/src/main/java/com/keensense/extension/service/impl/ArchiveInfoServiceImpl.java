@@ -1,8 +1,5 @@
 package com.keensense.extension.service.impl;
 
-import cn.jiuling.plugin.extend.featureclust.FaceFeatureClusterSpringRedis;
-import cn.jiuling.plugin.extend.featureclust.ReidFeatureClusterSpringRedis;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,7 +12,6 @@ import com.keensense.common.util.ReponseCode;
 import com.keensense.common.util.ResponseStatus;
 import com.keensense.common.util.ResponseStatusList;
 import com.keensense.common.util.ResultUtils;
-import com.keensense.common.util.ResponseStatusList;
 import com.keensense.extension.constants.ArchivesConstant;
 import com.keensense.extension.constants.LibraryConstant;
 import com.keensense.extension.entity.ArchivesBodyInfo;
@@ -32,7 +28,7 @@ import com.keensense.extension.service.IArchivesInfoService;
 import com.keensense.extension.service.IArchivesRelationInfoService;
 import com.keensense.extension.util.IDUtil;
 import com.keensense.extension.util.JsonPatterUtil;
-import com.keensense.extension.util.ResponseUtil;
+import com.keensense.common.util.ResponseUtil;
 import com.keensense.sdk.algorithm.impl.GLQstFaceSdkInvokeImpl;
 import com.keensense.sdk.algorithm.impl.GlstFaceSdkInvokeImpl;
 import com.keensense.sdk.algorithm.impl.KsFaceSdkInvokeImpl;
@@ -43,18 +39,12 @@ import com.keensense.sdk.constants.FaceConstant;
 import com.keensense.sdk.constants.SdkExceptionConst;
 import com.keensense.sdk.sys.utils.DbPropUtil;
 import com.keensense.sdk.util.ValidUtil;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +59,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.PatternMatchUtils;
 
 /***
  * @description:
@@ -205,13 +196,13 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
         if (faceQuality >= DbPropUtil.getFloat("face.archives.quality.threshold", 0.7f)) {
             log.info("face ok");
             /*人脸质量达标*/
-            Var similars = FaceConstant.getFaceSdkInvoke().getSimilars(archiveFaceLib, archivesDTO.getFaceFeature(),
+            Map<String,Object> similars = FaceConstant.getFaceSdkInvoke().getSimilars(archiveFaceLib, archivesDTO.getFaceFeature(),
                     DbPropUtil.getFloat("face.archives.compare.threshold", 0.75f) * 100, 1);
-            Float score = similars.isNull() ? ArchivesConstant.FACE_SCORE_DEFAULT : similars.getFloat("[0].score");
+            Float score = similars.isEmpty() ? ArchivesConstant.FACE_SCORE_DEFAULT : (Float) similars.get("[0].score");
             archivesDTO.setFaceScore(score);
             /*判断是否有与档案比对上的，若有，则根据人脸比对成功，添加至轨迹*/
-            String faceId = similars.isNull() ? "" : similars.getString("[0].face.id");
-            if (StringUtil.isNotNull(faceId)) {
+            String faceId = similars.isEmpty() ? "" : (String) similars.get("[0].face.id");
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(faceId)) {
                 addTrailByArchives(faceId, faceQuality, score, bodyQuality, archivesDTO);
             } else {
                 /*人脸没有匹配上*/
@@ -313,7 +304,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
     private void addBodyInfoToArchive(Integer angle, String bodyUrl, String archivesId) {
 
         if (angle != null && StringUtils.isNotBlank(bodyUrl)) {
-            Var bodyFeatureInfo = BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(BodyConstant.BODY_TYPE, bodyUrl);
+            Map<String,Object> bodyFeatureInfo = BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(BodyConstant.BODY_TYPE, bodyUrl);
             if (bodyFeatureInfo != null) {
 
                 String bodyFeatureId = IDUtil.uuid();
@@ -323,7 +314,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
                     throw new VideoException(-1, "angle=" + angle + " get repoid is null");
                 }
                 BodyConstant.getBodySdkInvoke().addBodyToLib(findBodyLibByAngle(angle), bodyFeatureId, BodyConstant.BODY_TYPE,
-                        bodyFeatureInfo.getString(FEATURE_VECTOR));
+                        (String) bodyFeatureInfo.get(FEATURE_VECTOR));
                 ArchivesBodyInfo bodyInfo = new ArchivesBodyInfo(IDUtil.uuid(), bodyUrl, String.valueOf(angle),
                         bodyFeatureId, archivesId);
                 archivesBodyInfoService.saveOrUpdate(bodyInfo);
@@ -363,8 +354,8 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
      *
      * @param archivesDTO
      */
-    private void deleteFeatureHead(ArchivesDTO archivesDTO, Var bodyInfoVar) {
-        String feature = bodyInfoVar.getString(FEATURE_VECTOR);
+    private void deleteFeatureHead(ArchivesDTO archivesDTO, Map<String,Object> bodyInfoVar) {
+        String feature = (String) bodyInfoVar.get(FEATURE_VECTOR);
         archivesDTO.setBodyFeature(feature);
     }
 
@@ -375,7 +366,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
      */
     private void useBodyToTrail(ArchivesDTO archivesDTO) {
         log.info("useBodyToTrail");
-        Var bodyInfoVar = BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(BodyConstant.BODY_TYPE,
+        Map<String,Object> bodyInfoVar = BodyConstant.getBodySdkInvoke().getPicAnalyzeOne(BodyConstant.BODY_TYPE,
                 archivesDTO.getBodyImgUrl());
         if (null != bodyInfoVar) {
 
@@ -417,23 +408,23 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
 
 
             // 人形比对质量达标
-            Var similars = BodyConstant.getBodySdkInvoke().getSimilars(BodyConstant.BODY_TYPE,
+            Map<String,Object> similars = BodyConstant.getBodySdkInvoke().getSimilars(BodyConstant.BODY_TYPE,
                     findBodyLibByAngle(archivesDTO.getAngle()),
-                    bodyInfoVar.getString(FEATURE_VECTOR),
+                    (String) bodyInfoVar.get(FEATURE_VECTOR),
                     DbPropUtil.getFloat("body.archives.compare.threshold", 0.8f)
                             * 100, 1, false);
 
-            Float score = similars.isNull() ? ArchivesConstant.BODY_SCORE_DEFAULT
-                    : similars.getFloat("[0].score");
+            Float score = similars.isEmpty() ? ArchivesConstant.BODY_SCORE_DEFAULT
+                    : (Float) similars.get("[0].score");
             archivesDTO.setBodyScore(score);
 
-            String bodyId = similars.isNull() ? "" : similars.getString("[0].uuid");
-            if (StringUtil.isNotNull(bodyId) &&
+            String bodyId = similars.isEmpty() ? "" : (String) similars.get("[0].uuid");
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(bodyId) &&
                     score - DbPropUtil.getFloat("body.archives.compare.threshold", 0.8f) >= 0) {
                 ArchivesBodyInfo archiveBodyInfo = archivesBodyInfoService.getOne(
                         new QueryWrapper<ArchivesBodyInfo>().eq("body_feature_id", bodyId));
                 String archiveId = archiveBodyInfo.getArchivesId();
-                if (StringUtil.isNotNull(archiveId)) {
+                if (org.apache.commons.lang3.StringUtils.isNotEmpty(archiveId)) {
                     saveTrailToResult(archivesDTO, archiveId, ArchivesConstant.TRACE_SOURCE_BODY,
                             archivesDTO.getFaceQuality(), ArchivesConstant.FACE_SCORE_DEFAULT, score);
                 } else {
@@ -472,7 +463,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
     @Override
     public String queryArchives(String jsonStr) {
 
-        JSONObject response = ResponseUtil.createResponse();
+        JSONObject response = ResponseUtil.createSuccessResponse(   "0", "success");
 
         try {
             JSONObject parseObject = JSONObject.parseObject(jsonStr);
@@ -511,7 +502,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
             response.put("ArchivesListObject", jsonObject);
             response.put("Count", archivesInfos.size());
         } catch (Exception e) {
-            response = ResponseUtil.createResponse("-1", "fail");
+            response = ResponseUtil.createSuccessResponse("-1", "fail");
             log.error("==== queryArchives exception : ", e);
         }
         return response.toJSONString();
@@ -520,7 +511,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
     @Override
     public String unbindTrail(String jsonStr) {
 
-        JSONObject response = ResponseUtil.createResponse();
+        JSONObject response = ResponseUtil.createSuccessResponse(   "0", "success");
         try {
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             JSONArray persons = jsonObject.getJSONObject("TrailCondition").getJSONArray("PersonId");
@@ -541,7 +532,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
             requestJsonObject.put("PersonListObject", personListObject);
             microSearchFeign.updateBodys(requestJsonObject);
         } catch (Exception e) {
-            response = ResponseUtil.createResponse("-1", "fail");
+            response = ResponseUtil.createSuccessResponse("-1", "fail");
             log.error("==== unbindTrail exception : ", e);
         }
         return response.toJSONString();
@@ -622,10 +613,10 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
 
         } catch (Exception e) {
             log.error("==== deleteArchives Exception :", e);
-            return ResponseUtil.createResponse("-1", "fail").toJSONString();
+            return ResponseUtil.createSuccessResponse("-1", "fail").toJSONString();
         }
 
-        return ResponseUtil.createResponse().toJSONString();
+        return ResponseUtil.createSuccessResponse("-1", "fail").toJSONString();
     }
 
     /**
@@ -676,20 +667,20 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
         Float thresholdStr = trailConditionDTO.getThreshold();
         Integer maxArchivesNum = trailConditionDTO.getMaxArchivesNum();
 
-        if (StringUtil.isNotNull(baseData) && !ValidUtil.validImageSize(baseData, 3)) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(baseData) && !ValidUtil.validImageSize(baseData, 3)) {
             throw new VideoException(SdkExceptionConst.FAIL_CODE, "picture base64>3m");
         }
-        Var faceInfoVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(baseData);
-        String faceFeature = faceInfoVar.getString(FEATURE_VECTOR);
+        Map<String,Object> faceInfoVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(baseData);
+        String faceFeature = (String) faceInfoVar.get(FEATURE_VECTOR);
 
         if (StringUtils.isEmpty(faceFeature)) {
             throw new VideoException(SdkExceptionConst.FAIL_CODE, "donot have feature");
         }
 
-        Var similars = FaceConstant.getFaceSdkInvoke()
+        Map<String, Object> similars = FaceConstant.getFaceSdkInvoke()
                 .getSimilars(LibraryConstant.getFaceLibraryCache().getId(),
                         faceFeature, thresholdStr * 100, maxArchivesNum);
-        if (!similars.isNull()) {
+        if (!similars.isEmpty()) {
             String[] featureIds = ArchivesConstant.getSearchResultIds(similars);
             if (featureIds != null && featureIds.length > 0) {
                 List<ArchivesInfo> archivesInfos = this.list(new QueryWrapper<ArchivesInfo>()
@@ -715,30 +706,30 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
         Float thresholdStr = trailConditionDTO.getThreshold();
         Integer maxArchivesNum = trailConditionDTO.getMaxArchivesNum();
 
-        if (StringUtils.isNotBlank(startTime) && !PatternUtil.isMatch(startTime, JsonPatterUtil.DATE_PATTER)) {
+        if (StringUtils.isNotBlank(startTime) && !PatternMatchUtils.simpleMatch(startTime, JsonPatterUtil.DATE_PATTER)) {
             log.info("begin time is incompatible format --" + JsonPatterUtil.DATE_PATTER);
             return trailDTOList;
         }
-        if (StringUtils.isNotBlank(endTime) && !PatternUtil.isMatch(endTime, JsonPatterUtil.DATE_PATTER)) {
+        if (StringUtils.isNotBlank(endTime) && !PatternMatchUtils.simpleMatch(endTime, JsonPatterUtil.DATE_PATTER)) {
             log.info("endTime time is incompatible format --" + JsonPatterUtil.DATE_PATTER);
             return trailDTOList;
         }
 
-        if (StringUtil.isNotNull(baseData) && !ValidUtil.validImageSize(baseData, 3)) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(baseData) && !ValidUtil.validImageSize(baseData, 3)) {
             log.info("picture base64>3m");
             return trailDTOList;
         }
-        Var faceInfoVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(baseData);
-        String faceFeature = faceInfoVar.getString(FEATURE_VECTOR);
+        Map<String,Object> faceInfoVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(baseData);
+        String faceFeature = (String) faceInfoVar.get(FEATURE_VECTOR);
 
         if (StringUtils.isEmpty(faceFeature)) {
             log.info("donot have feature");
             return trailDTOList;
         }
 
-        Var similars = FaceConstant.getFaceSdkInvoke().getSimilars(LibraryConstant.getFaceLibraryCache().getId(),
+        Map<String, Object> similars = FaceConstant.getFaceSdkInvoke().getSimilars(LibraryConstant.getFaceLibraryCache().getId(),
                 faceFeature, thresholdStr * 100, maxArchivesNum);
-        if (similars.isNull()) {
+        if (similars.isEmpty()) {
             log.info("face to archivesLib similars is null");
             return trailDTOList;
         }
@@ -772,30 +763,30 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
         Float thresholdStr = trailConditionDTO.getThreshold();
         Integer maxArchivesNum = trailConditionDTO.getMaxArchivesNum();
 
-        if (StringUtils.isNotBlank(startTime) && !PatternUtil.isMatch(startTime, JsonPatterUtil.DATE_PATTER)) {
+        if (StringUtils.isNotBlank(startTime) && !PatternMatchUtils.simpleMatch(startTime, JsonPatterUtil.DATE_PATTER)) {
             log.info("begin time is incompatible format --" + JsonPatterUtil.DATE_PATTER);
             return trailDTOList;
         }
-        if (StringUtils.isNotBlank(endTime) && !PatternUtil.isMatch(endTime, JsonPatterUtil.DATE_PATTER)) {
+        if (StringUtils.isNotBlank(endTime) && !PatternMatchUtils.simpleMatch(endTime, JsonPatterUtil.DATE_PATTER)) {
             log.info("endTime time is incompatible format --" + JsonPatterUtil.DATE_PATTER);
             return trailDTOList;
         }
 
-        if (StringUtil.isNotNull(baseData) && !ValidUtil.validImageSize(baseData, 3)) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(baseData) && !ValidUtil.validImageSize(baseData, 3)) {
             log.info("picture base64>3m");
             return trailDTOList;
         }
-        Var faceInfoVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(baseData);
-        String faceFeature = faceInfoVar.getString(FEATURE_VECTOR);
+        Map<String,Object> faceInfoVar = FaceConstant.getFaceSdkInvoke().getPicAnalyzeOne(baseData);
+        String faceFeature = (String) faceInfoVar.get(FEATURE_VECTOR);
 
         if (StringUtils.isEmpty(faceFeature)) {
             log.info("donot have feature");
             return trailDTOList;
         }
 
-        Var similars = FaceConstant.getFaceSdkInvoke().getSimilars(LibraryConstant.getFaceLibraryCache().getId(),
+        Map<String, Object> similars = FaceConstant.getFaceSdkInvoke().getSimilars(LibraryConstant.getFaceLibraryCache().getId(),
                 faceFeature, thresholdStr * 100, maxArchivesNum);
-        if (similars.isNull()) {
+        if (similars.isEmpty()) {
             log.info("face to archivesLib similars is null");
             return trailDTOList;
         }
@@ -1055,13 +1046,13 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
     }
 
     private void addInfoToClust(ArchivesDTO archivesDTO) {
-        if (StringUtils.isNotBlank(archivesDTO.getArchivesID())) {
-            FaceFeatureClusterSpringRedis.addFeature(faceRedisTemplate, archivesDTO.getFaceID() + "-" + archivesDTO.getArchivesID(),
-                    Base64.decode(archivesDTO.getFaceFeature().getBytes()));
-        } else {
-            FaceFeatureClusterSpringRedis.addFeature(faceRedisTemplate, archivesDTO.getFaceID(),
-                    Base64.decode(archivesDTO.getFaceFeature().getBytes()));
-        }
+//        if (StringUtils.isNotBlank(archivesDTO.getArchivesID())) {
+//            FaceFeatureClusterSpringRedis.addFeature(faceRedisTemplate, archivesDTO.getFaceID() + "-" + archivesDTO.getArchivesID(),
+//                    Base64.decode(archivesDTO.getFaceFeature().getBytes()));
+//        } else {
+//            FaceFeatureClusterSpringRedis.addFeature(faceRedisTemplate, archivesDTO.getFaceID(),
+//                    Base64.decode(archivesDTO.getFaceFeature().getBytes()));
+//        }
     }
 
     private List<TrailDTO> getBodyToTrail(Map<String, Object> paramSbr) {
@@ -1121,7 +1112,7 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
     private void faceSwitchClust(ArchivesDTO archivesDTO) throws VideoException {
 
         String archivesId = StringUtils.EMPTY;
-        Var similars = FaceConstant.getFaceSdkInvoke().getSimilars(archiveFaceLib, archivesDTO.getFaceFeature(),
+        Map<String, Object> similars = FaceConstant.getFaceSdkInvoke().getSimilars(archiveFaceLib, archivesDTO.getFaceFeature(),
                 DbPropUtil.getFloat("face.archives.compare.threshold", 0.75f) * 100, 100);
         /*判断是否有与档案比对上的，若有，则根据人脸比对成功，添加至轨迹*/
         String[] featureIds = ArchivesConstant.getSearchResultIds(similars);
@@ -1155,8 +1146,8 @@ public class ArchiveInfoServiceImpl extends ServiceImpl<ArchivesInfoMapper, Arch
 
         if (archivesDTO.getBodyQuality() - DbPropUtil.getFloat("body.archives.quality.threshold", 0f) >= 0 &&
                 ArchivesConstant.calProportion(archivesDTO) - DbPropUtil.getFloat("body.archives.proportion", 2f) >= 0) {
-            ReidFeatureClusterSpringRedis.addFeature(bodyRedisTemplate, archivesDTO.getDeviceID(),
-                    archivesDTO.getBodyID(), Base64.decode(archivesDTO.getBodyFeature().getBytes()));
+//            ReidFeatureClusterSpringRedis.addFeature(bodyRedisTemplate, archivesDTO.getDeviceID(),
+//                    archivesDTO.getBodyID(), Base64.decode(archivesDTO.getBodyFeature().getBytes()));
         }
 
         ArchivesRelationInfo archivesRelationInfo = archivesRelationInfoService.getOne(new QueryWrapper<ArchivesRelationInfo>()

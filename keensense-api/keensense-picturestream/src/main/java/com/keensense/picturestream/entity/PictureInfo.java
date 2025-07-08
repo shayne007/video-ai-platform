@@ -1,10 +1,11 @@
 package com.keensense.picturestream.entity;
 
-import com.loocme.sys.datastruct.Var;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import lombok.Data;
 
 @Data
@@ -84,14 +85,14 @@ public class PictureInfo implements java.io.Serializable
     private String picBase64;
     private int retryDownloadCount = 0;
     private int retryRecogCount = 0;
-    private List<Var> results = new ArrayList<>();
+    private List<Map<String,Object>> results = new ArrayList<>();
 
     private String extendId = "";
     private String interestRegion = "";
     private String returnUrl = "";
 
-    public void addResult(Var result){
-        if(!result.isNull()){
+    public void addResult(Map<String,Object> result){
+        if(!result.isEmpty()){
             results.add(result);
         }
     }

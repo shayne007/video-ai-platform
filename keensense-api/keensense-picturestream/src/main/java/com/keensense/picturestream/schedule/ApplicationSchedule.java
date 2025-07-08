@@ -17,7 +17,6 @@ import com.keensense.picturestream.input.impl.PictureStreamKafkaImpl;
 import com.keensense.picturestream.output.IResultSend;
 import com.keensense.picturestream.output.impl.ResultSendImpl;
 import com.keensense.picturestream.util.ImageBaseUtil;
-import com.loocme.sys.util.ListUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

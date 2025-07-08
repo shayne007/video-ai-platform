@@ -2,7 +2,7 @@ package com.keensense.search.filter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.util.concurrent.RateLimiter;
-import com.keensense.search.utils.ResponseUtil;
+import com.keensense.common.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;

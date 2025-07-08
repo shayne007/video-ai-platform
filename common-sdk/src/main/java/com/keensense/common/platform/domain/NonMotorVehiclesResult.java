@@ -1,7 +1,6 @@
 package com.keensense.common.platform.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.loocme.sys.annotation.database.Column;
 import lombok.Data;
 
 /**

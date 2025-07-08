@@ -32,12 +32,11 @@ import com.keensense.densecrowd.util.StringUtils;
 import com.keensense.densecrowd.util.VsdTaskUtil;
 import com.keensense.densecrowd.vo.AlarmDeviceRequest;
 import com.keensense.densecrowd.vo.CameraVo;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.PatternMatchUtils;
 
 import javax.annotation.Resource;
 import java.awt.geom.Point2D;
@@ -221,8 +220,9 @@ public class CameraServiceImpl extends ServiceImpl<CameraMapper, Camera> impleme
         }
         if (url.indexOf("vas") == 0) {
             try {
-                String[] masInfos = PatternUtil.getMatch(url, "vas://name=([^&]*)&psw=([^&]*)&srvip=([^&]*)&srvport=([^&]*)&devid=([^&]*)&");
-                if (masInfos == null || StringUtil.isNull(masInfos[3]) || StringUtil.isNull(masInfos[4]) || StringUtil.isNull(masInfos[5])) {
+//                String[] masInfos = PatternMatchUtils.simpleMatch(url, "vas://name=([^&]*)&psw=([^&]*)&srvip=([^&]*)&srvport=([^&]*)&devid=([^&]*)&");
+                String[] masInfos = new String[6];
+                if (masInfos == null || org.apache.commons.lang3.StringUtils.isEmpty(masInfos[3]) || org.apache.commons.lang3.StringUtils.isEmpty(masInfos[4]) || StringUtils.isEmpty(masInfos[5])) {
                     throw new VideoException("vas点位格式错误");
                 }
                 String masMasterIp = cfgMemPropsService.getWs2ServerIp();

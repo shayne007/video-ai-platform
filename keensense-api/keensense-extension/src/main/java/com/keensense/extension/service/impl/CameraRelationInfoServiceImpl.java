@@ -8,12 +8,10 @@ import com.google.common.collect.Maps;
 import com.keensense.extension.entity.CameraRelationInfo;
 import com.keensense.extension.mapper.CameraRelationInfoMapper;
 import com.keensense.extension.service.ICameraRelationInfoService;
-import com.keensense.extension.util.ResponseUtil;
+import com.keensense.common.util.ResponseUtil;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +38,7 @@ public class CameraRelationInfoServiceImpl extends
     @Override
     public String insertCameraRelation(String jsonStr) {
     
-        JSONObject response = ResponseUtil.createResponse();
+        JSONObject response = ResponseUtil.createSuccessResponse(   "0", "success");
         
         try {
             JSONArray parseArray = JSONArray.parseArray(jsonStr);
@@ -57,7 +55,7 @@ public class CameraRelationInfoServiceImpl extends
             int count = cameraRelationInfoMapper.batchInsert(list);
             response.put("count", count);
         } catch (Exception e) {
-            response = ResponseUtil.createResponse("-1", "fail");
+            response = ResponseUtil.createSuccessResponse("-1", "fail");
             log.error("==== insertCameraRelation exception : ", e);
         }
         return response.toJSONString();
@@ -66,7 +64,7 @@ public class CameraRelationInfoServiceImpl extends
     @Override
     public String deleteCameraRelation(String jsonStr) {
         
-        JSONObject response = ResponseUtil.createResponse();
+        String response = ResponseUtil.generatorDeleteResposnse("0", "success", ""  );
         
         try {
             Map<String, List<Object>> map = analysisPara(jsonStr);
@@ -76,20 +74,20 @@ public class CameraRelationInfoServiceImpl extends
             
             if (CollectionUtils.isEmpty(idList) && CollectionUtils.isEmpty(deviceIdList)
                 && CollectionUtils.isEmpty(updateTimeList)) {
-                return response.toJSONString();
+                return response;
             }
             cameraRelationInfoMapper.deleteByCondition(idList, deviceIdList, updateTimeList);
         } catch (Exception e) {
-            response = ResponseUtil.createResponse("-1", "fail");
+            response = String.valueOf(ResponseUtil.createSuccessResponse("-1", "fail"));
             log.error("==== deleteCameraRelation exception : ", e);
         }
-        return response.toJSONString();
+        return response;
     }
     
     @Override
     public String queryCameraRelation(String jsonStr) {
     
-        JSONObject response = ResponseUtil.createResponse();
+        JSONObject response = ResponseUtil.createSuccessResponse("0", "success");
     
         try {
             Map<String, List<Object>> map = analysisPara(jsonStr);
@@ -101,7 +99,7 @@ public class CameraRelationInfoServiceImpl extends
                 .queryByCondition(idList, deviceIdList, updateTimeList);
             response.put("data",JSONObject.toJSONString(cameraRelationInfos));
         } catch (Exception e) {
-            response = ResponseUtil.createResponse("-1", "fail");
+            response = ResponseUtil.createSuccessResponse("-1", "fail");
             log.error("==== queryCameraRelation exception : ", e);
         }
         return response.toJSONString();

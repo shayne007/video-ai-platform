@@ -7,7 +7,7 @@ import com.keensense.admin.util.RandomUtils;
 import com.keensense.admin.util.StringUtils;
 import com.keensense.admin.util.ZipUtils;
 import com.keensense.common.util.R;
-import com.loocme.security.encrypt.Base64;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.extension.entity.dto.ArchivesDTO;
 import com.keensense.sdk.sys.utils.DbPropUtil;
-import com.loocme.sys.datastruct.Var;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class ArchivesConstant {
     /**
      * 获取搜图模块id
      * */
-    public static String[] getSearchResultIds(Var var){
+    public static String[] getSearchResultIds(Map<String, Object> var){
         JSONArray array = JSON.parseArray(var.toString());
         String[] sbr = new String[array.size()];
         for (int i = 0; i < array.size(); i++) {
@@ -98,7 +97,7 @@ public class ArchivesConstant {
     /**
      * 获取搜图模块id
      * */
-    public static Map<String,Float> getSearchResultIdsAndScore(Var var){
+    public static Map<String,Float> getSearchResultIdsAndScore(Map<String, Object> var){
         Map<String,Float> aidFaceScore = new HashMap<>();
         JSONArray array = JSON.parseArray(var.toString());
         for (int i = 0; i < array.size(); i++) {

@@ -1,4 +1,4 @@
-package com.keensense.picturestream.constants;
+package com.keensense.common.image;
 
 /**
  * @Description: 图片结构化接口

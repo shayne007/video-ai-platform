@@ -2,7 +2,6 @@ package com.keensense;
 
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.glstsdk.RandomUtil;
-import org.apache.tomcat.jni.Time;
 
 import java.util.UUID;
 import java.util.concurrent.Callable;

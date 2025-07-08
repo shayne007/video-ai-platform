@@ -1,6 +1,5 @@
 package com.keensense.sdk.util;
 
-import com.loocme.sys.util.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -11,6 +10,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ public class HttpUtils {
     	CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost uploadFile = new HttpPost(url);
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-		if (MapUtil.isNotNull(textMap)) {
+		if (!CollectionUtils.isEmpty(textMap)) {
 			Iterator<String> it = textMap.keySet().iterator();
 			while (it.hasNext()) {
 				String textName = (String) it.next();
@@ -38,7 +38,7 @@ public class HttpUtils {
 		}
 		Map<String,String> tempFileMap = new HashMap<String,String>();
 		// 把文件加到HTTP的post请求中
-		if (MapUtil.isNotNull(fileMap)) {
+		if (!CollectionUtils.isEmpty(fileMap)) {
 			Iterator<String> it = fileMap.keySet().iterator();
 			while (it.hasNext()) {
 				String inputName  = (String) it.next();

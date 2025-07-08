@@ -1,4 +1,4 @@
-package com.keensense.dataconvert.framework.common.utils.file;
+package com.keensense.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,7 +3,6 @@ package com.keensense.common.platform.domain;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
-import net.sf.json.JSONArray;
 
 import java.util.Date;
 
@@ -797,21 +796,21 @@ public class PersonResult extends Result implements java.io.Serializable {
     public static void main(String args[]) {
         PersonResult personResult = new PersonResult();
         System.out.println(JSONObject.toJSONString(personResult));
-        test();
+//        test();
     }
 
-    public static void test() {
-        net.sf.json.JSONObject personListObject = new net.sf.json.JSONObject();
-        net.sf.json.JSONObject personObject = new net.sf.json.JSONObject();
-        net.sf.json.JSONObject personObjectArray = new net.sf.json.JSONObject();
-        net.sf.json.JSONObject featureObject = new net.sf.json.JSONObject();
-        JSONArray subImageInfoObject = new JSONArray();
-        net.sf.json.JSONObject subImageList = new net.sf.json.JSONObject();
-        personObject.put("SourceID", 11);
-        subImageList.put("SubImageInfoObject", subImageInfoObject);
-        personObject.put("SubImageList", subImageList);
-        personObjectArray.put("PersonObject", JSONArray.fromObject(personObject));
-        personListObject.put("PersonListObject", personObjectArray);
-        System.out.println(personListObject);
-    }
+//    public static void test() {
+//        net.sf.json.JSONObject personListObject = new net.sf.json.JSONObject();
+//        net.sf.json.JSONObject personObject = new net.sf.json.JSONObject();
+//        net.sf.json.JSONObject personObjectArray = new net.sf.json.JSONObject();
+//        net.sf.json.JSONObject featureObject = new net.sf.json.JSONObject();
+//        JSONArray subImageInfoObject = new JSONArray();
+//        net.sf.json.JSONObject subImageList = new net.sf.json.JSONObject();
+//        personObject.put("SourceID", 11);
+//        subImageList.put("SubImageInfoObject", subImageInfoObject);
+//        personObject.put("SubImageList", subImageList);
+//        personObjectArray.put("PersonObject", JSONArray.fromObject(personObject));
+//        personListObject.put("PersonListObject", personObjectArray);
+//        System.out.println(personListObject);
+//    }
 }

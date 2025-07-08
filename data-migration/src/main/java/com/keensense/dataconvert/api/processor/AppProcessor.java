@@ -22,7 +22,6 @@ import com.keensense.dataconvert.biz.service.ObjextResultService;
 import com.keensense.dataconvert.biz.service.VlprResultService;
 import com.keensense.dataconvert.framework.common.ext.spring.SpringContextHolder;
 import com.keensense.dataconvert.framework.common.utils.date.DateHelper;
-import com.loocme.sys.util.ListUtil;
 import net.sf.ehcache.util.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

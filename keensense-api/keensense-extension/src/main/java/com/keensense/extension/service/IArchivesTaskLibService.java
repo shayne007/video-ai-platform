@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.extension.entity.ArchivesTaskLib;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.loocme.sys.datastruct.Var;
 
 /**
  * <p>

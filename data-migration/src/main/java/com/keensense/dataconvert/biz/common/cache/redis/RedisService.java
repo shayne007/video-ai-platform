@@ -1,7 +1,6 @@
 package com.keensense.dataconvert.biz.common.cache.redis;
 
 import com.keensense.dataconvert.framework.common.exception.SystemException;
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.Tuple;
@@ -927,8 +926,6 @@ public interface RedisService {
 	 * @return 删除的数量
 	 */
 	public Long zremrangeByScore(String key, double start, double end) throws SystemException;
-
-	public Long linsert(String key, LIST_POSITION where, String pivot, String value) throws SystemException;
 
 	public String set(byte[] key, byte[] value) throws SystemException;
 

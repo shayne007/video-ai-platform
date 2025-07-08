@@ -1,7 +1,6 @@
 package com.keensense.common.util;
 
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.entities.HttpManagerParams;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
@@ -41,22 +40,22 @@ public class HttpU2sGetUtil {
     public static HttpClient client;
 
     static {
-        HttpManagerParams params = new HttpManagerParams();
-        HttpConnectionManagerParams managerParams = new HttpConnectionManagerParams();
-        managerParams.setConnectionTimeout(params.getConnectionTimeout());
-        managerParams.setSoTimeout(params.getSoTimeout());
-        managerParams.setStaleCheckingEnabled(params.getStaleCheckEnabled());
-        managerParams.setTcpNoDelay(params.getTcpNoDelay());
-        managerParams.setDefaultMaxConnectionsPerHost(
-                params.getDefaultMaxConnectionsPerHost());
-        managerParams.setMaxTotalConnections(params.getMaxTotalConnections());
-        managerParams.setParameter(HttpMethodParams.RETRY_HANDLER,
-                new DefaultHttpMethodRetryHandler(0, false));
-
-        HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
-        connectionManager.setParams(managerParams);
-
-        client = new HttpClient(connectionManager);
+//        HttpManagerParams params = new HttpManagerParams();
+//        HttpConnectionManagerParams managerParams = new HttpConnectionManagerParams();
+//        managerParams.setConnectionTimeout(params.getConnectionTimeout());
+//        managerParams.setSoTimeout(params.getSoTimeout());
+//        managerParams.setStaleCheckingEnabled(params.getStaleCheckEnabled());
+//        managerParams.setTcpNoDelay(params.getTcpNoDelay());
+//        managerParams.setDefaultMaxConnectionsPerHost(
+//                params.getDefaultMaxConnectionsPerHost());
+//        managerParams.setMaxTotalConnections(params.getMaxTotalConnections());
+//        managerParams.setParameter(HttpMethodParams.RETRY_HANDLER,
+//                new DefaultHttpMethodRetryHandler(0, false));
+//
+//        HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+//        connectionManager.setParams(managerParams);
+//
+//        client = new HttpClient(connectionManager);
     }
 
     public static String postContent(String url, String content) {

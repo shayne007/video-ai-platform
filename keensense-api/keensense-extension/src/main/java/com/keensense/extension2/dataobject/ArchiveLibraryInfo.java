@@ -4,6 +4,9 @@ package com.keensense.extension2.dataobject;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**

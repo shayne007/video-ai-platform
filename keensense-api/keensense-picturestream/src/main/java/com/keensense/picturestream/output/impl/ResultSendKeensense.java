@@ -12,9 +12,7 @@ import com.keensense.picturestream.feign.IFeignToSearch;
 import com.keensense.picturestream.util.ClassType;
 import com.keensense.picturestream.util.IDUtil;
 import com.keensense.picturestream.util.ImageBaseUtil;
-import com.loocme.security.encrypt.Base64;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.OpencvUtil;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.springframework.util.CollectionUtils;
@@ -32,12 +30,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -91,13 +85,13 @@ public class ResultSendKeensense {
     private JSONObject handleReceiveData(PictureInfo pictureInfo,
                                          Map<String, List<JSONObject>> resultMap) {
         List<Integer> recogTypeList = pictureInfo.getRecogTypeList();
-        List<Var> varList = pictureInfo.getResults();
+        List<Map<String,Object>> varList = pictureInfo.getResults();
 
         if (CollectionUtils.isEmpty(varList)) {
             ResultSendThreads.sendError(pictureInfo);
         }
 
-        for (Var var : varList) {
+        for (Map<String,Object> var : varList) {
             log.info("Var data______:" + var.toString());
             JSONObject jsonObject = JSONObject.parseObject(var.toString());
             int algoSource = jsonObject.getIntValue("AlgoSource");
@@ -1104,15 +1098,15 @@ public class ResultSendKeensense {
     }
 
     public String getMinPic(PictureInfo pictureInfo, int[] pois){
-        OpencvUtil util = OpencvUtil.getInstance();
-        byte[] bytes = Base64.decode(pictureInfo.getPicBase64().getBytes());
-        Mat img = util.loadImage(bytes);
-        byte[][] targetImages = util.cutTargetImages(img, pois, 20, 20);
-        if (null != targetImages) {
-            BASE64Encoder encode = new BASE64Encoder();
-            String base64 = encode.encode(targetImages[0]).replaceAll("\\r|\\n", "");
-            return base64;
-        }
+//        OpencvUtil util = OpencvUtil.getInstance();
+//        byte[] bytes = Base64.decode(Arrays.toString(pictureInfo.getPicBase64().getBytes()));
+//        Mat img = util.loadImage(bytes);
+//        byte[][] targetImages = util.cutTargetImages(img, pois, 20, 20);
+//        if (null != targetImages) {
+//            BASE64Encoder encode = new BASE64Encoder();
+//            String base64 = encode.encode(targetImages[0]).replaceAll("\\r|\\n", "");
+//            return base64;
+//        }
         return null;
     }
 

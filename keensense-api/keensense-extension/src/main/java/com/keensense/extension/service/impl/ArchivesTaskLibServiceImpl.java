@@ -14,8 +14,6 @@ import com.keensense.sdk.algorithm.impl.GlstFaceSdkInvokeImpl;
 import com.keensense.sdk.algorithm.impl.KsFaceSdkInvokeImpl;
 import com.keensense.sdk.algorithm.impl.StQstFaceSdkInvokeImpl;
 import com.keensense.sdk.constants.FaceConstant;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.datastruct.WeekArray;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -132,7 +130,7 @@ public class ArchivesTaskLibServiceImpl extends ServiceImpl<ArchivesTaskLibMappe
             return ja;
         }
         String libIds = taskLibs.stream().map(ArchivesTaskLib::getLibId).collect(Collectors.joining(","));
-        WeekArray searchData = (WeekArray) faceSdk.getSimilars(libIds,
+        Map<String, Object> searchData = faceSdk.getSimilars(libIds,
                 searchParam.getString(FEATURE_KEY),
                 getThreshold(threshold),
                 searchParam.getIntValue("LimitNum"),
@@ -140,8 +138,8 @@ public class ArchivesTaskLibServiceImpl extends ServiceImpl<ArchivesTaskLibMappe
                 searchParam.getString("EndTime"));
 
         if (searchData != null) {
-            for (int i = 0; i < searchData.getSize(); i++) {
-                Var tempVar = searchData.get("[" + i + "]");
+            for (int i = 0; i < searchData.entrySet().size(); i++) {
+                JSONObject tempVar = (JSONObject) searchData.get("[" + i + "]");
                 JSONObject jo = new JSONObject();
                 jo.put("uuid", tempVar.getString("face.id"));
                 jo.put("score", tempVar.getString("score"));

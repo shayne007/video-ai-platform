@@ -13,8 +13,6 @@ import com.keensense.admin.util.StringUtils;
 import com.keensense.common.config.SpringContext;
 import com.keensense.common.platform.constant.WebserviceConstant;
 import com.keensense.common.util.HttpU2sGetUtil;
-import com.loocme.sys.util.DateUtil;
-import com.loocme.sys.util.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
