@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by zhanx xiaohui on 2019-12-17.
+ * Video File Controller
  */
 @RestController
 public class FileController {
@@ -19,15 +19,14 @@ public class FileController {
 
     @PostMapping(value = "/VIID/File/{fileId}/Data")
     public String file(@PathVariable String fileId,
-                       @RequestParam(value = "FileExtentionName", required = false) String fileExtentionName,
+                       @RequestParam(value = "ext", required = false) String ext,
                        @RequestBody byte[] stream) {
-//
-        return service.file(fileId, stream, fileExtentionName, "Url");
+        return service.upload(fileId, stream, ext, "Url");
     }
 
     @DeleteMapping(value = "/VIID/File", produces = "application/json;charset=UTF-8")
-    public String batchDeleteAsync(@RequestParam("Serialnumber") String serialnumber,
+    public String batchDeleteAsync(@RequestParam("serialNumber") String serialNumber,
                                    @RequestParam(value = "Time", required = false) String time) {
-        return service.batchDeleteImage(serialnumber, time);
+        return service.batchDeleteImage(serialNumber, time);
     }
 }

@@ -153,10 +153,3 @@ public class HttpClientUtil {
         return null;
     }
 }
-
-/**
- * @program: data
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-05-10 11:23
- **/

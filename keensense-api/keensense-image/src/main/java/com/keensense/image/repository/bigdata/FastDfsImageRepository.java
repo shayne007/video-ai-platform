@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static com.google.common.base.Charsets.UTF_8;
 
 /**
- * Created by zhanx xiaohui on 2019-08-12.
+ * FastDFS distributed file system
  */
 @Repository("fastDfsImageRepository")
 

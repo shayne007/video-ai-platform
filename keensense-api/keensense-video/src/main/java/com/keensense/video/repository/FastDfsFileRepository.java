@@ -101,7 +101,7 @@ public class FastDfsFileRepository {
             Base64.getEncoder().encode((userName + ":" + userPath).getBytes()));
     }
 
-    public String getUrlWithoutBase64(byte[] stream, String fileExtentionName) {
+    public String getUrlAfterUploaded(byte[] stream, String extension) {
         String url = "";
         TrackerServer trackerServer1 = null;
         try {
@@ -109,9 +109,11 @@ public class FastDfsFileRepository {
             trackerServer1 = tracker.getConnection();
 
             StorageClient storageClient = new StorageClient(trackerServer1, null);
-            String[] fileIds = storageClient.upload_file(stream, fileExtentionName, null);
-            String prefix = map.get(fileIds[0]);
-            url = prefix + "/" + fileIds[0] + "/" + fileIds[1];
+            // results[0]:the group name to store the file; results[1]: the new created filename
+            String[] results = storageClient.upload_file(stream, extension, null);
+            String prefix = map.get(results[0]);
+            // group1/M00/00/00/wKgBaFxyz123.jpg
+            url = prefix + "/" + results[0] + "/" + results[1];
             log.info("the trace url is {}", url);
         } catch (Exception e) {
             log.error("", e);
@@ -129,7 +131,7 @@ public class FastDfsFileRepository {
 
     public long batchDelete(String serialNumber, String time) throws ParseException {
         JSONObject taskCallback = new JSONObject();
-        taskCallback.put("serialnumber", serialNumber);
+        taskCallback.put("serialNumber", serialNumber);
         taskCallback.put("time", time);
         taskCallback.put("status", true);
         try {
@@ -283,16 +285,16 @@ public class FastDfsFileRepository {
         }
     }
 
-    private JSONObject generateQueryObject(String serialnumber, Date start, Date end) {
+    private JSONObject generateQueryObject(String serialNumber, Date start, Date end) {
         JSONObject object = new JSONObject();
         object.put("size", "51200");
         JSONObject queryObject = new JSONObject();
         JSONObject boolObject = new JSONObject();
         JSONArray mustObject = new JSONArray();
-        JSONObject matchphraseObject = new JSONObject();
-        matchphraseObject.put("analysisid", serialnumber);
+        JSONObject matchPhraseObject = new JSONObject();
+        matchPhraseObject.put("analysisId", serialNumber);
         JSONObject arrayObject1 = new JSONObject();
-        arrayObject1.put("match_phrase", matchphraseObject);
+        arrayObject1.put("match_phrase", matchPhraseObject);
         mustObject.add(arrayObject1);
 
         if (null != start) {
@@ -312,10 +314,3 @@ public class FastDfsFileRepository {
         return object;
     }
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-08-12 09:37
- **/

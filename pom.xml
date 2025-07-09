@@ -105,7 +105,8 @@
         <module>gateway</module>
         <module>common-sdk</module>
         <module>jobs</module>
-<!--        <module>data-migration</module>-->
+        <module>algorithm-analysis</module>
+        <!--        <module>data-migration</module>-->
 <!--        <module>backend-for-frontend</module>-->
     </modules>
 
