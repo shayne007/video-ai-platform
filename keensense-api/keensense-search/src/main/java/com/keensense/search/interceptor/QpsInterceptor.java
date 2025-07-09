@@ -1,4 +1,4 @@
-package com.keensense.search.filter;
+package com.keensense.search.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.util.concurrent.RateLimiter;
