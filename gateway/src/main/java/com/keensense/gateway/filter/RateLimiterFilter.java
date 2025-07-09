@@ -17,6 +17,12 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * @Description 网关层限流
+ * When to use GlobalFilter:
+ * <p>
+ * 1.If you need to rate limit ALL requests (including static resources, error pages)
+ * 2.If you're not using Spring Boot or want framework-agnostic solution
+ * 3.If you need to filter requests before they reach Spring's dispatcher
+ * <p>
  * @Author fengsy
  * @Date 9/9/21
  */

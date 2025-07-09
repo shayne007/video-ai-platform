@@ -1,6 +1,7 @@
 package com.keensense.image.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.keensense.common.ratelimiter.RateLimit;
 import com.keensense.image.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class ImageController {
      * @param imageBase64 base64 string of image
      * @return response json
      */
+    @RateLimit(limit = 50, window = "PT1M")
     @PostMapping(value = "/VIID/Images/{imageId}/Data", produces = "application/json;charset=UTF-8")
     public String image(@PathVariable String imageId, @RequestBody String imageBase64) {
         return service.image(imageId, imageBase64, "jpg", "ImageUrl", "");
@@ -41,6 +43,7 @@ public class ImageController {
      * @param time         time of image
      * @return response json
      */
+    @RateLimit(limit = 50, window = "PT1M")
     @DeleteMapping(value = "/VIID/Images", produces = "application/json;charset=UTF-8")
     public String batchDeleteAsync(@RequestParam("Serialnumber") String serialnumber,
                                    @RequestParam(value = "Time", required = false) String time) {
