@@ -36,10 +36,3 @@ public class CapacityController {
     }
 
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-08-30 13:51
- **/

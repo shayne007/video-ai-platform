@@ -33,10 +33,3 @@ public class FeaturesearchCapacityResult {
     @Column(name = "date")
     protected String date;
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-08-30 16:02
- **/
