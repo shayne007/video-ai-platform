@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keensense.common.platform.bo.video.CrowdDensity;
 import com.keensense.common.platform.bo.video.CrowdDensityQuery;
+import com.keensense.common.util.HttpClientUtil;
 import com.keensense.common.util.PageUtils;
 import com.keensense.common.util.R;
 import com.keensense.common.util.RandomUtils;
@@ -26,8 +27,6 @@ import com.keensense.densecrowd.util.ExcelUtil;
 import com.keensense.densecrowd.util.QuerySqlUtil;
 import com.keensense.densecrowd.util.StringUtils;
 import com.keensense.densecrowd.vo.CameraVo;
-import com.loocme.sys.exception.HttpConnectionException;
-import com.loocme.sys.util.PostUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -77,16 +76,11 @@ public class WebController {
     @ApiOperation(value = "同步vas点位")
     @PostMapping(value = "/syncVasData")
     public R syncVasData() {
-        try {
-            String serviceIp = DbPropUtil.getString("1000video.ip", "172.16.1.68");
-            String servicePort = DbPropUtil.getString("1000video.port", "8060");
-            String extUrl = "http://" + serviceIp + ":" + servicePort + "/1000video/syncVasData";
-            //"http://localhost:8060/1000video/syncVasData";
-            PostUtil.requestContent(extUrl, "application/json", "");
-        } catch (HttpConnectionException e) {
-            e.printStackTrace();
-            return R.error("同步vas点位失败");
-        }
+        String serviceIp = DbPropUtil.getString("1000video.ip", "172.16.1.68");
+        String servicePort = DbPropUtil.getString("1000video.port", "8060");
+        String extUrl = "http://" + serviceIp + ":" + servicePort + "/1000video/syncVasData";
+        //"http://localhost:8060/1000video/syncVasData";
+        HttpClientUtil.requestPost(extUrl, "application/json", "");
         return R.ok();
     }
 

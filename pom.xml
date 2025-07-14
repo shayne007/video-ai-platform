@@ -104,8 +104,10 @@
         <module>monitor</module>
         <module>gateway</module>
         <module>common-sdk</module>
+        <module>compensation</module>
         <module>jobs</module>
         <module>algorithm-analysis</module>
+        <module>task-manager</module>
         <!--        <module>data-migration</module>-->
 <!--        <module>backend-for-frontend</module>-->
     </modules>

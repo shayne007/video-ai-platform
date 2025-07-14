@@ -2,26 +2,15 @@ package com.keensense.densecrowd.util;
 
 
 import com.keensense.common.platform.bo.video.CrowdDensity;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * 操作Excel表格的功能类
@@ -89,7 +78,8 @@ public final class ExcelHandleUtils {
             //同时支持Excel 2003、2007
             File excelFile = new File(filePath); //创建文件对象
             FileInputStream is = new FileInputStream(excelFile); //文件流
-            Workbook workbook = WorkbookFactory.create(is); //这种方式 Excel 2003/2007/2010 都是可以处理的
+            Workbook workbook = new HSSFWorkbook();
+            ; //这种方式 Excel 2003/2007/2010 都是可以处理的
             int sheetCount = workbook.getNumberOfSheets();  //Sheet的数量
 
             //遍历每个Sheet
@@ -148,7 +138,7 @@ public final class ExcelHandleUtils {
     }
 
     public static void exportCrowdExcel(HSSFWorkbook workbook, int sheetNum, String sheetTitle, String[] headers,
-                                         List<CrowdDensity> resultList, OutputStream out) throws Exception {
+                                        List<CrowdDensity> resultList, OutputStream out) throws Exception {
         // 生成一个表格
         HSSFSheet sheet = workbook.createSheet();
         workbook.setSheetName(sheetNum, sheetTitle);

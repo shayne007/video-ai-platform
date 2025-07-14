@@ -6,7 +6,6 @@ import com.keensense.densecrowd.annotation.Login;
 import com.keensense.densecrowd.entity.sys.TokenEntity;
 import com.keensense.densecrowd.service.sys.ITokenService;
 import com.keensense.densecrowd.util.CommonConstants;
-import com.loocme.plugin.webmvc.threadlocal.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 获取请求地址
         Login annotation;
-        Request.setRequest(request);
+//        Request.setRequest(request);
         if (handler instanceof HandlerMethod) {
             annotation = ((HandlerMethod) handler).getMethodAnnotation(Login.class);
         } else {

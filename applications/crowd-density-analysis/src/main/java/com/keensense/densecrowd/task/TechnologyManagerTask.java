@@ -12,8 +12,6 @@ import com.keensense.densecrowd.entity.task.VsdTaskRelation;
 import com.keensense.densecrowd.service.ext.CrowdDensityService;
 import com.keensense.densecrowd.service.task.IVsdTaskRelationService;
 import com.keensense.densecrowd.util.DbPropUtil;
-import com.loocme.sys.util.ListUtil;
-import com.loocme.sys.util.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 import sun.misc.BASE64Encoder;
 
@@ -24,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author: zengyc
@@ -38,12 +38,12 @@ public class TechnologyManagerTask {
     static CrowdDensityService crowdDensityService = SpringContext.getBean(CrowdDensityService.class);
     static Map<Long, Long> relations = new HashMap<>();
 
-    private static ThreadUtil.ExecutorService ESERVICE = null;
+    private static ExecutorService ESERVICE = null;
 
     private static long lastTime = System.currentTimeMillis();
 
     public static void start() {
-        ESERVICE = ThreadUtil.newSingleThreadExecutor();
+        ESERVICE = Executors.newSingleThreadExecutor();
         ESERVICE.execute(new Runnable() {
             @Override
             public void run() {

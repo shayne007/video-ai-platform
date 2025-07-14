@@ -22,13 +22,12 @@ import com.keensense.densecrowd.util.GoogleMapUtil;
 import com.keensense.densecrowd.util.QuerySqlUtil;
 import com.keensense.densecrowd.util.StringUtils;
 import com.keensense.densecrowd.vo.CameraVo;
-import com.loocme.sys.util.PatternUtil;
-import com.loocme.sys.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -129,11 +128,11 @@ public class CameraManagerController extends BaseController {
         R result = R.ok();
         String cameraUrl = addCameraRequest.getUrl();
         // 实时流地址为空
-        if (StringUtil.isNull(cameraUrl)) {
+        if (org.apache.commons.lang3.StringUtils.isEmpty(cameraUrl)) {
             return R.error("实时流地址不能为空！");
         }
         if (cameraUrl.indexOf("vas") == 0) {
-            if (PatternUtil.isNotMatch(cameraUrl, "^vas://name=.+&psw=.+&srvip=.+&srvport=\\d+&devid=.+&.*$")) {
+            if (PatternMatchUtils.simpleMatch(cameraUrl, "^vas://name=.+&psw=.+&srvip=.+&srvport=\\d+&devid=.+&.*$")) {
                 return R.error("点位信息有误");
             }
         }

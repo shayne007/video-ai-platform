@@ -4,16 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keensense.common.config.SpringContext;
 import com.keensense.densecrowd.entity.sys.CfgMemProps;
 import com.keensense.densecrowd.mapper.sys.CfgMemPropsMapper;
-import com.loocme.sys.util.ListUtil;
-import com.loocme.sys.util.MapUtil;
-import com.loocme.sys.util.ThreadUtil;
-import com.loocme.sys.util.ThreadUtil.ExecutorService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 数据库初始化配置加载
@@ -35,7 +34,7 @@ public class DbPropUtil {
     }
 
     public static void start(final String moduleName) {
-        ESERVICE = ThreadUtil.newSingleThreadExecutor();
+        ESERVICE = Executors.newSingleThreadExecutor();
         MODULE_NAME = moduleName;
         reload(moduleName);
         ESERVICE.execute(new Runnable() {
@@ -67,7 +66,7 @@ public class DbPropUtil {
         }
         queryWrapper = queryWrapper.orderByAsc("update_time");
         List<CfgMemProps> propList = mapper.selectList(queryWrapper);
-        if (ListUtil.isNotNull(propList)) {
+        if (CollectionUtils.isNotEmpty(propList)) {
             CfgMemProps prop = null;
             StringBuffer logBuff = new StringBuffer();
 
@@ -91,7 +90,7 @@ public class DbPropUtil {
     }
 
     public static int getInt(String key, int defaultValue) {
-        return PROP_MAP.containsKey(key) ? MapUtil.getInteger(PROP_MAP, key) : defaultValue;
+        return PROP_MAP.containsKey(key) ? (int) PROP_MAP.get(key) : defaultValue;
     }
 
     public static String getString(String key) {
@@ -99,15 +98,15 @@ public class DbPropUtil {
     }
 
     public static String getString(String key, String defaultValue) {
-        return PROP_MAP.containsKey(key) ? MapUtil.getString(PROP_MAP, key) : defaultValue;
+        return PROP_MAP.containsKey(key) ? (String) PROP_MAP.get(key) : defaultValue;
     }
 
     public static boolean getBoolean(String key) {
-        return MapUtil.getBoolean(PROP_MAP, key);
+        return (boolean) PROP_MAP.get(key);
     }
 
     public static boolean getBoolean(String key, boolean defaultValue) {
-        return PROP_MAP.containsKey(key) ? MapUtil.getBoolean(PROP_MAP, key) : defaultValue;
+        return PROP_MAP.containsKey(key) ? (boolean) PROP_MAP.get(key) : defaultValue;
     }
 
     public static double getDouble(String key) {
@@ -115,7 +114,7 @@ public class DbPropUtil {
     }
 
     public static double getDouble(String key, double defaultValue) {
-        return PROP_MAP.containsKey(key) ? MapUtil.getDouble(PROP_MAP, key) : defaultValue;
+        return PROP_MAP.containsKey(key) ? (double) PROP_MAP.get(key) : defaultValue;
     }
 
     public static float getFloat(String key) {
@@ -123,6 +122,6 @@ public class DbPropUtil {
     }
 
     public static float getFloat(String key, float defaultValue) {
-        return PROP_MAP.containsKey(key) ? MapUtil.getFloat(PROP_MAP, key) : defaultValue;
+        return PROP_MAP.containsKey(key) ? (float) PROP_MAP.get(key) : defaultValue;
     }
 }

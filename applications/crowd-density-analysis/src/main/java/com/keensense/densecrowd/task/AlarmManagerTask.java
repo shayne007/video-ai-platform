@@ -13,10 +13,8 @@ import com.keensense.densecrowd.service.ext.CrowdDensityService;
 import com.keensense.densecrowd.service.task.IDensecrowdWarnResultService;
 import com.keensense.densecrowd.service.task.IVsdTaskRelationService;
 import com.keensense.densecrowd.util.DbPropUtil;
-import com.loocme.sys.util.ListUtil;
-import com.loocme.sys.util.SpringUtil;
-import com.loocme.sys.util.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
@@ -24,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author: zengyc
@@ -38,7 +38,7 @@ public class AlarmManagerTask {
     static CrowdDensityService crowdDensityService = SpringContext.getBean(CrowdDensityService.class);
     static Map<Long, Long> relations = new HashMap<>();
 
-    private static ThreadUtil.ExecutorService ESERVICE = null;
+    private static ExecutorService ESERVICE = null;
 
     private static IDensecrowdWarnResultService densecrowdWarnResultService = SpringContext.getBean(IDensecrowdWarnResultService.class);
 
@@ -49,7 +49,7 @@ public class AlarmManagerTask {
     public static void reload() {
         log.info("定时任务,推送数据");
         List<VsdTaskRelation> vsdTaskRelations = vsdTaskRelationService.list(new QueryWrapper<VsdTaskRelation>().eq("isvalid", 1).and(i -> i.gt("alarm_interval", 0)));
-        if (ListUtil.isNull(vsdTaskRelations)) {
+        if (CollectionUtils.isEmpty(vsdTaskRelations)) {
             log.info("-------------->reload,reload is null");
             return;
         }
@@ -62,7 +62,7 @@ public class AlarmManagerTask {
     }
 
     public static void start() {
-        ESERVICE = ThreadUtil.newSingleThreadExecutor();
+        ESERVICE = Executors.newSingleThreadExecutor();
         ESERVICE.execute(new Runnable() {
             @Override
             public void run() {

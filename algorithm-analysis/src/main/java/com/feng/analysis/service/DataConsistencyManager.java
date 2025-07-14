@@ -22,13 +22,13 @@ public class DataConsistencyManager {
     public void processAnalysisResult(AnalysisResultBo result) {
         try {
             // Store in primary storage
-            elasticSearchService.index(result);
+//            elasticSearchService.index(result);
 
             // Store image embeddings
-            milvusService.insert(result.getFeatureObject());
+//            milvusService.insert(result.getFeatureObject());
 
             // Store original image
-            fastDfsService.upload(result.getBigImgUrl());
+//            fastDfsService.upload(result.getBigImgUrl());
 
             // Publish success event
             kafkaTemplate.send("analysis-completed", result);

@@ -16,8 +16,6 @@ import com.keensense.densecrowd.service.task.IVsdTaskRelationService;
 import com.keensense.densecrowd.util.CommonConstants;
 import com.keensense.densecrowd.util.DbPropUtil;
 import com.keensense.densecrowd.util.StringUtils;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.MapUtil;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +44,10 @@ public class VideoObjextTaskKeensenseServiceImpl extends AbstractService impleme
         if (startCount >= routes) {
             throw new VideoException(3000, "已达到系统最大支持路数" + routes + "路");
         }
-        String alarmStartTime = MapUtil.getString(paramMap, "alarmStartTime");
-        String alarmEndTime = MapUtil.getString(paramMap, "alarmEndTime");
-        String alarmThreshold = MapUtil.getString(paramMap, "alarmThreshold");
-        String alarmInterval = MapUtil.getString(paramMap, "alarmInterval");
+        String alarmStartTime = (String) paramMap.get("alarmStartTime");
+        String alarmEndTime = (String) paramMap.get("alarmEndTime");
+        String alarmThreshold = (String) paramMap.get("alarmThreshold");
+        String alarmInterval = (String) paramMap.get("alarmInterval");
 
         ObjextTaskBo params = initAddInputParam(paramMap);
         if (addRelation) {
@@ -112,7 +110,7 @@ public class VideoObjextTaskKeensenseServiceImpl extends AbstractService impleme
         crowdDensityBo.setHeatmapWeight(cfgMemPropsService.getHeatmapWeight());
         crowdDensityBo.setPushFrameMaxWaitTime(cfgMemPropsService.getPushFrameMaxWaitTime());
         String result = TaskUtil.addCrowdDensityVideoObjextTask(initKeensenseUrl(), crowdDensityBo);
-        Var resultVar = Var.fromJson(result);
+        JSONObject resultVar = JSONObject.parseObject(result);
         String ret = resultVar.getString("ret");
         if ("0".equals(ret)) {
 
@@ -154,21 +152,20 @@ public class VideoObjextTaskKeensenseServiceImpl extends AbstractService impleme
 
     public ObjextTaskBo initAddInputParam(Map<String, Object> paramMap) {
         ObjextTaskBo inParam = new ObjextTaskBo();
-        String serialnumber = MapUtil.getString(paramMap, "serialnumber");
-        String type = MapUtil.getString(paramMap, "type");
-        String url = MapUtil.getString(paramMap, "url");
-        Long cameraId = MapUtil.getLong(paramMap, "cameraId");
-        String name = MapUtil.getString(paramMap, "name");
-        String userId = MapUtil.getString(paramMap, "userId");
-        String param = MapUtil.getString(paramMap, "param");
-        String deviceId = MapUtil.getString(paramMap, "deviceId");
-        String startTime = MapUtil.getString(paramMap, "startTime");
-        String endTime = MapUtil.getString(paramMap, "endTime");
-        String entryTime = MapUtil.getString(paramMap, "entryTime");
-        Integer fromType = MapUtil.getInteger(paramMap, "fromType");
-        Integer taskType = MapUtil.getInteger(paramMap, "taskType");
-        String udrVertices = MapUtil.getString(paramMap, "udrVertices");
-        String interestFlag = MapUtil.getString(paramMap, "interestFlag");
+        String serialnumber = (String) paramMap.get("serialnumber");
+        String type =(String) paramMap.get("type");
+        String url =(String) paramMap.get("url");
+        Long cameraId = (Long) paramMap.get("cameraId");
+        String name = (String) paramMap.get("name");
+        String userId =(String) paramMap.get("userId");
+        String deviceId =(String) paramMap.get("deviceId");
+        String startTime =(String) paramMap.get("startTime");
+        String endTime =(String) paramMap.get("endTime");
+        String entryTime =(String) paramMap.get("entryTime");
+        Integer fromType = (Integer) paramMap.get("fromType");
+        Integer taskType = (Integer) paramMap.get("taskType");
+        String udrVertices =(String) paramMap.get("udrVertices");
+        String interestFlag =(String) paramMap.get("interestFlag");
 
 
         inParam.setDeviceId(deviceId);//设备ID
@@ -217,13 +214,12 @@ public class VideoObjextTaskKeensenseServiceImpl extends AbstractService impleme
 
     protected ObjextTaskBo initQueryInputParam(Map<String, Object> map) {
         ObjextTaskBo inParam = new ObjextTaskBo();
-        String startTime = MapUtil.getString(map, "startTime");
-        String endTime = MapUtil.getString(map, "endTime");
-        String type = MapUtil.getString(map, "type");
-        String serialnumber = MapUtil.getString(map, "serialnumber");
-        String userId = MapUtil.getString(map, "userId");
-        String containName = MapUtil.getString(map, "containName");
-        String name = MapUtil.getString(map, "name");
+        String startTime = map.get("startTime").toString();
+        String endTime = map.get("endTime").toString();
+        String type = map.get("type").toString();
+        String serialnumber = map.get("serialnumber").toString();
+        String userId = map.get("userId").toString();
+        String name = map.get("name").toString();
 
         if (!StringUtils.isEmptyString(name)) {
             inParam.setName(name);
@@ -246,21 +242,21 @@ public class VideoObjextTaskKeensenseServiceImpl extends AbstractService impleme
         }
 
         if (null != map && map.containsKey("status")) {
-            inParam.setStatus(MapUtil.getInteger(map, "status"));
+            inParam.setStatus((Integer) map.get("status"));
         }
 
         if (null != map && map.containsKey("pageSize")) {
-            inParam.setPageSize(MapUtil.getInteger(map, "pageSize"));
+            inParam.setPageSize((Integer) map.get("pageSize"));
         }
         if (null != map && map.containsKey("pageNo")) {
-            inParam.setPageNo(MapUtil.getInteger(map, "pageNo"));
+            inParam.setPageNo((Integer) map.get("pageNo"));
         }
         return inParam;
     }
 
     protected ObjextTaskBo initOperInputParam(Map<String, Object> paramMap) {
         ObjextTaskBo var = new ObjextTaskBo();
-        var.setSerialnumber(MapUtil.getString(paramMap, "serialnumber"));
+        var.setSerialnumber(paramMap.get("serialnumber").toString());
         var.setScene(MapUtils.getInteger(paramMap, "scene"));
         var.setInterested(MapUtils.getBoolean(paramMap, "isInterested"));
         var.setUdrVertices(MapUtils.getString(paramMap, "udrVertices"));

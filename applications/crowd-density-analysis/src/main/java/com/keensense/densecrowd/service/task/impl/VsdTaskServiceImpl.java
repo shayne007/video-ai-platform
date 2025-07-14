@@ -18,13 +18,12 @@ import com.keensense.densecrowd.util.CommonConstants;
 import com.keensense.densecrowd.util.EhcacheUtils;
 import com.keensense.densecrowd.util.PropertiesUtil;
 import com.keensense.densecrowd.util.StringUtils;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.util.PatternUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.PatternMatchUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -91,7 +90,7 @@ public class VsdTaskServiceImpl implements IVsdTaskService {
         if (cameratype == CommonConstants.CameraType.VAS) {
             taskUserId = CommonConstants.REALTIME_VIDEO;
             fileFromType = CommonConstants.VAS_FROM_TYPE;
-            if (PatternUtil.isNotMatch(url, "^vas://name=.+&psw=.+&srvip=.+&srvport=\\d+&devid=.+&.*$")) {
+            if (PatternMatchUtils.simpleMatch(url, "^vas://name=.+&psw=.+&srvip=.+&srvport=\\d+&devid=.+&.*$")) {
                 return R.error("点位信息有误,请确认点位格式及内容");
             }
             String[] data = url.trim().split("&");
@@ -129,8 +128,8 @@ public class VsdTaskServiceImpl implements IVsdTaskService {
             serialnumber = relation.getSerialnumber();
             paramMap.put("serialnumber", serialnumber);
             String continueJson = continueTask(relation, paramMap);
-            Var retCodeString = Var.fromJson(continueJson);
-            Var continueResVar = Var.fromJson(retCodeString.getString("result"));
+            JSONObject retCodeString = JSONObject.parseObject(continueJson);
+            JSONObject continueResVar = JSONObject.parseObject(retCodeString.getString("result"));
             String retCode = continueResVar.getString("ret");
             String retDesc = continueResVar.getString("desc");
             // -1：任务已经重启失败 -2 启动超路数
@@ -157,7 +156,7 @@ public class VsdTaskServiceImpl implements IVsdTaskService {
 
         resultJson = videoObjextTaskService.addVsdTaskService(paramMap, true);
         EhcacheUtils.removeItem(serialnumber);
-        Var addResVar = Var.fromJson(resultJson);
+        JSONObject addResVar = JSONObject.parseObject(resultJson);
         String retCode = addResVar.getString("ret");
         String retDesc = addResVar.getString("desc");
         result.put("code", retCode);
@@ -247,7 +246,7 @@ public class VsdTaskServiceImpl implements IVsdTaskService {
         String param = MapUtils.getString(paramMap, "param");
         String tripWires = MapUtils.getString(paramMap, "tripWires");
         String udrVertices = MapUtils.getString(paramMap, "udrVertices");
-        Var paramVar = Var.fromJson(param);
+        JSONObject paramVar = JSONObject.parseObject(param);
 //        String analysisCfg = paramVar.getString("analysisCfg");
 //        Var analysisCfgVar = Var.fromJson(analysisCfg);
 //        String scene = analysisCfgVar.getString("scene");
@@ -317,7 +316,7 @@ public class VsdTaskServiceImpl implements IVsdTaskService {
         Map<String, Object> pauseMap = new HashMap<>();
         pauseMap.put("serialnumber", serialnumber);
         String resultJson = videoObjextTaskService.pauseVsdTaskService(pauseMap);
-        Var updateRestVar = Var.fromJson(resultJson);
+        JSONObject updateRestVar = JSONObject.parseObject(resultJson);
         if (resultJson == null) {
             return R.error();
         }
@@ -341,7 +340,7 @@ public class VsdTaskServiceImpl implements IVsdTaskService {
         Map<String, Object> pauseMap = new HashMap<>();
         pauseMap.put("serialnumber", serialnumber);
         String resultJson = videoObjextTaskService.pauseVsdTaskService(pauseMap);
-        Var updateRestVar = Var.fromJson(resultJson);
+        JSONObject updateRestVar = JSONObject.parseObject(resultJson);
         if (resultJson == null) {
             return R.error();
         }

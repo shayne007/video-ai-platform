@@ -3,6 +3,10 @@ package com.keensense.picturestream.util;
 import com.keensense.common.util.DateUtil;
 import com.keensense.picturestream.common.BitCommonConst;
 import com.keensense.picturestream.entity.PictureInfo;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.imageio.stream.FileImageOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
-import javax.imageio.stream.FileImageOutputStream;
-
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import lombok.extern.slf4j.Slf4j;
-import org.opencv.core.Mat;
 
 @Slf4j
 public class ImageBaseUtil {

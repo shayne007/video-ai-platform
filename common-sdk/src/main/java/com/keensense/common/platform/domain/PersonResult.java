@@ -2,6 +2,7 @@ package com.keensense.common.platform.domain;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  * 1400标准人员类
  */
 @Data
+@Builder
 public class PersonResult extends Result implements java.io.Serializable {
 
     private static final long serialVersionUID = 1123L;
@@ -794,7 +796,7 @@ public class PersonResult extends Result implements java.io.Serializable {
     }
 
     public static void main(String args[]) {
-        PersonResult personResult = new PersonResult();
+        PersonResult personResult = PersonResult.builder().build();
         System.out.println(JSONObject.toJSONString(personResult));
 //        test();
     }

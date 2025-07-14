@@ -6,19 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keensense.extension.config.NacosConfig;
 import com.keensense.extension.constants.ArchivesConstant;
 import com.keensense.extension.constants.LibraryConstant;
-import com.keensense.extension.entity.ArchivesBodyInfo;
-import com.keensense.extension.entity.ArchivesInfo;
-import com.keensense.extension.entity.ArchivesRelationInfo;
-import com.keensense.extension.entity.CameraRelationInfo;
-import com.keensense.extension.entity.TbAnalysisTask;
+import com.keensense.extension.entity.*;
 import com.keensense.extension.feign.IFeignService;
 import com.keensense.extension.feign.IMicroSearchFeign;
-import com.keensense.extension.service.IArchivesBodyInfoService;
-import com.keensense.extension.service.IArchivesClustService;
-import com.keensense.extension.service.IArchivesInfoService;
-import com.keensense.extension.service.IArchivesRelationInfoService;
-import com.keensense.extension.service.ICameraRelationInfoService;
-import com.keensense.extension.service.ITbAnalysisTaskService;
+import com.keensense.extension.service.*;
 import com.keensense.extension.util.DownloadImageUtil;
 import com.keensense.extension.util.IDUtil;
 import com.keensense.sdk.constants.BodyConstant;
@@ -27,22 +18,14 @@ import com.keensense.sdk.sys.utils.DbPropUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 /***
  * @description:

@@ -1,10 +1,15 @@
 package com.keensense.densecrowd.util;
 
+
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
-import java.io.*;
-import java.util.zip.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedOutputStream;
 
 /**
  * 

@@ -1,5 +1,8 @@
 package com.keensense.densecrowd.task;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.keensense.common.platform.enums.TypeEnums;
 import com.keensense.common.util.DateUtil;
@@ -12,10 +15,8 @@ import com.keensense.densecrowd.service.task.IVsdTaskRelationService;
 import com.keensense.densecrowd.util.CameraConstants;
 import com.keensense.densecrowd.util.IpUtils;
 import com.keensense.densecrowd.util.StringUtils;
-import com.loocme.sys.datastruct.Var;
-import com.loocme.sys.datastruct.WeekArray;
-import com.loocme.sys.util.ListUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -59,7 +60,7 @@ public class TaskManagerTask {
     public void updateAllVideoTranscodingProgress() {
         log.info("定时任务，更新任务状态");
         List<VsdTaskRelation> vsdTaskRelations = vsdTaskRelationService.list(new QueryWrapper<VsdTaskRelation>().ne("isvalid", 2).and(i -> i.in("task_status", 0, 1, 4).or().isNull("task_status")));
-        if (ListUtil.isNull(vsdTaskRelations)) {
+        if (CollectionUtils.isEmpty(vsdTaskRelations)) {
             log.info("-------------->updateAllVideoTranscodingProgress,ctrlUnitFiles is null");
             return;
         }
@@ -69,7 +70,7 @@ public class TaskManagerTask {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("serialnumber", vsdTaskRelation1.getSerialnumber());
             String taskListReponse = videoObjextTaskService.queryVsdTaskAllService(requestParams);
-            Var var = Var.fromJson(taskListReponse);
+            JSONObject var = JSONObject.parseObject(taskListReponse);
             if (var == null) {
                 return;
             }
@@ -80,23 +81,23 @@ public class TaskManagerTask {
             vsdTaskRelation.setTaskStatus(vsdTaskRelation1.getTaskStatus());
             String ret = var.getString("ret");
             if ("0".equals(ret)) {
-                WeekArray tasks = var.getArray("tasks");
-                if (tasks.getSize() > 0) {
-                    for (int i = 0; i < tasks.getSize(); i++) {
-                        Var resultVar = tasks.get(String.valueOf(i));
+                JSONArray tasks = var.getJSONArray("tasks");
+                if (tasks.size() > 0) {
+                    for (int i = 0; i < tasks.size(); i++) {
+                        JSONObject resultVar = (JSONObject) tasks.get(i);
                         String serialnumber = resultVar.getString("serialnumber");
                         if (StringUtils.isEmpty(serialnumber)) {
                             serialnumber = resultVar.getString("id");
                         }
                         if (vsdTaskRelation.getSerialnumber().equals(serialnumber)) {
-                            vsdTaskRelation.setTaskProgress(resultVar.getInt("progress"));
+                            vsdTaskRelation.setTaskProgress(resultVar.getInteger("progress"));
                             vsdTaskRelation.setSlaveip(resultVar.getString("slaveip"));
-                            WeekArray subTasks = resultVar.getArray("subTasks");
-                            if (subTasks.getSize() > 0) {
+                            JSONArray subTasks = resultVar.getJSONArray("subTasks");
+                            if (subTasks.size() > 0) {
                                 int status0 = 0;
-                                for (int j = 0; j < subTasks.getSize(); j++) {
-                                    Var sub = subTasks.get(String.valueOf(j));
-                                    int status = sub.getInt("status");
+                                for (int j = 0; j < subTasks.size(); j++) {
+                                    JSONObject sub = (JSONObject) subTasks.get(j);
+                                    int status = sub.getInteger("status");
                                     if (status == 1) {
                                         status0 = 1;
                                     }
@@ -109,7 +110,7 @@ public class TaskManagerTask {
                                 }
                                 vsdTaskRelation.setTaskStatus(status0);
                             } else {
-                                vsdTaskRelation.setTaskStatus(resultVar.getInt("status"));
+                                vsdTaskRelation.setTaskStatus(resultVar.getInteger("status"));
                             }
                             if (vsdTaskRelation.getTaskStatus() != null && (vsdTaskRelation.getTaskStatus().equals(2) || vsdTaskRelation.getTaskStatus().equals(3))) {
                                 vsdTaskRelation.setEndTime(new Date());
@@ -144,7 +145,7 @@ public class TaskManagerTask {
     public void startTask() {
         log.info("定时任务，提交任务");
         List<VsdTaskRelation> vsdTaskRelations = vsdTaskRelationService.list(new QueryWrapper<VsdTaskRelation>().eq("isvalid", 2).and(i -> i.lt("alarm_start_time", DateUtil.formatTime(new Date()))).and(i -> i.gt("alarm_end_time", DateUtil.formatTime(new Date())).or().isNull("alarm_end_time")));
-        if (ListUtil.isNull(vsdTaskRelations)) {
+        if (CollectionUtils.isEmpty(vsdTaskRelations)) {
             log.info("-------------->startTask null");
             return;
         }
@@ -154,7 +155,7 @@ public class TaskManagerTask {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("serialnumber", vsdTaskRelation1.getSerialnumber());
             String taskListReponse = videoObjextTaskService.queryVsdTaskAllService(requestParams);
-            Var var = Var.fromJson(taskListReponse);
+            JSONObject var = JSONObject.parseObject(taskListReponse);
             if (var == null) {
                 return;
             }
@@ -165,7 +166,7 @@ public class TaskManagerTask {
             vsdTaskRelation.setTaskStatus(vsdTaskRelation1.getTaskStatus());
             String ret = var.getString("ret");
             if ("0".equals(ret)) {
-                WeekArray tasks = var.getArray("tasks");
+                JSONArray tasks = var.getJSONArray("tasks");
                 Camera camera = cameraService.getById(vsdTaskRelation1.getCameraId());
                 Map<String, Object> paramMap = new HashMap();
                 paramMap.put("url", CameraConstants.transUrl(cfgMemPropsService.getWs2ServerIp(), cfgMemPropsService.getWs2ServerPort(), camera.getUrl(), "real_Platform"));
@@ -182,7 +183,7 @@ public class TaskManagerTask {
                 }
                 log.info("paramMap:" + paramMap);
                 String resultJson = "";
-                if (tasks.getSize() == 0) {
+                if (tasks.size() == 0) {
                     resultJson = videoObjextTaskService.addVsdTaskService(paramMap, false);
                 } else {
                     resultJson = videoObjextTaskService.continueVsdTaskService(paramMap);
@@ -204,7 +205,7 @@ public class TaskManagerTask {
     public void stopTask() {
         log.info("定时任务，停止任务");
         List<VsdTaskRelation> vsdTaskRelations = vsdTaskRelationService.list(new QueryWrapper<VsdTaskRelation>().lt("alarm_end_time", DateUtil.formatTime(new Date())));
-        if (ListUtil.isNull(vsdTaskRelations)) {
+        if (CollectionUtils.isEmpty(vsdTaskRelations)) {
             log.info("-------------->stopTask null");
             return;
         }

@@ -9,5 +9,6 @@ import org.apache.arrow.flatbuf.Tensor;
  */
 public class ModelInferenceEngine {
     public InferenceResult inference(String modelType, Tensor inputTensor) {
+        return null;
     }
 }

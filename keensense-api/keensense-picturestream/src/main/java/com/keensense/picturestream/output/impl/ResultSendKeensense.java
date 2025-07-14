@@ -12,9 +12,7 @@ import com.keensense.picturestream.feign.IFeignToSearch;
 import com.keensense.picturestream.util.ClassType;
 import com.keensense.picturestream.util.IDUtil;
 import com.keensense.picturestream.util.ImageBaseUtil;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import lombok.extern.slf4j.Slf4j;
-import org.opencv.core.Mat;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import sun.misc.BASE64Encoder;
@@ -30,8 +28,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**

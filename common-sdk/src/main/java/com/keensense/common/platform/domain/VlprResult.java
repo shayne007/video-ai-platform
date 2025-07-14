@@ -1,6 +1,7 @@
 package com.keensense.common.platform.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.Date;
  * 1400标准机动车类
  */
 @Data
+@Builder
 public class VlprResult extends Result implements Serializable {
 
     private static final long serialVersionUID = 346567457457474L;

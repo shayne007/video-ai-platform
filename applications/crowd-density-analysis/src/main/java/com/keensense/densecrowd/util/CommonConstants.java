@@ -1,7 +1,6 @@
 package com.keensense.densecrowd.util;
 
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.util.PatternUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;

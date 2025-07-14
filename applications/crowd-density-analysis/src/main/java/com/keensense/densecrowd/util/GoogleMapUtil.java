@@ -1,6 +1,7 @@
 package com.keensense.densecrowd.util;
 
-import com.loocme.sys.util.StringUtil;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class GoogleMapUtil {
     private GoogleMapUtil() {
@@ -10,8 +11,8 @@ public class GoogleMapUtil {
 
     public static String[] getPointByEncrypt(String latitude, String longitude) {
         if ("pgis".equals(DbPropUtil.getString("google-map-from"))) {
-            double lon = StringUtil.getDouble(longitude);
-            double lat = StringUtil.getDouble(latitude);
+            double lon = Double.parseDouble(StringUtils.getDigits(longitude));
+            double lat = Double.parseDouble(StringUtils.getDigits(latitude));
 
             if (isOutOfChina(lat, lon)) {
                 return new String[]{latitude, longitude};
@@ -21,7 +22,7 @@ public class GoogleMapUtil {
 
             return new String[]{(lat + d[0]) + "", (lon + d[1]) + ""};
         } else {
-            if (StringUtil.isNotNull(latitude) && StringUtil.isNotNull(longitude)) {
+            if (StringUtils.isNotEmpty(latitude) && StringUtils.isNotEmpty(longitude)) {
                 return new String[]{latitude, longitude};
             } else {
                 return new String[]{};
@@ -32,8 +33,8 @@ public class GoogleMapUtil {
 
     public static String[] getPointByDecrypt(String latitude, String longitude) {
         if ("pgis".equals(DbPropUtil.getString("google-map-from"))) {
-            double lon = StringUtil.getDouble(longitude);
-            double lat = StringUtil.getDouble(latitude);
+            double lon = Double.parseDouble(StringUtils.getDigits(longitude));
+            double lat = Double.parseDouble(StringUtils.getDigits(latitude));
 
             if (isOutOfChina(lat, lon)) {
                 return new String[]{latitude, longitude};

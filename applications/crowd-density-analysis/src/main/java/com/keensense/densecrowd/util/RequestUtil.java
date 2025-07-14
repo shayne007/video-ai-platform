@@ -1,8 +1,15 @@
 package com.keensense.densecrowd.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.RequestContext;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,26 +19,29 @@ public class RequestUtil {
     private RequestUtil() {
     }
 
+    public static HttpServletRequest getRequest() {
+        ServletRequestAttributes attributes =
+                (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        return request;
+    }
+
     public static String getLocalIp() {
         String currentRequestHost = CommonConstants.LOCAL_IP;
-        try {
-            if (null != Request.getRequest()) {
-                //原读取真实路径方式，当以localhost方式访问的如果有双网卡，会优先读取IPV6路径0:0:0:0:0:0:0:1
+        if (null != getRequest()) {
+            //原读取真实路径方式，当以localhost方式访问的如果有双网卡，会优先读取IPV6路径0:0:0:0:0:0:0:1
 //                request.getRemoteAddr() 获取的值为0:0:0:0:0:0:0:1的原因及解决办法
 //
 //                最近在进行web开发时，在jsp页面获取服务器ip时，遇到了request.getRemoteAddr()获取的值为0:0:0:0:0:0:0:1，这是为什么呢，照道理讲，应该是127.0.0.1才对，为什么这个获取的值变成了ipv6了呢，而且我发现这种情况只有在服务器和客户端都在同一台电脑上才会出现（例如用localhost访问的时候才会出现），后来上网查了查原因，原来是/etc/hosts这个东西作怪(在windows上应该是C:\Windows\System32\drivers\etc\hosts这个文件)，只需要注释掉文件中的 # ::1 localhost 这一行即可解决问题。另外localhost这个文件很有用，这里你可以添加自己的条目，例如添加 192.168.0.212 myweb 这样子，在浏览器中原来只能使用192.168.0.212来访问的，并可以使用myweb来进行替换。
 //
 //                如果还不能解决，本机访问的时候用127.0.0.1或本机ip代替localhost即可解决
-                currentRequestHost = Request.getRequest().getLocalAddr();
-                if (CommonConstants.LOCAL_IP.equals(currentRequestHost)) {
-                    currentRequestHost = getIpAddress(Request.getRequest());
-                }
-                if (currentRequestHost.equals("0:0:0:0:0:0:0:1")) {
-                    currentRequestHost = CommonConstants.LOCAL_IP;
-                }
+            currentRequestHost = getRequest().getLocalAddr();
+            if (CommonConstants.LOCAL_IP.equals(currentRequestHost)) {
+                currentRequestHost = getIpAddress(getRequest());
             }
-        } catch (RequestException e) {
-            log.error(e.getMessage(), e);
+            if (currentRequestHost.equals("0:0:0:0:0:0:0:1")) {
+                currentRequestHost = CommonConstants.LOCAL_IP;
+            }
         }
         return currentRequestHost;
     }
@@ -39,21 +49,22 @@ public class RequestUtil {
     private static Map<String, String> replaceIps = null;
 
     public static String getResultUrl(String url) {
-        if (StringUtil.isNull(url)) return url;
+        if (StringUtils.isEmpty(url)) return url;
 
         if (null == replaceIps) {
             String replaceIpsStr = PropertiesUtil
                     .getParameterKey("converse.network.req.config");
-            if (StringUtil.isNull(replaceIpsStr)) {
+            if (StringUtils.isEmpty(replaceIpsStr)) {
                 replaceIpsStr = DbPropUtil
                         .getString("converse-network-req-config");
             }
             Map<String, String> replaceIpsMap = new HashMap<>();
-            if (StringUtil.isNotNull(replaceIpsStr)) {
-                List<String[]> replaceIpList = PatternUtil.getMatches(
-                        replaceIpsStr,
-                        "(\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)_(\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)");
-                if (ListUtil.isNotNull(replaceIpList)) {
+            if (StringUtils.isNotEmpty(replaceIpsStr)) {
+//                List<String[]> replaceIpList = PatternUtil.getMatches(
+//                        replaceIpsStr,
+//                        "(\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)_(\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)");
+                List<String[]> replaceIpList = new ArrayList<>();
+                if (CollectionUtils.isNotEmpty(replaceIpList)) {
                     for (int i = 0; i < replaceIpList.size(); i++) {
                         replaceIpsMap.put(replaceIpList.get(i)[1],
                                 replaceIpList.get(i)[2]);
@@ -73,10 +84,11 @@ public class RequestUtil {
         }
         if (null == replaceIps) return url;
 
-        String ipp = PatternUtil.getMatch(url,
-                "^((http|https)://)?(\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)(/)?.*$", 0,
-                3);
-        if (StringUtil.isNull(ipp)) return url;
+//        String ipp = PatternUtil.getMatch(url,
+//                "^((http|https)://)?(\\d+\\.\\d+\\.\\d+\\.\\d+:\\d+)(/)?.*$", 0,
+//                3);
+        String ipp = "";
+        if (StringUtils.isEmpty(ipp)) return url;
 
         if (!replaceIps.containsKey(ipp)) return url;
 

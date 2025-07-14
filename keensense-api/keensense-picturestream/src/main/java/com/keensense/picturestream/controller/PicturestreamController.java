@@ -28,14 +28,4 @@ public class PicturestreamController {
         KafkaUtil.sendMessage("dag_face_analysis","JdFaceCjQst", body, nacosConfig.getKafkaBootstrap());
         return ResultUtils.renderSuccess(null);
     }
-
-    @ApiOperation(value = "测试opencv", notes = "测试opencv")
-    @PostMapping(value = "/opencv")
-    public String opencv() {
-        //172.16.1.29:8890/rest/picturestream/opencv
-//        OpencvUtil util = OpencvUtil.getInstance();
-//        log.info("opencv succuse");
-//        return util.toString();
-        return "";
-    }
 }

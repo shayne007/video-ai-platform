@@ -12,7 +12,6 @@
     <artifactId>keensense-api</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>keensense-task</module>
         <module>keensense-search</module>
         <module>keensense-extension</module>
         <module>keensense-alarm</module>
@@ -22,7 +21,6 @@
         <module>keensense-image</module>
         <module>keensense-video</module>
         <module>keensense-archives</module>
-        <module>keensense-compensation</module>
     </modules>
 
 </project>

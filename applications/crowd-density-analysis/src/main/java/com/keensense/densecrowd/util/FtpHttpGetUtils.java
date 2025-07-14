@@ -1,13 +1,13 @@
 package com.keensense.densecrowd.util;
 
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.util.StringUtil;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -89,8 +89,6 @@ public class FtpHttpGetUtils {
     /**
      * get方式
      *
-     * @param param1
-     * @param param2
      * @return
      */
     public static String getHttp(String serviceName, String params) {
@@ -101,8 +99,6 @@ public class FtpHttpGetUtils {
     /**
      * get方式
      *
-     * @param param1
-     * @param param2
      * @return
      */
     public static String getHttp(String serviceName, Map<String, String> paramMap) {
@@ -286,7 +282,7 @@ public class FtpHttpGetUtils {
 
     public static String parseURL(String url) {
         String host = "127.0.0.1";
-        if (StringUtil.isNotNull(url) && url.startsWith("http")) {
+        if (StringUtils.isNotEmpty(url) && url.startsWith("http")) {
             try {
                 URL dbUrl = new URL(url);
                 host = dbUrl.getHost();

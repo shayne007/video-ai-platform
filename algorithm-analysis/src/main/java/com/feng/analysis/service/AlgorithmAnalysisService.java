@@ -6,6 +6,8 @@ import com.feng.analysis.algorithm.InferenceResult;
 import com.feng.analysis.algorithm.ModelInferenceEngine;
 import com.feng.analysis.algorithm.PersonAttributes;
 import com.keensense.common.platform.bo.video.AnalysisResultBo;
+import com.keensense.common.platform.domain.PersonResult;
+import com.keensense.common.platform.domain.VlprResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.arrow.flatbuf.Tensor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,6 @@ import org.springframework.stereotype.Service;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 
-import static com.keensense.common.platform.enums.ObjTypeEnum.CAR;
-import static com.keensense.common.platform.enums.ObjTypeEnum.PERSON;
-import static javax.swing.DebugGraphics.loadImage;
 
 /**
  * TODO
@@ -49,7 +48,7 @@ public class AlgorithmAnalysisService {
                     request.getModelType(), inputTensor);
 
             // Extract structured data
-            AnalysisResult analysisResult = extractStructuredData(result);
+            AnalysisResultBo analysisResult = extractStructuredData(result);
 
             // Publish to Kafka
             publishAnalysisResult(analysisResult);
@@ -58,8 +57,11 @@ public class AlgorithmAnalysisService {
 
         } catch (Exception e) {
             log.error("Analysis failed for request: {}", request, e);
-            return CompletableFuture.failedFuture(e);
         }
+        return null;
+    }
+
+    private void publishAnalysisResult(AnalysisResultBo analysisResult) {
     }
 
     private Tensor preprocessImage(BufferedImage image) {
@@ -76,12 +78,12 @@ public class AlgorithmAnalysisService {
         for (Detection detection : result.getDetections()) {
             switch (detection.getObjectType()) {
                 case PERSON:
-                    PersonAttributes person = extractPersonAttributes(detection);
-                    analysisResult.addPersonDetection(person);
+                    PersonResult person = extractPersonAttributes(detection);
+                    analysisResult.setPersonResult(person);
                     break;
                 case CAR:
-                    VehicleAttributes vehicle = extractVehicleAttributes(detection);
-                    analysisResult.addVehicleDetection(vehicle);
+                    VlprResult vehicle = extractVehicleAttributes(detection);
+                    analysisResult.setVlprResult(vehicle);
                     break;
                 // ... other object types
             }
@@ -90,17 +92,22 @@ public class AlgorithmAnalysisService {
         return analysisResult;
     }
 
-    private PersonAttributes extractPersonAttributes(Detection detection) {
-        return PersonAttributes.builder()
-                .boundingBox(detection.getBoundingBox())
-                .age(estimateAge(detection.getFeatures()))
-                .gender(classifyGender(detection.getFeatures()))
-                .height(estimateHeight(detection.getBoundingBox()))
-                .upperClothingColor(detectClothingColor(detection, "upper"))
-                .lowerClothingColor(detectClothingColor(detection, "lower"))
-                .bodySize(classifyBodySize(detection.getFeatures()))
-                .confidence(detection.getConfidence())
-                .build();
+    private VlprResult extractVehicleAttributes(Detection detection) {
+        return VlprResult.builder().build();
+    }
+
+    private PersonResult extractPersonAttributes(Detection detection) {
+//        return PersonResult.builder()
+//                .boundingBox(detection.getBoundingBox())
+//                .age(estimateAge(detection.getFeatures()))
+//                .gender(classifyGender(detection.getFeatures()))
+//                .height(estimateHeight(detection.getBoundingBox()))
+//                .upperClothingColor(detectClothingColor(detection, "upper"))
+//                .lowerClothingColor(detectClothingColor(detection, "lower"))
+//                .bodySize(classifyBodySize(detection.getFeatures()))
+//                .confidence(detection.getConfidence())
+//                .build();
+        return PersonResult.builder().build();
     }
 }
 

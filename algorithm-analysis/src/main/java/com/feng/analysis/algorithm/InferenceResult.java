@@ -7,5 +7,6 @@ package com.feng.analysis.algorithm;
  */
 public class InferenceResult {
     public Detection[] getDetections() {
+        return null;
     }
 }

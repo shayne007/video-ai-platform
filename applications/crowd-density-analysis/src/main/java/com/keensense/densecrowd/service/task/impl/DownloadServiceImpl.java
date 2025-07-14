@@ -3,19 +3,18 @@ package com.keensense.densecrowd.service.task.impl;
 import com.keensense.common.platform.bo.video.CrowdDensity;
 import com.keensense.common.util.RandomUtils;
 import com.keensense.densecrowd.service.task.DownloadService;
-import com.keensense.densecrowd.util.DateTimeUtils;
-import com.keensense.densecrowd.util.ExcelHandleUtils;
-import com.keensense.densecrowd.util.FTPUtils;
-import com.keensense.densecrowd.util.FileUtils;
-import com.keensense.densecrowd.util.FileZipCompressorUtil;
-import com.keensense.densecrowd.util.StringUtils;
-import com.loocme.sys.util.StringUtil;
+import com.keensense.densecrowd.util.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class DownloadServiceImpl implements DownloadService {

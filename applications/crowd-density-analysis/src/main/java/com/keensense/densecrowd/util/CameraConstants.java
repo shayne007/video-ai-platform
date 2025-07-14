@@ -1,8 +1,8 @@
 package com.keensense.densecrowd.util;
 
 import com.keensense.common.exception.VideoException;
-import com.loocme.sys.util.PatternUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.PatternMatchUtils;
 
 import java.util.*;
 
@@ -119,7 +119,7 @@ public class CameraConstants {
      * @return 无效为false
      */
     public static boolean checkVas(String url) {
-        if (PatternUtil.isNotMatch(url, "^vas://name=.+&psw=.+&srvip=.+&srvport=\\d+&devid=.+&.*$")) {
+        if (PatternMatchUtils.simpleMatch(url, "^vas://name=.+&psw=.+&srvip=.+&srvport=\\d+&devid=.+&.*$")) {
             return false;
         } else {
             return true;

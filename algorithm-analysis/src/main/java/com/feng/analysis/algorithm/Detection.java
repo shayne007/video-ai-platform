@@ -13,8 +13,10 @@ public class Detection {
     }
 
     public Object getBoundingBox() {
+        return null;
     }
 
     public Object getFeatures() {
+        return null;
     }
 }
