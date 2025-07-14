@@ -33,10 +33,3 @@ public class DateUtil {
         return c.getTime();
     }
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-08-21 11:52
- **/

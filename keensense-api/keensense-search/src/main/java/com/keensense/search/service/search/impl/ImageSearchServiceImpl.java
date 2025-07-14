@@ -10,12 +10,11 @@ import com.keensense.search.feign.FeignToTask;
 import com.keensense.search.schedule.ImageServiceClusterIpScheduled;
 import com.keensense.search.service.impl.JviaFeatureSearch;
 import com.keensense.search.service.search.ImageSearchService;
-import com.keensense.search.utils.HttpClientUtil;
+import com.keensense.common.util.HttpClientUtil2;
 import com.keensense.search.utils.ParametercheckUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -101,7 +100,7 @@ public class ImageSearchServiceImpl implements ImageSearchService {
             JSONArray jsonArray = new JSONArray();
             for (String ip : featureIps) {
                 String featureUrl = "http://" + ip + ":" + searchImageServicePort + "/dump";
-                String responseStr = HttpClientUtil.post(featureUrl, json.toJSONString(), headerMap);
+                String responseStr = HttpClientUtil2.post(featureUrl, json.toJSONString(), headerMap);
 
                 JSONObject jsonObject = JSONObject.parseObject(responseStr);
                 JSONArray features = jsonObject.getJSONArray("features");

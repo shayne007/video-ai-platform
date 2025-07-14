@@ -127,10 +127,3 @@ public class ParametercheckUtil {
         }
     }
 }
-
-/**
- * @program: data
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-02-23 14:49
- **/

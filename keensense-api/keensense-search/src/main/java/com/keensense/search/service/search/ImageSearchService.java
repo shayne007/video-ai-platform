@@ -15,10 +15,3 @@ public interface ImageSearchService {
      */
     String featureDump(JSONObject json);
 }
-
-/**
- * @program: data
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-05-14 09:55
- **/

@@ -1,6 +1,6 @@
 package com.keensense.search.schedule;
 
-import com.keensense.search.utils.HttpClientUtil;
+import com.keensense.common.util.HttpClientUtil2;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class ElasticSearchClusterIpSchedule {
             String url = "http://" + esIp + ":9200/_cat/nodes";
             Map<String, String> header = new HashMap<>();
             header.put("Authorization", auth);
-            String result = HttpClientUtil.get(url, header);
+            String result = HttpClientUtil2.get(url, header);
             if (StringUtils.isEmpty(result)) {
                 continue;
             }

@@ -1,14 +1,10 @@
-package com.keensense.search.utils;
-
-
-/**
- * Created by zhanx xiaohui on 2019-07-22.
- */
+package com.keensense.common.ids;
 
 import com.keensense.common.exception.VideoException;
 
 /**
  * Twitter的分布式自增ID雪花算法snowflake
+ *
  * @author MENG
  * @create 2018-08-23 10:21
  **/
@@ -82,9 +78,9 @@ public class SnowFlake {
         lastStmp = currStmp;
 
         return (currStmp - START_STMP) << TIMESTMP_LEFT //时间戳部分
-            | datacenterId << DATACENTER_LEFT       //数据中心部分
-            | machineId << MACHINE_LEFT             //机器标识部分
-            | sequence;                             //序列号部分
+                | datacenterId << DATACENTER_LEFT       //数据中心部分
+                | machineId << MACHINE_LEFT             //机器标识部分
+                | sequence;                             //序列号部分
     }
 
     private long getNextMill() {
@@ -99,10 +95,3 @@ public class SnowFlake {
         return System.currentTimeMillis();
     }
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-07-22 20:05
- **/

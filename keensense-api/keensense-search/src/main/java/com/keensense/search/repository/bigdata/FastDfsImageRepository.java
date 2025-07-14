@@ -8,7 +8,7 @@ import com.keensense.search.feign.FeignToTask;
 import com.keensense.search.repository.ImageRepository;
 import com.keensense.search.repository.StructuringDataRepository;
 import com.keensense.search.utils.DateUtil;
-import com.keensense.search.utils.HttpClientUtil;
+import com.keensense.common.util.HttpClientUtil2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.csource.fastdfs.ClientGlobal;
@@ -168,7 +168,7 @@ public class FastDfsImageRepository implements ImageRepository {
             Map<String, String> header = new HashMap<>();
             header.put(HttpHeaders.CONTENT_TYPE, "application/json");
             header.put(HttpHeaders.AUTHORIZATION, auth);
-            String response = HttpClientUtil
+            String response = HttpClientUtil2
                     .post("http://" + host + ":" + port + "/image_result/_search?scroll=10m",
                             object.toJSONString(), header);
             AtomicLong total = new AtomicLong();
@@ -184,7 +184,7 @@ public class FastDfsImageRepository implements ImageRepository {
                 object = new JSONObject();
                 object.put("scroll_id", scroll);
                 object.put("scroll", "10m");
-                response = HttpClientUtil
+                response = HttpClientUtil2
                         .post("http://" + host + ":" + port + "/_search/scroll",
                                 object.toJSONString(), header);
                 responseObject = JSONObject.parseObject(response);
@@ -196,7 +196,7 @@ public class FastDfsImageRepository implements ImageRepository {
             log.info("delete total {} images, analysisId: {} time: {} ", total.get(), serialNumber, time);
             JSONObject deleteObject = new JSONObject();
             deleteObject.put("scroll_id", scroll);
-            HttpClientUtil
+            HttpClientUtil2
                     .delete("http://" + host + ":" + port + "/_search/scroll",
                             deleteObject.toJSONString(),
                             header);

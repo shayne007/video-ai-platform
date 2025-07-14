@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.keensense.search.domain.FdfsCapacityResult;
 import com.keensense.search.domain.FeaturesearchCapacityResult;
 import com.keensense.search.repository.StructuringDataRepository;
-import com.keensense.search.utils.HttpClientUtil;
+import com.keensense.common.util.HttpClientUtil2;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,7 +100,7 @@ public class CapacityService {
         String url = "http://" + host + ":" + port + "/_cat/allocation";
         Map<String, String> header = new HashMap<>();
         header.put("Authorization", auth);
-        String esResult = HttpClientUtil.get(url, header);
+        String esResult = HttpClientUtil2.get(url, header);
         //返回结果示例
         //shards disk.indices disk.used disk.avail disk.total disk.percent host         ip           node
         //     0           0b    18.4gb     60.2gb     78.6gb           23 192.168.96.2 192.168.96.2 es01

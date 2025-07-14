@@ -276,10 +276,3 @@ public class JsonConvertUtil {
         return imageObjectArray;
     }
 }
-
-/**
- * @program: data
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-02-26 17:58
- **/

@@ -2,14 +2,15 @@ package com.keensense.search.schedule;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.keensense.search.utils.HttpClientUtil;
+import com.keensense.common.util.HttpClientUtil2;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,11 +40,11 @@ public class ImageServiceClusterIpScheduled {
 
     @Scheduled(fixedDelay = 5000)//上一次执行完毕时间点之后5秒再执行
     private void getFeatureSearchIpSchedule() {
-        if("true".equals(featureSave)){//如果不存储搜图模块，则也不检查搜图可用ip
+        if ("true".equals(featureSave)) {//如果不存储搜图模块，则也不检查搜图可用ip
             List<String> newList = new ArrayList<>();
             for (String imageSearchIp : ips) {
                 String url = "http://" + imageSearchIp + ":39081/status";
-                String result = HttpClientUtil
+                String result = HttpClientUtil2
                         .post(url, new JSONObject().toJSONString(), new HashMap<>());
                 if (!StringUtils.isEmpty(result)) {
                     JSONObject object = JSON.parseObject(result);
@@ -61,10 +62,11 @@ public class ImageServiceClusterIpScheduled {
 
     /**
      * 随机获取一个可用搜图ip列表
+     *
      * @return
      */
     public String getFeatureIp() {
-        if(list.size() == 0){
+        if (list.size() == 0) {
             return null;
         }
         List<String> tmpList = list;
@@ -73,16 +75,17 @@ public class ImageServiceClusterIpScheduled {
 
     /**
      * 获取可用搜图模块ip列表，多个ip之间用,分隔
+     *
      * @return
      */
     public String getFeatureIps() {
-        if(list.size() == 0){
+        if (list.size() == 0) {
             return null;
         }
         StringBuffer sb = new StringBuffer();
         List<String> tmpList = list;
-        for (int i=0; i < tmpList.size(); i++ ) {
-            if (i==0) {
+        for (int i = 0; i < tmpList.size(); i++) {
+            if (i == 0) {
                 sb.append(tmpList.get(i));
             } else {
                 sb.append("," + tmpList.get(i));
@@ -92,10 +95,3 @@ public class ImageServiceClusterIpScheduled {
     }
 
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-11-12 10:07
- **/

@@ -15,7 +15,7 @@ import com.keensense.search.exception.QueryException;
 import com.keensense.search.repository.StructuringDataRepository;
 import com.keensense.search.schedule.ElasticSearchClusterIpSchedule;
 import com.keensense.search.utils.ClassUtil;
-import com.keensense.search.utils.HttpClientUtil;
+import com.keensense.common.util.HttpClientUtil2;
 import com.keensense.search.utils.JsonConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -421,7 +421,7 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
         for (Entry updateRequest : updateMap.entrySet()) {
             requestBody.append(updateRequest.getValue());
         }
-        String response = HttpClientUtil.post(url, requestBody.toString(), header);
+        String response = HttpClientUtil2.post(url, requestBody.toString(), header);
         JSONObject responseObject = JSON.parseObject(response);
         JSONArray items = responseObject.getJSONArray("items");
         int size = items.size();
@@ -450,7 +450,7 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
             requestBody.append(request);
         }
         log.info("execute failed request {}", requestBody);
-        HttpClientUtil.post(url, requestBody.toString(), header);
+        HttpClientUtil2.post(url, requestBody.toString(), header);
     }
 
     @Override

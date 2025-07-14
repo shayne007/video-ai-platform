@@ -1,4 +1,4 @@
-package com.keensense.search.utils;
+package com.keensense.common.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -19,9 +19,9 @@ import org.apache.http.util.EntityUtils;
  * Created by zhanx xiaohui on 2019-05-10.
  */
 @Slf4j
-public class HttpClientUtil {
+public class HttpClientUtil2 {
 
-    private HttpClientUtil() {
+    private HttpClientUtil2() {
     }
 
     private static final String RESPONSE_LOG = "the response is {}.";
@@ -154,10 +154,3 @@ public class HttpClientUtil {
         return null;
     }
 }
-
-/**
- * @program: data
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-05-10 11:23
- **/

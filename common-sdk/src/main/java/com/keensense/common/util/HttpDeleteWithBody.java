@@ -1,4 +1,4 @@
-package com.keensense.search.utils;
+package com.keensense.common.util;
 
 import java.net.URI;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -28,10 +28,3 @@ public class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
         super();
     }
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-08-22 14:18
- **/

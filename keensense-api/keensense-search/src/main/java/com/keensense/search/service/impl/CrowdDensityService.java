@@ -66,7 +66,8 @@ public class CrowdDensityService {
         JSONArray resposneArray = new JSONArray();
         JSONArray dataArray = jsonObject.getJSONObject(objectName).getJSONArray(listObjectName);
         for (int i = 0; i < dataArray.size(); i++) {
-            resposneArray.add(insert(dataArray.getJSONObject(i), idName, tClass));
+            JSONObject inserted = insert(dataArray.getJSONObject(i), idName, tClass);
+            resposneArray.add(inserted);
         }
 
         return ResponseUtil.genereteInsertResponse(resposneArray).toJSONString();
@@ -345,10 +346,3 @@ public class CrowdDensityService {
         return esQueryUtil.groupByQuery(json, index);
     }
 }
-
-/**
- * @program: platform
- * @description:
- * @author: zhan xiaohui
- * @create: 2019-09-10 14:26
- **/
