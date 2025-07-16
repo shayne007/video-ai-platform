@@ -3,6 +3,7 @@ package com.keensense.search.repository.origin;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.keensense.common.exception.VideoException;
 import com.keensense.common.util.DateUtil;
 import com.keensense.common.util.ResponseUtil;
@@ -11,6 +12,7 @@ import com.keensense.search.domain.FdfsCapacityResult;
 import com.keensense.search.domain.VehicleflowrateResult;
 import com.keensense.search.domain.ViolationResult;
 import com.keensense.search.domain.VlprResult;
+import com.keensense.search.es.ElasticSearchService;
 import com.keensense.search.exception.QueryException;
 import com.keensense.search.repository.StructuringDataRepository;
 import com.keensense.search.schedule.ElasticSearchClusterIpSchedule;
@@ -18,10 +20,16 @@ import com.keensense.search.utils.ClassUtil;
 import com.keensense.common.util.HttpClientUtil2;
 import com.keensense.search.utils.JsonConvertUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,15 +48,8 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -110,6 +111,9 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
+
+    @Autowired
+    ElasticSearchService elasticSearchService;
 
     private static List<Object> insertList = new LinkedList<>();
     private static Map<String, String> updateMap = new HashMap<>();
@@ -461,63 +465,47 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
     }
 
     @Override
-    /**
-     * ES查询封装接口
-     */
     public <T> Map<Integer, List<T>> batchQuery(Map<String, String> map, Class<T> tClass) {
         int pageRecordNumber = DEFAULT_PAGE_RECORD;
         int pageStartNumber = DEFAULT_PAGE_START_NUMBER;
         // log.debug("#######################start inner batch query");
-//        Select<T> select = Select.from(tClass, getSecondDataSource());
-//        for (Map.Entry<String, String> entry : map.entrySet()) {
-//            String[] parametorKeyArray = covertKeyToDomainMember(entry.getKey(), tClass);
-//            String key = parametorKeyArray[0];
-//            String operation = parametorKeyArray[1];
-//            String value = entry.getValue();
-//            if ("PageRecordNum".equalsIgnoreCase(key)) {
-//                pageRecordNumber = getPageNum(value);
-//            } else if ("RecordStartNo".equalsIgnoreCase(key)) {
-//                pageStartNumber = Integer.valueOf(value);
-//            } else if (operation == null) {
-//                addEaualSelect(select, key, value);
-//            } else if ("Like".equals(operation)) {
-//                if (("PLATENO".equals(key.toUpperCase())) || "PLATELICENCE".equals(key.toUpperCase())) {
-//                    if (value.length() == 1) {
-//                        select.addWhereCause(key, SqlCompare.REGEXP, ".*" + value + ".*");
-//                    } else {
-//                        select.addWhereCause(key, SqlCompare.LIKE, value);
-//                    }
-//                } else {
-//                    select.addWhereCause(key, SqlCompare.REGEXP, ".*" + value + ".*");
-//                }
-//            } else if ("Gte".equals(operation)) {
-//                Object objectValue = getValueType(key, tClass, value);
-//                select.addWhereCause(key, SqlCompare.MORE_EQ, objectValue);
-//            } else if ("Gt".equals(operation)) {
-//                Object objectValue = getValueType(key, tClass, value);
-//                select.addWhereCause(key, SqlCompare.MORE, objectValue);
-//            } else if ("Lte".equals(operation)) {
-//                Object objectValue = getValueType(key, tClass, value);
-//                select.addWhereCause(key, SqlCompare.LESS_EQ, objectValue);
-//            } else if ("Lt".equals(operation)) {
-//                Object objectValue = getValueType(key, tClass, value);
-//                select.addWhereCause(key, SqlCompare.LESS, objectValue);
-//            } else if ("Order".equals(operation)) {
-//                select.addOrderCause(key, value);
-//            } else if ("In".equals(operation)) {
-//                Object[] valueArray = getInOpeartionVlaueArray(value);
-//                select.addWhereCause(key, SqlCompare.IN, valueArray);
-//            } else {
-//                throw new VideoException(operation + " is not support");
-//            }
-//        }
-//        Page page = new Page(pageRecordNumber, pageStartNumber);
-//        // log.debug("#######################start query ES");
-//        select.page(page);
-//        // log.debug("#######################end query ES");
-//        List<T> list = (List<T>) page.getRecords();
-//        Map<Integer, List<T>> resultMap = new HashedMap();
-//        resultMap.put(page.getRecordCount(), list);
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String[] parametorKeyArray = covertKeyToDomainMember(entry.getKey(), tClass);
+            String key = parametorKeyArray[0];
+            String operation = parametorKeyArray[1];
+            String value = entry.getValue();
+            if ("PageRecordNum".equalsIgnoreCase(key)) {
+                pageRecordNumber = getPageNum(value);
+            } else if ("RecordStartNo".equalsIgnoreCase(key)) {
+                pageStartNumber = Integer.valueOf(value);
+            } else if ("Like".equals(operation)) {
+                if (("PLATENO".equals(key.toUpperCase())) || "PLATELICENCE".equals(key.toUpperCase())) {
+                    boolQueryBuilder.queryName(value);
+                }
+            } else if ("In".equals(operation)) {
+                Object[] valueArray = getInOpeartionVlaueArray(value);
+                boolQueryBuilder.should(new RangeQueryBuilder(key).from(valueArray[0]).to(valueArray[1]));
+            } else {
+                throw new VideoException(operation + " is not support");
+            }
+        }
+        // log.debug("#######################start query ES");
+        String index = tClass.getName();
+        SearchResponse searchResponse = elasticSearchService.searchByQueryBuilder(boolQueryBuilder, index, "", 1, 1000, "");
+        SearchHits hits = searchResponse.getHits();
+        List<T> list = new ArrayList<>();
+        Arrays.stream(hits.getHits()).forEach(hit -> {
+            T t = JSON.parseObject(hit.getSourceAsString(), tClass);
+            list.add(t);
+        });
+        Page page = new Page(pageRecordNumber, pageStartNumber);
+        page.setTotal(hits.getTotalHits());
+        // log.debug("#######################end query ES");
+        Map<Integer, List<T>> resultMap = new HashedMap();
+        resultMap.put((int) page.getTotal(), list);
         // log.debug("#######################end inner batch query");
         return new HashMap<>();
     }
@@ -549,15 +537,6 @@ public class OriginStructuringDataRepository implements StructuringDataRepositor
         return 0;
     }
 
-//    private <T> void addEaualSelect(Select<T> select, String key, String value) {
-////        if ("Null".equals(value)) {
-////            select.addWhereCause(key, SqlCompare.ISNULL);
-////        } else if ("NotNull".equals(value)) {
-////            select.addWhereCause(key, SqlCompare.ISNOTNULL);
-////        } else {
-////            select.addWhereCause(key, SqlCompare.EQ, value);
-//        }
-//    }
 
     private static String[] removePrefix(String key) {
         String[] keyArray = key.split("\\.");
