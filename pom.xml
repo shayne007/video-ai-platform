@@ -99,7 +99,7 @@
 
 
     <modules>
-        <module>keensense-api</module>
+        <module>data-center</module>
         <module>applications</module>
         <module>monitor</module>
         <module>gateway</module>
@@ -108,7 +108,7 @@
         <module>jobs</module>
         <module>algorithm-analysis</module>
         <module>task-manager</module>
-        <!--        <module>data-migration</module>-->
+<!--        <module>data-migration</module>-->
 <!--        <module>backend-for-frontend</module>-->
     </modules>
 

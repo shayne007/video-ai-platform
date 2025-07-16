@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>platform</artifactId>
+        <groupId>com.keensense</groupId>
+        <version>1.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>data-center</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>keensense-search</module>
+        <module>keensense-extension</module>
+        <module>keensense-alarm</module>
+        <module>keensense-commonlib</module>
+        <module>keensense-sdk</module>
+        <module>keensense-picturestream</module>
+        <module>keensense-image</module>
+        <module>keensense-video</module>
+        <module>keensense-archives</module>
+    </modules>
+
+</project>

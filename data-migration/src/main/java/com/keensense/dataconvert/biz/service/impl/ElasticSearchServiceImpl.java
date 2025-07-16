@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.keensense.dataconvert.biz.service.ElasticSearchService;
 import com.keensense.dataconvert.framework.config.es.ElasticSearchClient;
-import com.loocme.sys.util.ListUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionListener;
@@ -45,6 +44,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -556,7 +556,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     public XContentBuilder generateMappingBuilder(List<String> columns,JSONObject jsonColumns) throws IOException {
         XContentBuilder contentBuilder = XContentFactory.jsonBuilder().startObject();
         contentBuilder.startObject("properties");
-        if (ListUtil.isNull(columns) && jsonColumns != null){
+        if (CollectionUtils.isEmpty(columns) && jsonColumns != null){
             Set<String> strKey = jsonColumns.keySet();
             for (String columnName :strKey) {
                 JSONObject valueJson = jsonColumns.getJSONObject(columnName);
@@ -599,7 +599,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Override
     public void deleteIndex(String indexName) throws IOException {
         try {
-            DeleteIndexResponse response = restHighLevelClient.indices()
+            DeleteIndexResponse response = (DeleteIndexResponse) restHighLevelClient.indices()
                     .delete(new DeleteIndexRequest(indexName), RequestOptions.DEFAULT);
             if (response.isAcknowledged()) {
                 logger.info(" == [{}]索引删除成功!", indexName);

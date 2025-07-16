@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>data-center</artifactId>
+        <groupId>com.keensense</groupId>
+        <version>1.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <version>${platform.version}</version>
+    <artifactId>keensense-alarm</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <druid.version>1.1.9</druid.version>
+        <mybatis-plus.version>3.1.1</mybatis-plus.version>
+        <fastjson.version>1.2.57</fastjson.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.keensense</groupId>
+            <artifactId>common-sdk</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.keensense</groupId>
+            <artifactId>keensense-sdk</artifactId>
+            <version>1.0.0.1</version>
+        </dependency>
+        <!-- spring-boot redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+<!--        代码生成器-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.28</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <mainClass>com.keensense.AlarmApplication</mainClass>
+            </configuration>
+        </plugin>
+        </plugins>
+
+    </build>
+
+</project>
