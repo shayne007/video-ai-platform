@@ -1,6 +1,7 @@
 package com.keensense.image.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.keensense.common.util.ResponseUtil;
 import com.keensense.image.repository.ImageRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -74,8 +79,10 @@ public class ImageService {
         if (StringUtils.isEmpty(serialnumber) && StringUtils.isEmpty(time)) {
             return ResponseUtil.generatorDeleteResposnse("-1", "Failed", "the parameter is empty");
         }
-
-        pool.execute(() -> imageRepository.batchDelete(serialnumber, time));
+        List<String> list = Collections.singletonList(serialnumber);
+        list.parallelStream().forEach((serial) -> {
+            pool.execute(() -> imageRepository.batchDelete(serial, time));
+        });
         return ResponseUtil.generatorDeleteResposnse("0", SUCCESS, null);
     }
 }
