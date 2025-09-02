@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: keensense-alarm
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
+        enabled: true
+      config:
+        server-addr: ${NACOS_HOST}
+        file-extension: yaml
+        shared-dataids: comConfig.properties,service-monitor.yaml,commonip.properties
+        refreshable-dataids: comConfig.properties,service-monitor.yaml,commonip.properties
+logging:
+  config: /logs/config/logback-spring.xml
+server:
+  port: 8082

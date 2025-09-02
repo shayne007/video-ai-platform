@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: keensense-search
+  host: ${HOST}
+  disk: ${DISK}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1000MB  #单个文件的最大上限
+      max-request-size: 1000MB #单个请求的文件总大小上限
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
+        enabled: true
+      config:
+        server-addr: ${NACOS_HOST}
+        file-extension: properties
+        shared-dataids: service-monitor.yaml,comConfig.properties,commonip.properties,keensense-search.properties
+        refreshable-dataids: service-monitor.yaml,comConfig.properties,commonip.properties,keensense-search.properties
+logging:
+  config: /logs/config/logback-spring.xml
+server:
+  port: 9999
+  max-http-header-size: 4048576
+  tomcat:
+    max-http-post-size: 1000MB  #请求参数长度
